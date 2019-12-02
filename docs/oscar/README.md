@@ -4,21 +4,7 @@
 
 1. Установите [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 
-2. Релиз 3.5 аполло требует поддежки [git lfs](https://git-lfs.github.com/):
-
-    ```
-    sudo apt install git-lfs
-    ```
-
-    Для удобного неявного использования lfs можно обновить git:
-
-    ```
-    sudo add-apt-repository ppa:git-core/ppa -y
-    sudo apt-get update
-    sudo apt-get install git -y
-    ```
-
-3. Склонируйте репозиторий проекта:
+2. Склонируйте репозиторий проекта:
 
     Публичный репозиторий сообщества
 
@@ -32,7 +18,7 @@
     git clone git@git.starline.ru:oscar/oscar.git
     ```
 
-4. Выполнив следующую команду вы запустите докер-контейнеры для работы apollo:
+3. Выполнив следующую команду вы запустите докер-контейнеры для работы apollo:
 
     ```
     cd oscar
@@ -45,19 +31,19 @@
     bash docker/scripts/dev_start.sh stop
     ```
 
-5. Для работы с apollo войдите в рабочий докер-контейнер:
+4. Для работы с apollo войдите в рабочий докер-контейнер:
 
     ```
     bash docker/scripts/dev_into.sh
     ```
 
-6. Соберите проект:
+5. Соберите проект:
 
     ```
     bash apollo.sh build
     ```
 
-7. Запустите Dreamview:
+6. Запустите Dreamview:
 
     ```
     bash scripts/bootstrap.sh
@@ -77,7 +63,7 @@
 
 ### Настройка и калибровка датчиков
 
-Для калибровки камер, а так же определения и настройки фокусного растояния камер ознакомтесь с соответствующией инструкцией - [README](../../scripts/sensor_calibration/camera/README.md)
+Для калибровки камер, а так же определения и настройки фокусного растояния камер ознакомтесь с соответствующией инструкцией - [README](../../scripts/oscar/sensor_calibration/camera/README.md)
 
 ### oscar tools
 
