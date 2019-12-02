@@ -17,6 +17,6 @@
 
 С нами можно связаться по почте **smartcar@starline.ru**.
 
-А еще у нас есть [Twitter](https://twitter.com/starline_oscar), на который можно подписаться.
+А еще у нас есть [Twitter](https://twitter.com/starline_oscar) и [YouTube](https://www.youtube.com/channel/UC1ZPtOXu7cr4HsQKRpElDnA).
 
 Для активных студентов и амбициозных специалистов из Open Source Community у нас имеется [список актуальных для проекта задач](docs/oscar/task_for_students.md). Если вы ищете возможности обратить на себя внимания, это то, с чего можно начать.
