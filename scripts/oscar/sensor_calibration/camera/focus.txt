@@ -1,0 +1,3 @@
+here should be two values. Important: same measurement (mm, cm, m), but needless to indicate them
+distance to the object: 50
+chess cell width: 10

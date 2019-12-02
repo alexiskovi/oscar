@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+OSCAR_ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../.." && pwd )"
+
+OSCAR_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [ -z "$1" ]; then
+  echo "No command passed"
+  echo "Alaiable options: docker help"
+  exit 2
+fi
+
+EXEC_PATH=$PWD
+
+function docker_start() {
+    cd $OSCAR_ROOT_DIR
+    bash $OSCAR_ROOT_DIR/docker/scripts/dev_start.sh
+    cd $EXEC_PATH
+}
+
+function docker_stop() {
+    cd $OSCAR_ROOT_DIR
+    bash $OSCAR_ROOT_DIR/docker/scripts/dev_start.sh stop
+    cd $EXEC_PATH
+}
+
+function docker_into() {
+    cd $OSCAR_ROOT_DIR
+    bash $OSCAR_ROOT_DIR/docker/scripts/dev_into.sh
+    cd $EXEC_PATH
+}
+
+function print_help() {
+    printf "All Possible arguments:\n"
+    printf "oscar docker start - launches all apollo docker containers\n"
+    printf "oscar docker stop  - stops all apollo docker containers\n"
+    printf "oscar docker into  - open bash in apollo docker container\n"
+    printf "oscar help         - show this help\n"
+}
+
+
+if [ "$1" == "docker" ]; then
+    if [ "$2" == "start" ]; then
+        docker_start
+    elif [ "$2" == "stop" ]; then
+        docker_stop
+    elif [ "$2" == "into" ]; then
+        docker_into
+    else
+        printf "Possible arguments:\n"
+        printf "start - launches all apollo docker containers\n"
+        printf "stop -  stops all apollo docker containers\n"
+        printf "into -  open bash in apollo docker container\n"
+    fi
+
+elif [ "$1" == "help" ]; then
+    print_help
+
+else
+  printf "Command  $1 not found.\n"
+  exit 2
+fi
