@@ -640,7 +640,7 @@ cc_test(
         "//modules/perception/base:distortion_model",
         "//modules/perception/camera/app:cipv_camera",
         "//modules/perception/common/io:io_util",
-        "@com_google_googletest//:gtest_main",
+        "@gtest//:main",
     ],
 )
 
