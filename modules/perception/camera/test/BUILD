@@ -5,9 +5,7 @@ package(default_visibility = ["//visibility:public"])
 cc_test(
     name = "camera_app_obstacle_camera_perception_test",
     size = "medium",
-    srcs = [
-        "camera_app_obstacle_camera_perception_test.cc",
-    ],
+    srcs = ["camera_app_obstacle_camera_perception_test.cc"],
     linkopts = [
         "-lnvinfer_plugin",
     ],
@@ -17,8 +15,8 @@ cc_test(
         "//modules/perception/inference:inference_factory_lib",
         "//modules/perception/inference/operators:perception_inference_operators",
         "@caffe",
+        "@com_google_googletest//:gtest_main",
         "@com_google_protobuf//:protobuf",
-        "@gtest//:main",
         "@opencv",
         "@tensorrt",
         "@yaml_cpp//:yaml",
@@ -27,9 +25,7 @@ cc_test(
 
 #cc_test(
 #    name = "camera_app_traffic_light_camera_perception_test",
-#    srcs = [
-#        "camera_app_traffic_light_camera_perception_test.cc",
-#    ],
+#    srcs = ["camera_app_traffic_light_camera_perception_test.cc"],
 #    linkopts = [
 #        "-lnvinfer_plugin",
 #    ],
@@ -41,38 +37,32 @@ cc_test(
 #        "@com_google_protobuf//:protobuf",
 #        "@opencv",
 #        "@tensorrt",
-#        "@gtest//:main",
+#        "@com_google_googletest//:gtest_main",
 #        "@yaml_cpp//:yaml",
-#    ]
+#    ],
 #)
 cc_test(
     name = "camera_common_camera_ground_plane_test",
     size = "small",
-    srcs = [
-        "camera_common_camera_ground_plane_test.cc",
-    ],
+    srcs = ["camera_common_camera_ground_plane_test.cc"],
     deps = [
         "//modules/perception/base",
         "//modules/perception/camera/common:camera_ground_plane",
         "//modules/perception/common/io:io_util",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
         "@yaml_cpp//:yaml",
     ],
 )
 
 cc_library(
     name = "camera_common_io_util",
-    hdrs = [
-        ":camera_common_io_util.h",
-    ],
+    hdrs = [":camera_common_io_util.h"],
 )
 
 cc_test(
     name = "camera_common_data_provider_test",
     size = "small",
-    srcs = [
-        "camera_common_data_provider_test.cc",
-    ],
+    srcs = ["camera_common_data_provider_test.cc"],
     linkopts = [
         "-lnvinfer_plugin",
     ],
@@ -83,8 +73,8 @@ cc_test(
         "//modules/perception/inference:inference_factory_lib",
         "//modules/perception/inference/operators:perception_inference_operators",
         "@caffe",
+        "@com_google_googletest//:gtest_main",
         "@com_google_protobuf//:protobuf",
-        "@gtest//:main",
         "@opencv",
         "@tensorrt",
         "@yaml_cpp//:yaml",
@@ -94,9 +84,7 @@ cc_test(
 cc_test(
     name = "camera_common_twod_threed_util_test",
     size = "small",
-    srcs = [
-        "camera_common_twod_threed_util_test.cc",
-    ],
+    srcs = ["camera_common_twod_threed_util_test.cc"],
     linkopts = [
         "-lnvinfer_plugin",
     ],
@@ -106,8 +94,8 @@ cc_test(
         "//modules/perception/inference:inference_factory_lib",
         "//modules/perception/inference/operators:perception_inference_operators",
         "@caffe",
+        "@com_google_googletest//:gtest_main",
         "@com_google_protobuf//:protobuf",
-        "@gtest//:main",
         "@opencv",
         "@tensorrt",
         "@yaml_cpp//:yaml",
@@ -116,12 +104,8 @@ cc_test(
 
 cc_library(
     name = "camera_common_undistortion",
-    srcs = [
-        "camera_common_undistortion.cc",
-    ],
-    hdrs = [
-        "camera_common_undistortion.h",
-    ],
+    srcs = ["camera_common_undistortion.cc"],
+    hdrs = ["camera_common_undistortion.h"],
     deps = [
         "//modules/perception/base",
         "@boost",
@@ -132,9 +116,7 @@ cc_library(
 
 #cc_test(
 #    name = "camera_common_undistortion_handler_test",
-#    srcs = [
-#        "camera_common_undistortion_handler_test.cc",
-#    ],
+#    srcs = ["camera_common_undistortion_handler_test.cc"],
 #    linkopts = [
 #        "-lnvinfer_plugin",
 #    ],
@@ -147,18 +129,16 @@ cc_library(
 #        "@com_google_protobuf//:protobuf",
 #        "@opencv",
 #        "@tensorrt",
-#        "@gtest//:main",
+#        "@com_google_googletest//:gtest_main",
 #        "@yaml_cpp//:yaml",
 #        ":camera_common_undistortion",
 #        ":camera_common_io_util",
-#    ]
+#    ],
 #)
 cc_test(
     name = "camera_common_util_test",
     size = "small",
-    srcs = [
-        "camera_common_util_test.cc",
-    ],
+    srcs = ["camera_common_util_test.cc"],
     linkopts = [
         "-lnvinfer_plugin",
     ],
@@ -171,8 +151,8 @@ cc_test(
         "//modules/perception/inference/utils:inference_cuda_util_lib",
         "//modules/perception/inference/utils:inference_util_lib",
         "@caffe",
+        "@com_google_googletest//:gtest_main",
         "@com_google_protobuf//:protobuf",
-        "@gtest//:main",
         "@opencv",
         "@tensorrt",
         "@yaml_cpp//:yaml",
@@ -182,9 +162,7 @@ cc_test(
 cc_test(
     name = "camera_common_veh_template_test",
     size = "small",
-    srcs = [
-        "camera_common_veh_template_test.cc",
-    ],
+    srcs = ["camera_common_veh_template_test.cc"],
     linkopts = [
         "-lnvinfer_plugin",
     ],
@@ -193,8 +171,8 @@ cc_test(
         "//modules/perception/inference:inference_factory_lib",
         "//modules/perception/inference/operators:perception_inference_operators",
         "@caffe",
+        "@com_google_googletest//:gtest_main",
         "@com_google_protobuf//:protobuf",
-        "@gtest//:main",
         "@opencv",
         "@tensorrt",
         "@yaml_cpp//:yaml",
@@ -204,16 +182,14 @@ cc_test(
 cc_test(
     name = "camera_lib_calibration_service_online_calibration_service_test",
     size = "small",
-    srcs = [
-        "camera_lib_calibration_service_online_calibration_service_test.cc",
-    ],
+    srcs = ["camera_lib_calibration_service_online_calibration_service_test.cc"],
     deps = [
         "//cyber",
         "//modules/perception/base",
         "//modules/perception/camera/lib/calibration_service/online_calibration_service",
         "//modules/perception/camera/lib/calibrator/laneline:laneline_calibrator",
         "//modules/perception/common/io:io_util",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
         "@yaml_cpp//:yaml",
     ],
 )
@@ -221,23 +197,17 @@ cc_test(
 cc_test(
     name = "camera_lib_calibrator_common_histogram_estimator_test",
     size = "small",
-    srcs = [
-        "camera_lib_calibrator_common_histogram_estimator_test.cc",
-    ],
+    srcs = ["camera_lib_calibrator_common_histogram_estimator_test.cc"],
     deps = [
         "//modules/perception/camera/lib/calibrator/common:histogram_estimator",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 
 cc_library(
     name = "camera_lib_calibrator_laneline_app_util",
-    srcs = [
-        "camera_lib_calibrator_laneline_app_util.cc",
-    ],
-    hdrs = [
-        "camera_lib_calibrator_laneline_app_util.h",
-    ],
+    srcs = ["camera_lib_calibrator_laneline_app_util.cc"],
+    hdrs = ["camera_lib_calibrator_laneline_app_util.h"],
     deps = [
         "//modules/perception/common/i_lib/core",
         "//modules/perception/common/i_lib/geometry:i_plane",
@@ -248,12 +218,8 @@ cc_library(
 
 cc_library(
     name = "camera_lib_calibrator_laneline_lane_calibrator_util",
-    srcs = [
-        "camera_lib_calibrator_laneline_lane_calibrator_util.cc",
-    ],
-    hdrs = [
-        "camera_lib_calibrator_laneline_lane_calibrator_util.h",
-    ],
+    srcs = ["camera_lib_calibrator_laneline_lane_calibrator_util.cc"],
+    hdrs = ["camera_lib_calibrator_laneline_lane_calibrator_util.h"],
     deps = [
         "//modules/perception/common/i_lib/core",
         "//modules/perception/common/i_lib/geometry:i_plane",
@@ -277,37 +243,31 @@ cc_library(
 
 # cc_test(
 #     name = "camera_lib_calibrator_laneline_laneline_calibrator_test",
-#     srcs = [
-#         "camera_lib_calibrator_laneline_laneline_calibrator_test.cc",
-#     ],
+#     srcs = ["camera_lib_calibrator_laneline_laneline_calibrator_test.cc"],
 #     deps = [
 #         ":camera_lib_calibrator_laneline_app_util",
 #         ":camera_lib_calibrator_laneline_lane_calibrator_util",
 #         ":camera_lib_calibrator_laneline_lane_io",
 #         "//modules/perception/camera/lib/calibrator/laneline:laneline_calibrator",
-#         "@gtest//:main",
+#         "@com_google_googletest//:gtest_main",
 #         "@opencv",
-#     ]
+#     ],
 # )
 
 cc_test(
     name = "camera_lib_dummy_algorithms_test",
     size = "small",
-    srcs = [
-        "camera_lib_dummy_algorithms_test.cc",
-    ],
+    srcs = ["camera_lib_dummy_algorithms_test.cc"],
     deps = [
         "//modules/perception/camera/lib/dummy:dummy_algorithms",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 
 cc_test(
     name = "camera_lib_feature_extractor_tfe_tracking_feat_extractor_test",
     size = "small",
-    srcs = [
-        "camera_lib_feature_extractor_tfe_tracking_feat_extractor_test.cc",
-    ],
+    srcs = ["camera_lib_feature_extractor_tfe_tracking_feat_extractor_test.cc"],
     deps = [
         "//modules/perception/base",
         "//modules/perception/camera/lib/feature_extractor/tfe:tracking_feat_extractor",
@@ -315,34 +275,30 @@ cc_test(
         "//modules/perception/inference/utils:inference_cuda_util_lib",
         "//modules/perception/inference/utils:inference_gemm_lib",
         "//modules/perception/inference/utils:inference_util_lib",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 
 cc_test(
     name = "camera_lib_interface_test",
     size = "small",
-    srcs = [
-        "camera_lib_interface_test.cc",
-    ],
+    srcs = ["camera_lib_interface_test.cc"],
     deps = [
         "//modules/perception/camera/lib/interface",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 
 cc_test(
     name = "camera_lib_lane_common_functions_test",
     size = "small",
-    srcs = [
-        "camera_lib_lane_common_functions_test.cc",
-    ],
+    srcs = ["camera_lib_lane_common_functions_test.cc"],
     deps = [
         "//cyber",
         "//modules/perception/base",
         "//modules/perception/camera/lib/lane/common:common_functions",
         "//modules/perception/common/io:io_util",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
         "@opencv",
         "@yaml_cpp//:yaml",
     ],
@@ -351,15 +307,13 @@ cc_test(
 cc_test(
     name = "camera_lib_lane_detector_denseline_lane_detector_test",
     size = "medium",
-    srcs = [
-        "camera_lib_lane_detector_denseline_lane_detector_test.cc",
-    ],
+    srcs = ["camera_lib_lane_detector_denseline_lane_detector_test.cc"],
     deps = [
         "//cyber",
         "//modules/perception/base",
         "//modules/perception/camera/lib/lane/detector/denseline:denseline_lane_detector",
         "//modules/perception/common/io:io_util",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
         "@opencv",
     ],
 )
@@ -367,9 +321,7 @@ cc_test(
 cc_test(
     name = "camera_lib_lane_postprocessor_denseline_lane_postprocessor_test",
     size = "small",
-    srcs = [
-        "camera_lib_lane_postprocessor_denseline_lane_postprocessor_test.cc",
-    ],
+    srcs = ["camera_lib_lane_postprocessor_denseline_lane_postprocessor_test.cc"],
     deps = [
         "//cyber",
         "//modules/perception/base",
@@ -379,7 +331,7 @@ cc_test(
         "//modules/perception/camera/lib/lane/detector/denseline:denseline_lane_detector",
         "//modules/perception/camera/lib/lane/postprocessor/denseline:denseline_lane_postprocessor",
         "//modules/perception/common/io:io_util",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
         "@opencv",
     ],
 )
@@ -387,15 +339,13 @@ cc_test(
 cc_test(
     name = "camera_lib_lane_detector_darkscnn_lane_detector_test",
     size = "medium",
-    srcs = [
-        "camera_lib_lane_detector_darkscnn_lane_detector_test.cc",
-    ],
+    srcs = ["camera_lib_lane_detector_darkscnn_lane_detector_test.cc"],
     deps = [
         "//cyber",
         "//modules/perception/base",
         "//modules/perception/camera/lib/lane/detector/darkSCNN:darkSCNN_lane_detector",
         "//modules/perception/common/io:io_util",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
         "@opencv",
     ],
 )
@@ -403,9 +353,7 @@ cc_test(
 cc_test(
     name = "camera_lib_lane_postprocessor_darkscnn_lane_postprocessor_test",
     size = "medium",
-    srcs = [
-        "camera_lib_lane_postprocessor_darkscnn_lane_postprocessor_test.cc",
-    ],
+    srcs = ["camera_lib_lane_postprocessor_darkscnn_lane_postprocessor_test.cc"],
     deps = [
         "//cyber",
         "//modules/perception/base",
@@ -416,7 +364,7 @@ cc_test(
         "//modules/perception/camera/lib/lane/postprocessor/darkSCNN:darkSCNN_lane_postprocessor",
         "//modules/perception/camera/tools/offline:visualizer",
         "//modules/perception/common/io:io_util",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
         "@opencv",
     ],
 )
@@ -424,31 +372,27 @@ cc_test(
 cc_test(
     name = "camera_lib_obstacle_detector_yolo_region_output_test",
     size = "small",
-    srcs = [
-        "camera_lib_obstacle_detector_yolo_region_output_test.cc",
-    ],
+    srcs = ["camera_lib_obstacle_detector_yolo_region_output_test.cc"],
     deps = [
         "//modules/perception/base",
         "//modules/perception/camera/lib/obstacle/detector/yolo:yolo_obstacle_detector",
         "//modules/perception/common/io:io_util",
         "//modules/perception/inference/utils:inference_cuda_util_lib",
         "//modules/perception/inference/utils:inference_gemm_lib",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 
 cc_test(
     name = "camera_lib_obstacle_detector_yolo_yolo_obstacle_detector_test",
     size = "medium",
-    srcs = [
-        "camera_lib_obstacle_detector_yolo_yolo_obstacle_detector_test.cc",
-    ],
+    srcs = ["camera_lib_obstacle_detector_yolo_yolo_obstacle_detector_test.cc"],
     deps = [
         "//modules/perception/camera/lib/obstacle/detector/yolo:yolo_obstacle_detector",
         "//modules/perception/common/io:io_util",
         "//modules/perception/inference/utils:inference_cuda_util_lib",
         "//modules/perception/inference/utils:inference_util_lib",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
         "@opencv",
         "@yaml_cpp//:yaml",
     ],
@@ -457,25 +401,21 @@ cc_test(
 cc_test(
     name = "camera_lib_obstacle_postprocessor_location_refiner_test",
     size = "small",
-    srcs = [
-        "camera_lib_obstacle_postprocessor_location_refiner_test.cc",
-    ],
+    srcs = ["camera_lib_obstacle_postprocessor_location_refiner_test.cc"],
     deps = [
         "//cyber",
         "//modules/perception/camera/lib/calibration_service/online_calibration_service",
         "//modules/perception/camera/lib/calibrator/laneline:laneline_calibrator",
         "//modules/perception/camera/lib/obstacle/postprocessor/location_refiner:location_refiner_obstacle_postprocessor",
         "//modules/perception/common/io:io_util",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 
 cc_test(
     name = "camera_lib_obstacle_tracker_common_test",
     size = "small",
-    srcs = [
-        "camera_lib_obstacle_tracker_common_test.cc",
-    ],
+    srcs = ["camera_lib_obstacle_tracker_common_test.cc"],
     deps = [
         "//cyber",
         "//modules/perception/camera/common",
@@ -484,30 +424,26 @@ cc_test(
         "//modules/perception/inference/utils:inference_cuda_util_lib",
         "//modules/perception/inference/utils:inference_gemm_lib",
         "//modules/perception/inference/utils:inference_util_lib",
+        "@com_google_googletest//:gtest_main",
         "@eigen",
-        "@gtest//:main",
     ],
 )
 
 cc_test(
     name = "camera_lib_obstacle_tracker_omt_frame_list_test",
     size = "small",
-    srcs = [
-        "camera_lib_obstacle_tracker_omt_frame_list_test.cc",
-    ],
+    srcs = ["camera_lib_obstacle_tracker_omt_frame_list_test.cc"],
     deps = [
         "//modules/perception/camera/common",
         "//modules/perception/camera/lib/obstacle/tracker/omt:frame_list",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 
 # TODO(private)
 # cc_test(
 #     name = "camera_lib_obstacle_tracker_omt_omt_obstacle_tracker_test",
-#     srcs = [
-#         "camera_lib_obstacle_tracker_omt_omt_obstacle_tracker_test.cc",
-#     ],
+#     srcs = ["camera_lib_obstacle_tracker_omt_omt_obstacle_tracker_test.cc"],
 #     deps = [
 #         "//cyber",
 #         "//modules/perception/base:base",
@@ -516,18 +452,16 @@ cc_test(
 #         "//modules/perception/common/geometry:common",
 #         "//modules/perception/common/io:io_util",
 #         "@com_google_absl//absl/strings",
-#         "@gtest//:main",
+#         "@com_google_googletest//:gtest_main",
 #         "@opencv",
 #         "@yaml_cpp//:yaml",
-#     ]
+#     ],
 # )
 
 # TODO(private)
 # cc_test(
 #     name = "camera_lib_obstacle_tracker_omt_reference_test",
-#     srcs = [
-#         "camera_lib_obstacle_tracker_omt_reference_test.cc",
-#     ],
+#     srcs = ["camera_lib_obstacle_tracker_omt_reference_test.cc"],
 #     deps = [
 #         "//cyber/common:file",
 #         "//modules/perception/base:base",
@@ -535,16 +469,14 @@ cc_test(
 #         "//modules/perception/camera/lib/obstacle/tracker/omt:frame_list",
 #         "//modules/perception/camera/lib/obstacle/tracker/omt:omt_proto",
 #         "//modules/perception/camera/lib/obstacle/tracker/omt:target",
-#         "@gtest//:main",
-#     ]
+#         "@com_google_googletest//:gtest_main",
+#     ],
 # )
 
 cc_test(
     name = "camera_lib_obstacle_tracker_omt_target_test",
     size = "small",
-    srcs = [
-        "camera_lib_obstacle_tracker_omt_target_test.cc",
-    ],
+    srcs = ["camera_lib_obstacle_tracker_omt_target_test.cc"],
     deps = [
         "//cyber/common:file",
         "//modules/perception/base",
@@ -553,16 +485,14 @@ cc_test(
         "//modules/perception/camera/lib/obstacle/tracker/omt:omt_proto",
         "//modules/perception/camera/lib/obstacle/tracker/omt:target",
         "//modules/perception/inference/utils:inference_gemm_lib",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 
 cc_test(
     name = "camera_lib_obstacle_transformer_multicue_multicue_obstacle_transformer_test",
     size = "small",
-    srcs = [
-        "camera_lib_obstacle_transformer_multicue_multicue_obstacle_transformer_test.cc",
-    ],
+    srcs = ["camera_lib_obstacle_transformer_multicue_multicue_obstacle_transformer_test.cc"],
     deps = [
         "//modules/perception/base",
         "//modules/perception/camera/lib/obstacle/detector/yolo:yolo_obstacle_detector",
@@ -571,7 +501,7 @@ cc_test(
         "//modules/perception/inference/utils:inference_cuda_util_lib",
         "//modules/perception/inference/utils:inference_resize_lib",
         "//modules/perception/inference/utils:inference_util_lib",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
         "@opencv",
     ],
 )
@@ -579,17 +509,15 @@ cc_test(
 cc_test(
     name = "camera_lib_traffic_light_detector_crop_test",
     size = "small",
-    srcs = [
-        "camera_lib_traffic_light_detector_crop_test.cc",
-    ],
+    srcs = ["camera_lib_traffic_light_detector_crop_test.cc"],
     linkopts = [
         "-lnvinfer_plugin",
     ],
     deps = [
         "//modules/perception/camera/lib/traffic_light/detector/detection:cropbox",
         "@caffe",
+        "@com_google_googletest//:gtest_main",
         "@com_google_protobuf//:protobuf",
-        "@gtest//:main",
         "@opencv",
         "@tensorrt",
         "@yaml_cpp//:yaml",
@@ -598,9 +526,7 @@ cc_test(
 
 # cc_test(
 #     name = "camera_lib_traffic_light_detector_detection_test",
-#     srcs = [
-#         "camera_lib_traffic_light_detector_detection_test.cc",
-#     ],
+#     srcs = ["camera_lib_traffic_light_detector_detection_test.cc"],
 #     linkopts = [
 #         "-lnvinfer_plugin",
 #     ],
@@ -612,16 +538,14 @@ cc_test(
 #         "@com_google_protobuf//:protobuf",
 #         "@opencv",
 #         "@tensorrt",
-#         "@gtest//:main",
+#         "@com_google_googletest//:gtest_main",
 #         "@yaml_cpp//:yaml",
-#     ]
+#     ],
 # )
 
 #cc_test(
 #    name = "camera_lib_traffic_light_detector_recognition_test",
-#    srcs = [
-#        "camera_lib_traffic_light_detector_recognition_test.cc",
-#    ],
+#    srcs = ["camera_lib_traffic_light_detector_recognition_test.cc"],
 #    linkopts = [
 #        "-lnvinfer_plugin",
 #    ],
@@ -633,16 +557,14 @@ cc_test(
 #        "@com_google_protobuf//:protobuf",
 #        "@opencv",
 #        "@tensorrt",
-#        "@gtest//:main",
+#        "@com_google_googletest//:gtest_main",
 #        "@yaml_cpp//:yaml",
-#    ]
+#    ],
 #)
 cc_test(
     name = "camera_lib_traffic_light_detector_select_test",
     size = "small",
-    srcs = [
-        "camera_lib_traffic_light_detector_select_test.cc",
-    ],
+    srcs = ["camera_lib_traffic_light_detector_select_test.cc"],
     linkopts = [
         "-lnvinfer_plugin",
     ],
@@ -651,8 +573,8 @@ cc_test(
         "//modules/perception/inference:inference_factory_lib",
         "//modules/perception/inference/operators:perception_inference_operators",
         "@caffe",
+        "@com_google_googletest//:gtest_main",
         "@com_google_protobuf//:protobuf",
-        "@gtest//:main",
         "@opencv",
         "@tensorrt",
         "@yaml_cpp//:yaml",
@@ -662,9 +584,7 @@ cc_test(
 # TODO(private)
 #cc_test(
 #    name = "camera_lib_traffic_light_preprocessor_test",
-#    srcs = [
-#        "camera_lib_traffic_light_preprocessor_test.cc",
-#    ],
+#    srcs = ["camera_lib_traffic_light_preprocessor_test.cc"],
 #    linkopts = [
 #        "-lnvinfer_plugin",
 #    ],
@@ -675,19 +595,17 @@ cc_test(
 #        "//modules/perception/inference/operators:perception_inference_operators",
 #        "@caffe",
 #        "@com_google_protobuf//:protobuf",
-#        "@gtest//:main",
+#        "@com_google_googletest//:gtest_main",
 #        "@opencv",
 #        "@tensorrt",
 #        "@yaml_cpp//:yaml",
-#    ]
+#    ],
 #)
 
 cc_test(
     name = "camera_lib_traffic_light_tracker_test",
     size = "small",
-    srcs = [
-        "camera_lib_traffic_light_tracker_test.cc",
-    ],
+    srcs = ["camera_lib_traffic_light_tracker_test.cc"],
     linkopts = [
         "-lnvinfer_plugin",
     ],
@@ -699,8 +617,8 @@ cc_test(
         "//modules/perception/inference:inference_factory_lib",
         "//modules/perception/inference/operators:perception_inference_operators",
         "@caffe",
+        "@com_google_googletest//:gtest_main",
         "@com_google_protobuf//:protobuf",
-        "@gtest//:main",
         "@opencv",
         "@tensorrt",
         "@yaml_cpp//:yaml",
@@ -710,9 +628,7 @@ cc_test(
 cc_test(
     name = "camera_app_cipv_camera_test",
     size = "small",
-    srcs = [
-        "camera_app_cipv_camera_test.cc",
-    ],
+    srcs = ["camera_app_cipv_camera_test.cc"],
     linkopts = [
         "-lopencv_core",
         "-lnvinfer_plugin",
@@ -724,7 +640,7 @@ cc_test(
         "//modules/perception/base:distortion_model",
         "//modules/perception/camera/app:cipv_camera",
         "//modules/perception/common/io:io_util",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 

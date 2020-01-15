@@ -11,9 +11,9 @@ cc_library(
     ],
     deps = [
         "//cyber/common:log",
-        "//external:gflags",
         "//modules/common/util",
         "//modules/common/util:future",
+        "@com_github_gflags_gflags//:gflags",
     ],
 )
 
@@ -23,7 +23,7 @@ cc_test(
     srcs = ["kv_db_test.cc"],
     deps = [
         ":kv_db",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 

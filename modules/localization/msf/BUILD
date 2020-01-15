@@ -20,7 +20,6 @@ cc_library(
     ],
     deps = [
         "//cyber",
-        "//modules/common",
         "//modules/common/adapters:adapter_gflags",
         "//modules/common/monitor_log",
         "//modules/common/proto:geometry_proto",
@@ -44,8 +43,8 @@ cc_library(
         "//modules/localization/proto:sins_pva_proto",
         "//modules/transform:transform_broadcaster_lib",
         "@boost",
-        "@glog",
-        "@gtest",
+        "@com_google_glog//:glog",
+        "@com_google_googletest//:gtest",
         "@yaml_cpp//:yaml",
     ],
 )
@@ -61,9 +60,7 @@ cc_test(
     name = "msf_localization_test",
     size = "small",
     timeout = "short",
-    srcs = [
-        "msf_localization_test.cc",
-    ],
+    srcs = ["msf_localization_test.cc"],
     copts = [
         "-Dprivate=public",
     ],
@@ -73,7 +70,7 @@ cc_test(
         "//modules/common/time",
         "//modules/common/util",
         "//modules/localization/msf:msf_localization_component_lib",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 

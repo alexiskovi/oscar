@@ -22,15 +22,13 @@ cc_library(
 cc_test(
     name = "io_util_test",
     size = "small",
-    srcs = [
-        "io_util_test.cc",
-    ],
+    srcs = ["io_util_test.cc"],
     data = [
         "//modules/perception:perception_testdata",
     ],
     deps = [
         ":io_util",
-        "@gtest//:main",
+        "@com_google_googletest//:gtest_main",
     ],
 )
 

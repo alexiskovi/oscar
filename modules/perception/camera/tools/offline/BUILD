@@ -4,9 +4,7 @@ package(default_visibility = ["//visibility:public"])
 
 cc_library(
     name = "visualizer",
-    srcs = [
-        "visualizer.cc",
-    ],
+    srcs = ["visualizer.cc"],
     hdrs = [
         "colormap.h",
         "keycode.h",
@@ -28,12 +26,8 @@ cc_library(
 
 cc_library(
     name = "transform_server",
-    srcs = [
-        "transform_server.cc",
-    ],
-    hdrs = [
-        "transform_server.h",
-    ],
+    srcs = ["transform_server.cc"],
+    hdrs = ["transform_server.h"],
     deps = [
         "//cyber",
         "//modules/perception/base",
@@ -50,7 +44,6 @@ cc_binary(
         "-lopencv_core",
         "-lopencv_imgproc",
         "-lopencv_highgui",
-        "-lboost_system",
     ],
     linkstatic = False,
     deps = [
@@ -62,6 +55,7 @@ cc_binary(
         "//modules/perception/camera/lib/lane/detector/darkSCNN:darkSCNN_lane_detector",
         "//modules/perception/camera/lib/lane/postprocessor/darkSCNN:darkSCNN_lane_postprocessor",
         "//modules/perception/lib/utils",
+        "@boost",
         "@com_google_absl//absl/strings",
     ],
 )

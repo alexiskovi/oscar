@@ -11,19 +11,13 @@ cc_proto_library(
 
 proto_library(
     name = "camera_app_lib",
-    srcs = [
-        "perception.proto",
-    ],
+    srcs = ["perception.proto"],
 )
 
 cc_library(
     name = "debug_info",
-    srcs = [
-        "debug_info.cc",
-    ],
-    hdrs = [
-        "debug_info.h",
-    ],
+    srcs = ["debug_info.cc"],
+    hdrs = ["debug_info.h"],
     deps = [
         "//cyber",
         "//modules/perception/base",
@@ -34,17 +28,12 @@ cc_library(
 
 cc_library(
     name = "obstacle_camera_perception",
-    srcs = [
-        "obstacle_camera_perception.cc",
-    ],
-    hdrs = [
-        "obstacle_camera_perception.h",
-    ],
+    srcs = ["obstacle_camera_perception.cc"],
+    hdrs = ["obstacle_camera_perception.h"],
     deps = [
         ":camera_app_lib_proto",
         ":debug_info",
         "//cyber",
-        "//external:gflags",
         "//modules/perception/base",
         "//modules/perception/camera/common",
         "//modules/perception/camera/lib/calibration_service/online_calibration_service",
@@ -62,18 +51,15 @@ cc_library(
         "//modules/perception/inference/utils:inference_cuda_util_lib",
         "//modules/perception/inference/utils:inference_util_lib",
         "//modules/perception/lib/utils",
+        "@com_github_gflags_gflags//:gflags",
         "@yaml_cpp//:yaml",
     ],
 )
 
 cc_library(
     name = "traffic_light_camera_perception",
-    srcs = [
-        "traffic_light_camera_perception.cc",
-    ],
-    hdrs = [
-        "traffic_light_camera_perception.h",
-    ],
+    srcs = ["traffic_light_camera_perception.cc"],
+    hdrs = ["traffic_light_camera_perception.h"],
     deps = [
         ":camera_app_lib_proto",
         "//cyber",
@@ -89,17 +75,12 @@ cc_library(
 
 cc_library(
     name = "lane_camera_perception",
-    srcs = [
-        "lane_camera_perception.cc",
-    ],
-    hdrs = [
-        "lane_camera_perception.h",
-    ],
+    srcs = ["lane_camera_perception.cc"],
+    hdrs = ["lane_camera_perception.h"],
     deps = [
         ":camera_app_lib_proto",
         ":debug_info",
         "//cyber",
-        "//external:gflags",
         "//modules/perception/base",
         "//modules/perception/camera/common",
         "//modules/perception/camera/lib/calibration_service/online_calibration_service",
@@ -112,18 +93,15 @@ cc_library(
         "//modules/perception/inference/utils:inference_cuda_util_lib",
         "//modules/perception/inference/utils:inference_util_lib",
         "//modules/perception/lib/utils",
+        "@com_github_gflags_gflags//:gflags",
         "@yaml_cpp//:yaml",
     ],
 )
 
 cc_library(
     name = "cipv_camera",
-    srcs = [
-        "cipv_camera.cc",
-    ],
-    hdrs = [
-        "cipv_camera.h",
-    ],
+    srcs = ["cipv_camera.cc"],
+    hdrs = ["cipv_camera.h"],
     deps = [
         ":camera_app_lib_proto",
         "//cyber",
