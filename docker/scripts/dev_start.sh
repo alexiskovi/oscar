@@ -233,7 +233,7 @@ function main(){
         fi
     fi
 
-    APOLLO_DEV="apollo_dev_${USER}"
+    APOLLO_DEV="apollo_dev_oscar5_${USER}"
     docker ps -a --format "{{.Names}}" | grep "$APOLLO_DEV" 1>/dev/null
     if [ $? == 0 ]; then
         if [[ "$(docker inspect --format='{{.Config.Image}}' $APOLLO_DEV 2> /dev/null)" != "$IMG" ]]; then
@@ -371,9 +371,10 @@ function main(){
         --add-host in_dev_docker:127.0.0.1 \
         --add-host ${LOCAL_HOST}:127.0.0.1 \
         --hostname in_dev_docker \
-        --shm-size 2G \
+        --shm-size 6G \
         --pid=host \
         -v /dev/null:/dev/raw1394 \
+        -v /pool/logs/data:/apollo/data \
         $IMG \
         /bin/bash
     if [ $? -ne 0 ];then
