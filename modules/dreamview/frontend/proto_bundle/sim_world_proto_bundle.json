@@ -4582,14 +4582,14 @@
                     "default": 0.1
                   }
                 },
-                "roiLinesegmentMinAngle": {
+                "roiLineSegmentMinAngle": {
                   "type": "double",
                   "id": 7,
                   "options": {
                     "default": 0.3
                   }
                 },
-                "roiLinesegmentLength": {
+                "roiLineSegmentLength": {
                   "type": "double",
                   "id": 8,
                   "options": {
@@ -4607,7 +4607,7 @@
                   "type": "double",
                   "id": 10
                 },
-                "curbHeadingTangentChangeUppperLimit": {
+                "curbHeadingTangentChangeUpperLimit": {
                   "type": "double",
                   "id": 11,
                   "options": {
