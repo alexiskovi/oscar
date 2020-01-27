@@ -8,6 +8,7 @@ message CANCardParameter {
     ESD_CAN = 1;
     SOCKET_CAN_RAW = 2;
     HERMES_CAN = 3;
+    SIGMA_CAN = 4;
   }
 
   enum CANCardType {
