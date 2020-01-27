@@ -1,0 +1,17 @@
+child_frame_id: velodyne128
+transform:
+  translation:
+    x: 0.0
+    y: 1.9
+    z: 1.24965
+  rotation:
+    x: 0.0
+    y: 0.0
+    z: 0.7071068
+    w: -0.7071068
+header:
+  seq: 0
+  stamp:
+    secs: 1512689414
+    nsecs: 0
+  frame_id: novatel
