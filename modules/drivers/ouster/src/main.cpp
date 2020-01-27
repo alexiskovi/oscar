@@ -52,7 +52,7 @@ int pool_size_ = 8;
 
 bool Init() {
     std::shared_ptr<apollo::cyber::Node> node_(apollo::cyber::CreateNode("ouster_talker"));
-    writer_ = node_->CreateWriter<PointCloud>("/apollo/sensor/lidar16/compensator/PointCloud2");
+    writer_ = node_->CreateWriter<PointCloud>("/apollo/sensor/lidar128/compensator/PointCloud2");
     point_cloud_pool_.reset(new CCObjectPool<PointCloud>(pool_size_));
     point_cloud_pool_->ConstructAll();
     for (int i = 0; i < pool_size_; i++) {
