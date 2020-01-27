@@ -78,6 +78,17 @@ cc_library(
 )
 
 cc_library(
+    name = "pid_steer_controller",
+    srcs = ["pid_steer_controller.cc"],
+    hdrs = ["pid_steer_controller.h"],
+    copts = ['-DMODULE_NAME=\\"control\\"'],
+    deps = [
+        "//cyber",
+        "//modules/control/proto:control_proto",
+    ],
+)
+
+cc_library(
     name = "pid_BC_controller",
     srcs = ["pid_BC_controller.cc"],
     hdrs = ["pid_BC_controller.h"],

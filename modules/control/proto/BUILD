@@ -16,6 +16,7 @@ proto_library(
         "lat_controller_conf.proto",
         "lon_controller_conf.proto",
         "pid_conf.proto",
+        "pid_steer_conf.proto",
     ],
     deps = [
         ":calibration_table_proto_lib",
