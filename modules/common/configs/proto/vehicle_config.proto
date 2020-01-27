@@ -34,6 +34,7 @@ enum VehicleBrand {
   WEY = 5;
   ZHONGYUN = 6;
   CH = 7;
+  LEXUS_RX450H = 10;
 }
 
 message VehicleID {

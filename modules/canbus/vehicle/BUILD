@@ -46,6 +46,7 @@ cc_library(
         "//modules/canbus/vehicle/transit:transit_vehicle_factory",
         "//modules/canbus/vehicle/wey:wey_vehicle_factory",
         "//modules/canbus/vehicle/zhongyun:zhongyun_vehicle_factory",
+        "//modules/canbus/vehicle/lexus_rx:lexus_rx_vehicle_factory",
         "//modules/common/util:factory",
     ],
 )
