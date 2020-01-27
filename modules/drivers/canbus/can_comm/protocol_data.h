@@ -98,8 +98,14 @@ class ProtocolData {
   template <typename T>
   static T BoundedValue(T lower, T upper, T val);
 
+  uint32_t getCounter() { return cnt_; }
+
+  void incrCounter() { cnt_++; }
+
  private:
   const int32_t data_length_ = CANBUS_MESSAGE_LENGTH;
+
+  uint32_t cnt_ = 0;
 };
 
 template <typename SensorType>
