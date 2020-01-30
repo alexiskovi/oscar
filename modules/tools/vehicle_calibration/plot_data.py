@@ -22,7 +22,9 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
-import tkinter.filedialog
+#import tkinter.filedialog
+import tkFileDialog
+#from tkinter import filedialog
 
 from process import get_start_index
 from process import preprocess

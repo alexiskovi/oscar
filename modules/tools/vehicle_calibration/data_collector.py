@@ -165,7 +165,7 @@ class DataCollector(object):
             else:
                 self.controlcmd.throttle = 0
                 self.controlcmd.brake = -self.cmd[2]
-            if self.vehicle_speed == 0:
+            if self.vehicle_speed < 0.01:
                 self.in_session = False
 
         self.controlcmd.header.timestamp_sec = cyber_time.Time.now().to_sec()
@@ -207,7 +207,7 @@ def main():
     print('Positive number for throttle and negative number for brake.')
 
     while True:
-        cmd = input("Enter commands: ").split()
+        cmd = input("Enter commands: ").split(" ")
         if len(cmd) == 0:
             print('Quiting.')
             break
