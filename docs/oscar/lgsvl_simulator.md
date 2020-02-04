@@ -23,7 +23,7 @@
 
     В основном окне симулятора появится созданная вами симуляция, да ее запуска требуется нажать кнопку *Play* в нижнем левом углу.
 
-    ![lgsvl_config](images/lgsvl/lgsvl_config.png)
+    ![lgsvl_config](images/lgsvl/lgsvl_cfg.png)
 
 
 5. Войдите в контейнер apollo, запустите bootstrap и мост
