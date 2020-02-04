@@ -1,4 +1,4 @@
-Проект OSCAR является ответвлением проекта [Apollo](https://github.com/ApolloAuto/apollo) релиза 3.5.
+Проект OSCAR является ответвлением проекта [Apollo](https://github.com/ApolloAuto/apollo).
 
 ### Установка ПО
 
@@ -12,17 +12,11 @@
     git clone https://gitlab.com/starline/oscar.git
     ```
 
-    Локальный репозиторий для разработчиков StarLine
-
-    ```
-    git clone git@git.starline.ru:oscar/oscar.git
-    ```
-
-3. Выполнив следующую команду вы запустите докер-контейнеры для работы apollo:
+3. Выполнив следующую команду, запустите докер-контейнеры для работы apollo:
 
     ```
     cd oscar
-    bash docker/scripts/dev_start.sh
+    bash docker/scripts/dev_start.sh -b
     ```
 
     В случае первого запуска после клонирования репозитория с удаленного докер-хранилища будут подтянуты все требуемые докер-образы автоматически. Для остановки всех докер-контейнеров apollo можно выполнить:
@@ -56,7 +50,7 @@
     yarn install && yarn build
     ```
 
-    В случае наличия UI установку можно считать законченой
+    В случае наличия UI установку можно считать законченой. Работу с проектом можно начать используя [симулятор](lgsvl_simulator.md).
 
 
 [Устранение возможных проблем](docs/oscar/possible_problems.md)
