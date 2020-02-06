@@ -25,6 +25,8 @@
 
 #include "modules/drivers/canbus/can_client/hermes_can/hermes_can_client.h"
 
+#include "modules/drivers/canbus/can_client/sigma/sigma_can_client.h"
+
 #include "cyber/common/log.h"
 #include "modules/common/util/util.h"
 
@@ -48,6 +50,9 @@ void CanClientFactory::RegisterCanClients() {
 
   Register(CANCardParameter::HERMES_CAN,
            []() -> CanClient* { return new can::HermesCanClient(); });
+
+  Register(CANCardParameter::SIGMA_CAN,
+           []() -> CanClient* { return new can::SigmaCanClient(); });
 }
 
 std::unique_ptr<CanClient> CanClientFactory::CreateCANClient(

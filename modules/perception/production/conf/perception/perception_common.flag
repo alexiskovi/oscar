@@ -23,7 +23,7 @@
 # enable hdmap input for roi filter.
 # type: bool
 # default: true
---obs_enable_hdmap_input=true
+--obs_enable_hdmap_input=false
 
 # whether to send message for visualization.
 # type: bool
@@ -66,7 +66,7 @@
 # query Cyber TF buffer size in second.
 # type: double
 # default: 0.01
---obs_tf2_buff_size=0.01
+--obs_tf2_buff_size=0.1
 
 # enabled state of local pose extrapolation when failed to query pose
 # type: bool
@@ -76,12 +76,12 @@
 # local pose cache size
 # type: double
 # default: 1.0
---obs_transform_cache_size=1.0
+--obs_transform_cache_size=10.0
 
 # max local pose extrapolation latency
 # type: double
 # default: 0.15
---obs_max_local_pose_extrapolation_latency=0.15
+--obs_max_local_pose_extrapolation_latency=1.5
 
 --config_manager_path=./
 --start_visualizer=false

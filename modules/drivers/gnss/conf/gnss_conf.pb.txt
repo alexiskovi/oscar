@@ -1,7 +1,7 @@
 data {
     format: NOVATEL_BINARY
     serial {
-        device: "/dev/novatel0"
+        device: "/dev/ttyUSB0"
         baud_rate: 115200
     }
 }
@@ -9,12 +9,12 @@ data {
 #rtk_from {
 #    format: RTCM_V3
 #    ntrip {
-        #address: "111.111.111.11"
-        #port: 0000
-        #mount_point: "yourport"
-        #user: "username"
-        #password: "password"
-        #timeout_s: 5
+#        address: "185.129.96.88"
+#        port: 8081
+#        mount_point: "STARLINE0"
+#        user: "Starline1"
+#        password: "Starline1234567890"
+#        timeout_s: 5
 #    }
 #    push_location: true
 #}
@@ -22,7 +22,7 @@ data {
 rtk_to {
     format: NOVATEL_BINARY
     serial {
-        device: "/dev/novatel1"
+        device: "/dev/ttyUSB1"
         baud_rate: 115200
     }
 }
@@ -30,14 +30,14 @@ rtk_to {
 command {
     format: NOVATEL_BINARY
     serial {
-        device: "/dev/novatel2"
+        device: "/dev/ttyUSB2"
         baud_rate: 115200
     }
 }
 
 rtk_solution_type: RTK_RECEIVER_SOLUTION
-imu_type: ADIS16488
-proj4_text: "+proj=utm +zone=10 +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+gpsbin_folder: "/apollo/data/gpsbin"
+proj4_text: "+proj=utm +zone=36 +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 
 tf {
     frame_id: "world"
@@ -45,40 +45,54 @@ tf {
     enable: true
 }
 
-# If given, the driver will send velocity info into novatel one time per second
 wheel_parameters: "SETWHEELPARAMETERS 100 1 1\r\n"
-
-gpsbin_folder: "/apollo/data/gpsbin"
 
 #########################################################################
 # notice: only for debug, won't configure device through driver online!!!
 #########################################################################
-# login_commands: "UNLOGALL THISPORT\r\n"
-# login_commands: "LOG COM2 GPRMC ONTIME 1.0 0.25\r\n"
-# login_commands: "EVENTOUTCONTROL MARK2 ENABLE POSITIVE 999999990 10\r\n"
-# login_commands: "EVENTOUTCONTROL MARK1 ENABLE POSITIVE 500000000 500000000\r\n"
-# login_commands: "LOG GPGGA ONTIME 1.0\r\n"
+login_commands: "WIFICONFIG OFF\r\n"
+login_commands: "UNLOGALL THISPORT\r\n"
+login_commands: "INSCOMMAND ENABLE\r\n"
+login_commands: "SETIMUORIENTATION 5\r\n"
+login_commands: "ALIGNMENTMODE AUTOMATIC\r\n"
+login_commands: "VEHICLEBODYROTATION 0 0 0\r\n"
+login_commands: "SERIALCONFIG COM1 9600 N 8 1 N OFF\r\n"
+login_commands: "SERIALCONFIG COM2 9600 N 8 1 N OFF\r\n"
+login_commands: "INTERFACEMODE COM1 NOVATEL NOVATEL ON\r\n"
+#login_commands: "INTERFACEMODE USB2 RTCMV3 NONE OFF\r\n"
+login_commands: "PPSCONTROL ENABLE POSITIVE 1.0 10000\r\n"
+login_commands: "MARKCONTROL MARK1 ENABLE POSITIVE\r\n"
+login_commands: "EVENTINCONTROL MARK1 ENABLE POSITIVE 0 2\r\n"
+login_commands: "RTKSOURCE AUTO ANY\r\n"
+login_commands: "PSRDIFFSOURCE AUTO ANY\r\n"
+login_commands: "SETINSTRANSLATION ANT1 0.00 0.39 0.95 0.03 0.03 0.03\r\n"
+login_commands: "SETINSTRANSLATION ANT2 0.00 1.89 0.92 0.03 0.03 0.03\r\n"
+login_commands: "SETINSTRANSLATION USER 0.00 0.00 0.00\r\n"
+login_commands: "THISANTENNATYPE NOV804\r\n"
+login_commands: "BASEANTENNATYPE NOV850\r\n"
+login_commands: "EVENTOUTCONTROL MARK2 ENABLE POSITIVE 999999990 10\r\n"
+login_commands: "EVENTOUTCONTROL MARK1 ENABLE POSITIVE 500000000 500000000\r\n"
 
-# login_commands: "log bestgnssposb ontime 1\r\n"
-# login_commands: "log bestgnssvelb ontime 1\r\n"
-# login_commands: "log bestposb ontime 1\r\n"
-# login_commands: "log INSPVAXB ontime 0.5\r\n"
-# login_commands: "log INSPVASB ontime 0.01\r\n"
-# login_commands: "log CORRIMUDATASB ontime 0.01\r\n"
-# login_commands: "log RAWIMUSXB onnew 0 0\r\n"
-# login_commands: "log INSCOVSB ontime 1\r\n"
-# login_commands: "log mark1pvab onnew\r\n"
+login_commands: "LOG COM2 GPRMC ONTIME 1.0 0.25\r\n"
+login_commands: "LOG USB1 GPGGA ONTIME 1.0\r\n"
+login_commands: "LOG USB1 BESTGNSSPOSB ONTIME 0.1\r\n"
+login_commands: "LOG USB1 BESTGNSSVELB ONTIME 0.1\r\n"
+login_commands: "LOG USB1 BESTPOSB ONTIME 0.1\r\n"
+login_commands: "LOG USB1 INSPVAXB ONTIME 1\r\n"
+login_commands: "LOG USB1 INSPVASB ONTIME 0.01\r\n"
+login_commands: "LOG USB1 CORRIMUDATASB ONTIME 0.01\r\n"
+login_commands: "LOG USB1 RAWIMUSXB ONNEW 0 0\r\n"
+login_commands: "LOG USB1 MARK1PVAB ONNEW\r\n"
+login_commands: "LOG USB1 HEADING2A ONNEW\r\n"
+login_commands: "LOG USB1 HEADINGRATEA ONCHANGED\r\n"
 
-# login_commands: "log rangeb ontime 0.2\r\n"
-# login_commands: "log bdsephemerisb\r\n"
-# login_commands: "log gpsephemb\r\n"
-# login_commands: "log gloephemerisb\r\n"
-# login_commands: "log bdsephemerisb ontime 15\r\n"
-# login_commands: "log gpsephemb ontime 15\r\n"
-# login_commands: "log gloephemerisb ontime 15\r\n"
+login_commands: "LOG USB1 RANGEB ONTIME 1\r\n"
+login_commands: "LOG USB1 BDSEPHEMERISB ONTIME 15\r\n"
+login_commands: "LOG USB1 GPSEPHEMB ONTIME 15\r\n"
+login_commands: "LOG USB1 GLOEPHEMERISB ONTIME 15\r\n"
 
-# login_commands: "log imutoantoffsetsb once\r\n"
-# login_commands: "log vehiclebodyrotationb onchanged\r\n"
+login_commands: "LOG USB1 INSCONFIGB ONCE\r\n"
+login_commands: "LOG USB1 VEHICLEBODYROTATIONB ONCHANGED\r\n"
+login_commands: "NTRIPCONFIG NCOM1 CLIENT V1 185.129.96.88:8081 STARLINE0 Starline1 Starline1234567890\r\n"
 
-logout_commands: "EVENTOUTCONTROL MARK2 DISABLE\r\n"
-logout_commands: "EVENTOUTCONTROL MARK1 DISABLE\r\n"
+login_commands: "SAVECONFIG\r\n"

@@ -15,6 +15,7 @@ cc_library(
         "//modules/drivers/canbus/can_client/socket:socket_can_client_raw",
         "//modules/drivers/canbus/common:canbus_common",
         "//modules/drivers/canbus/proto:canbus_proto",
+        "//modules/drivers/canbus/can_client/sigma:sigma_can_client",
     ] + select({
         "//tools/platforms:use_esd_can": [
             "//modules/drivers/canbus/can_client/esd:esd_can_client",
