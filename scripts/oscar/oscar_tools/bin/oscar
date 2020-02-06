@@ -1,20 +1,14 @@
 #!/usr/bin/env bash
 
-OSCAR_ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../.." && pwd )"
+OSCAR_ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../../.." && pwd )"
 
 OSCAR_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-if [ -z "$1" ]; then
-  echo "No command passed"
-  echo "Alaiable options: docker help"
-  exit 2
-fi
 
 EXEC_PATH=$PWD
 
 function docker_start() {
     cd $OSCAR_ROOT_DIR
-    bash $OSCAR_ROOT_DIR/docker/scripts/dev_start.sh
+    bash $OSCAR_ROOT_DIR/docker/scripts/dev_start.sh -b
     cd $EXEC_PATH
 }
 
@@ -30,13 +24,51 @@ function docker_into() {
     cd $EXEC_PATH
 }
 
+function trajectory_generation() {
+    cd $OSCAR_ROOT_DIR
+    NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectory_generator.py")"
+    if [ "${NUM_PROCESSES}" -ne 0 ]; then
+      pkill -SIGKILL -f oscar_tools/trajectory_generator.py
+    fi
+
+    python modules/tools/oscar_tools/trajectory_generator.py
+    cd $EXEC_PATH
+}
+
+function trajectory_play() {
+    cd $OSCAR_ROOT_DIR
+    NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectory_player.py")"
+    if [ "${NUM_PROCESSES}" -ne 0 ]; then
+      pkill -SIGKILL -f oscar_tools/trajectory_player.py
+    fi
+
+    python modules/tools/oscar_tools/trajectory_player.py
+    cd $EXEC_PATH
+}
+
+function trajectory_stop() {
+    pkill -SIGKILL -f oscar_tools/trajectory_player.py
+}
+
 function print_help() {
-    printf "All Possible arguments:\n"
+    printf "Possible arguments:\n"
     printf "oscar docker start - launches all apollo docker containers\n"
     printf "oscar docker stop  - stops all apollo docker containers\n"
     printf "oscar docker into  - open bash in apollo docker container\n"
+    printf "\n"
+    printf "oscar trajectory generate - generates\n"
+    printf "oscar trajectory paly     - play\n"
+    printf "oscar trajectory stop     - stops\n"
+    printf "\n"
     printf "oscar help         - show this help\n"
 }
+
+
+if [ -z "$1" ]; then
+  echo "No command passed\n"
+  print_help
+  exit 2
+fi
 
 
 if [ "$1" == "docker" ]; then
@@ -53,10 +85,24 @@ if [ "$1" == "docker" ]; then
         printf "into -  open bash in apollo docker container\n"
     fi
 
+
+elif [ "$1" == "trajectory" ]; then
+    if [ "$2" == "generate" ]; then
+        trajectory_generation
+    elif [ "$2" == "play" ]; then
+        trajectory_play
+    elif [ "$2" == "stop" ]; then
+        trajectory_stop
+    else
+        printf "Possible arguments:\n"
+        printf "generate - generates\n"
+        printf "paly     - play\n"
+        printf "stop     - stops\n"
+    fi
+
 elif [ "$1" == "help" ]; then
     print_help
 
 else
-  printf "Command  $1 not found.\n"
-  exit 2
+    print_help
 fi
