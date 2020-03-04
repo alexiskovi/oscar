@@ -4,9 +4,12 @@ from cyber_py3 import cyber_time
 from modules.canbus.proto import chassis_pb2
 from modules.control.proto import control_cmd_pb2
 
-MAX_STEERING_PERCENTAGE = 65
-MAX_THROTTLE = 50
-MAX_BRAKE = 40
+MAX_STEERING_PERCENTAGE = 65.0
+MAX_THROTTLE = 90.0
+MAX_BRAKE = 80.0
+STEERING_MAX_RATIO = 3.0
+STEERING_EPS = 20
+
 
 def callback_canbus(msg):
   global current_gear, current_speed
@@ -74,19 +77,25 @@ def main():
           if event.value >= 0.0:
             if event.value * MAX_BRAKE >= 5.0:
               params['brake_cmd'] = event.value * MAX_BRAKE
+              params['throttle_cmd'] = 0.000000000
             else:
-              params['brake_cmd'] = 0.0
+              params['brake_cmd'] = 0.0000000
 
 
           else:
             if -event.value * MAX_BRAKE >= 5.0:
-              params['throttle_cmd'] = -event.value * MAX_BRAKE
+              params['throttle_cmd'] = -event.value * MAX_THROTTLE
+              params['brake_cmd'] = 0.0000000000
             else:
-              params['throttle_cmd'] = 0.0
+              params['throttle_cmd'] = 0.0000000
 
         # STEERING (RIGHT STICK)
         if event.axis == 3:
-          params['target_steering'] = -event.value * MAX_STEERING_PERCENTAGE
+          #params['target_steering'] = -event.value * MAX_STEERING_PERCENTAGE
+          #if params['target_steering'] - event.value * STEERING_MAX_RATIO > -MAX_STEERING_PERCENTAGE and params['target_steering'] - event.value * STEERING_MAX_RATIO < MAX_STEERING_PERCENTAGE:
+          #    params['target_steering'] -= event.value * STEERING_MAX_RATIO
+          new_steering = -event.value * MAX_STEERING_PERCENTAGE
+          params['target_steering'] += (new_steering - params['target_steering']) / STEERING_EPS
 
       #HAT (ARROWS) MOTION CALLBACK
       if event.type == pygame.JOYHATMOTION:
@@ -109,18 +118,22 @@ def main():
         
         # GEARS SWITCHING (L1 - R1)
         if event.button == 5:
-          if current_speed < 0.03:
-            if current_gear == 2:
-              params['gear'] = 0
-            if current_gear == 0:
-              params['gear'] = 1
+          #if current_speed < 0.03:
+          if params['gear'] == 2:
+            params['gear'] = 0
+            print("to N")
+          elif params['gear'] == 0:
+            params['gear'] = 1
+            print("to D")
           
         if event.button == 4:
-          if current_speed < 0.03:
-            if current_gear == 1:
-              params['gear'] = 0
-            if current_gear == 0:
-              params['gear'] = 2
+          #if current_speed < 0.03:
+          if params['gear'] == 1:
+            params['gear'] = 0
+            print("to N")
+          elif params['gear'] == 0:
+            params['gear'] = 2
+            print("to R")
 
         # ESTOP (B)
         if event.button == 1:
