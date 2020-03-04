@@ -33,8 +33,8 @@ uint32_t Throttle343::GetPeriod() const {
 
 void Throttle343::Parse(const std::uint8_t *bytes, int32_t length,
                          ChassisDetail *chassis_detail) const {
-   auto gas = throttle_cmd(bytes, length)*1000;
-   chassis_detail->mutable_gas()->set_throttle_cmd(gas);
+   //auto gas = throttle_cmd(bytes, length)*1000;
+   //chassis_detail->mutable_gas()->set_throttle_cmd(gas);
    chassis_detail->mutable_gas()->set_driver_override(driver_override(bytes, length));
 }
 
