@@ -1396,7 +1396,8 @@
                 "GE3": 4,
                 "WEY": 5,
                 "ZHONGYUN": 6,
-                "CH": 7
+                "CH": 7,
+                "LEXUS_RX450H": 10
               }
             },
             "VehicleID": {

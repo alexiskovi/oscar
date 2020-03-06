@@ -1,7 +1,7 @@
 import React from "react";
 
 import Image from "components/common/Image";
-import logoApollo from "assets/images/logo_apollo.png";
+import logoApollo from "assets/images/logo_starline.png";
 import HMIControls from "components/Header/HMIControls";
 
 export default class Header extends React.Component {
