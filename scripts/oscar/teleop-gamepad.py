@@ -92,10 +92,10 @@ def main():
         # STEERING (RIGHT STICK)
         if event.axis == 3:
           #params['target_steering'] = -event.value * MAX_STEERING_PERCENTAGE
-          #if params['target_steering'] - event.value * STEERING_MAX_RATIO > -MAX_STEERING_PERCENTAGE and params['target_steering'] - event.value * STEERING_MAX_RATIO < MAX_STEERING_PERCENTAGE:
-          #    params['target_steering'] -= event.value * STEERING_MAX_RATIO
-          new_steering = -event.value * MAX_STEERING_PERCENTAGE
-          params['target_steering'] += (new_steering - params['target_steering']) / STEERING_EPS
+          if params['target_steering'] - event.value * STEERING_MAX_RATIO > -MAX_STEERING_PERCENTAGE and params['target_steering'] - event.value * STEERING_MAX_RATIO < MAX_STEERING_PERCENTAGE:
+              params['target_steering'] -= event.value * STEERING_MAX_RATIO
+          #new_steering = -event.value * MAX_STEERING_PERCENTAGE
+          #params['target_steering'] += (new_steering - params['target_steering']) / STEERING_EPS
 
       #HAT (ARROWS) MOTION CALLBACK
       if event.type == pygame.JOYHATMOTION:
