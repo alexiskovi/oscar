@@ -742,7 +742,7 @@ void LexusRxController::Brake(double pedal) {
     */
     //pedal *= 1.5;
     if ( pedal >= 0.01 ) {
-       AERROR << "Receive breaking pedal: " << pedal;
+       //AERROR << "Receive breaking pedal: " << pedal;
        throttle_343_->set_pedal(-pedal);
     }
     //else
@@ -761,7 +761,7 @@ void LexusRxController::Throttle(double pedal) {
     }
     */
     if ( pedal >= 1.0 && pedal <= 100.0) {
-	AERROR << "Receive throttle: " << pedal;
+	//AERROR << "Receive throttle: " << pedal;
         throttle_343_->set_pedal(pedal);
     }
 }

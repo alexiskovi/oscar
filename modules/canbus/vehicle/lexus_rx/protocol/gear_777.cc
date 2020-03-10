@@ -35,6 +35,7 @@ void Gear777::UpdateData(uint8_t *data) {
 
 void Gear777::Reset() {
   gear_position_ = GEAR_NEUTRAL;
+  drive_position_counter_ = 0;
 }
 
 void Gear777::set_gear_p( uint8_t *data, uint8_t gear_pos ) {
@@ -54,6 +55,7 @@ void Gear777::set_counter_p( uint8_t *data ) {
 /* Neutral */
   void Gear777::set_gear_neutral() {
     gear_position_ = GEAR_NEUTRAL;
+    drive_position_counter_ = 0;
   }
 
   /* Reverse */
@@ -63,7 +65,14 @@ void Gear777::set_counter_p( uint8_t *data ) {
 
   /* Drive */
   void Gear777::set_gear_drive() {
-    gear_position_ = GEAR_DRIVE;
+    printf("Current counter: %ld\n", drive_position_counter_);
+    drive_position_counter_++;
+    if ( drive_position_counter_ >= 70 ) {
+	if ( gear_position_ != GEAR_DRIVE ) {
+	    printf("Swith GEAR to DRIVE at %ld counter\n", drive_position_counter_ );
+	}
+        gear_position_ = GEAR_DRIVE;
+    }
   }
 
   /* Parking */

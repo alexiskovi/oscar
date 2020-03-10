@@ -62,6 +62,7 @@ class Gear777 : public ::apollo::drivers::canbus::ProtocolData<
 private:
   uint8_t gear_position_ = 0x03;
 
+  uint64_t drive_position_counter_ = 0;
 };
 
 } // lexus_rx

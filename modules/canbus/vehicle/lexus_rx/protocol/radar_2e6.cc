@@ -42,6 +42,7 @@ void Radar2E6::UpdateData(uint8_t *data) {
 
   uint16_t lead_dist = lead_rel_dist[step];
   uint16_t lead_speed = lead_rel_speed[step];
+  printf("counter: %ld\n; Lead distance: %ld; Lead speed: %ld\n", glob_cnt, lead_dist*0.05, lead_speed );
 
   set_lead_dist_p(data, lead_dist );
   set_lead_speed_p(data, lead_speed );
