@@ -1,0 +1,17 @@
+syntax = "proto2";
+
+import "modules/common/proto/header.proto";
+
+package apollo.supervisor;
+
+message SV_info {
+  optional apollo.common.Header header = 1;
+  enum Status {
+    OK = 1;
+    WARN = 2;
+    ERROR = 3;
+    FATAL = 4;
+  }
+  optional Status status = 2;
+  optional string message = 3;
+}

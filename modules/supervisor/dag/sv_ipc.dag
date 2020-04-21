@@ -1,0 +1,10 @@
+module_config {
+    module_library : "/apollo/bazel-bin/modules/supervisor/libsv_ipc.so"
+    timer_components {
+        class_name : "IPCSupervisor"
+        config {
+            name: "ipc_supervisor"
+            interval: 500
+        }
+    }
+}

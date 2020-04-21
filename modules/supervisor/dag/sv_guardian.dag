@@ -1,0 +1,10 @@
+module_config {
+    module_library : "/apollo/bazel-bin/modules/supervisor/libsv_guardian.so"
+    timer_components {
+        class_name : "GSupervisor"
+        config {
+            name: "g_supervisor"
+            interval: 200
+        }
+    }
+}
