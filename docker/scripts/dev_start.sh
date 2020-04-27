@@ -388,6 +388,9 @@ function main(){
     fi
     docker exec $APOLLO_DEV bash -c '/apollo/docker/scripts/container_setup.sh'
 
+    # oscar_tools setup
+    docker exec $APOLLO_DEV sh -c 'echo "source /apollo/scripts/oscar/oscar_tools/setup.sh" >> /home/${USER}/.bashrc'
+
     ok "Finished setting up Apollo docker environment. Now you can enter with: \nbash docker/scripts/dev_into.sh"
     ok "Enjoy!"
 }
