@@ -1,8 +1,8 @@
 ## Архитектура платформы
-![platform](docs/oscar/images/soft_hard_description/platform_ru.png)
+![platform](images/soft_hard_description/platform_ru.png)
 
 ## Умный автомобиль
-![car](docs/oscar/images/soft_hard_description/car_ru.png)
+![car](images/soft_hard_description/car_ru.png)
 
 Оборудование OSCAR:
 * **Радары**, которые необходимы для обнаружения препятствий. Сигнал радара служит отправной точкой для торможения или распознавания объекта камерами и лидаром.
@@ -13,11 +13,11 @@
 * **Инерциальный датчик**, позволяющий определить положение и направление движения в случаях, когда информация от спутников GPS+ГЛОНАСС недоступна -- например, в подземном паркинге или под мостом.
 
 ### Аппаратная архитектура:
-![hardware](docs/oscar/images/soft_hard_description/hardware_architecture_ru.png)
+![hardware](images/soft_hard_description/hardware_architecture_ru.png)
 
 ### Программные модули OSCAR:
 
-![software_architecture](docs/oscar/images/soft_hard_description/oscar_software_ru.png)
+![software_architecture](images/soft_hard_description/oscar_software_ru.png)
 
 * **Распознавание**: модуль распознавания воспринимает мир, окружающий автономный автомобиль. Содержит два подмодуля: первый отвечает за обнаружение препятствий, а второй за обнаружение и распознавание сигналов светофоров.
 * **Прогнозирование**: рассчитывает будущие траектории движения распознаваемых препятствий.
@@ -33,7 +33,7 @@
 * **Пользовательский интерфейс** -- модуль для просмотра состояния транспортного средства и управления им в режиме реального времени.
 
 ## Серверная архитектура
-![server_architecture](docs/oscar/images/soft_hard_description/server_architecture_ru.png)
+![server_architecture](images/soft_hard_description/server_architecture_ru.png)
 
 * **Каналы связи**:  беспилотный автомобиль будет иметь по крайней мере 2 канала связи LTE, по которым будут передаваться различные данные в режиме реального времени на серверную платформу StarLine.  Также умный автомобиль имеет возможность подключения по WiFi для выгрузки логов, дампов и выполнения сервисных работ.
 
