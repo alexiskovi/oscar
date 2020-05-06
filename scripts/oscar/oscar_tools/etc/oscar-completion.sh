@@ -43,6 +43,24 @@ _oscar_completions()
             return
         fi
 
+    elif [ "${#COMP_WORDS[@]}" == "4" ]; then
+
+        if [ "${COMP_WORDS[1]}" == "trajectory" ]; then
+
+            if [ "${COMP_WORDS[2]}" == "generate" ]; then
+                COMPREPLY=($(compgen -W "8type 0type" -- "${COMP_WORDS[3]}"))
+            else
+                return
+            fi
+
+        else
+            return
+        fi
+
+    elif [ "${COMP_WORDS[3]}" == "8type" ] || [ "${COMP_WORDS[3]}" == "0type" ]; then
+        COMP_COUNT=$((${#COMP_WORDS[@]}-1))
+        COMPREPLY=($(compgen -W "-r -a -d -v -n --rtk_player -h" -- "${COMP_WORDS[${COMP_COUNT}]}"))
+
     else
       return
     fi

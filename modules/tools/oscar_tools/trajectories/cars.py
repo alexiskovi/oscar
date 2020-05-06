@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python
 
 ###############################################################################
 # Copyright 2020 Nikolay Dema. All Rights Reserved.
@@ -21,12 +21,14 @@ from math import pi, sqrt, cos, sin, copysign
 
 class Car():
     def __init__(self):
-        self.wheel_radius   = 0.35
-        self.wheel_width    = 0.25
-        self.wheelbase      = 2.5
-        self.axle_track     = 1.5
-        self.max_steering   = 1.0
-        self.steering_ratio = 1.0
+        self.wheel_radius     = 0.35
+        self.wheel_width      = 0.25
+        self.wheelbase        = 2.5
+        self.axle_track       = 1.5
+        self.max_steering     = 1.0
+        self.steering_ratio   = 1.0
+        self.max_acceleration = 5.0
+        self.max_deceleration = 10.0
         self.footprint = np.array([[ self.wheelbase + 1.0,  (self.axle_track+self.wheel_width)], # quadrants order
                                    [ self.wheelbase + 1.0, -(self.axle_track+self.wheel_width)],
                                    [-1.0,                  -(self.axle_track+self.wheel_width)],
@@ -37,6 +39,7 @@ class Car():
 
         self.x   = 0.0
         self.y   = 0.0
+        self.z   = 0.0
         self.yaw = 0.0
         self.v   = 0.0
         self.a   = 0.0
@@ -177,13 +180,15 @@ class Car():
 
 class Lexus(Car):
     def __init__(self):
-        super(Lexus, self).__init__()
+        Car.__init__(self)
         self.wheel_radius   = 0.37
         self.wheel_width    = 0.25
         self.wheelbase      = 2.75
         self.axle_track     = 1.64
         self.max_steering   = 0.576           # max 0.576 rad ~ 33.78 deg
         self.steering_ratio = 14.8
+        self.max_acceleration = 6.0
+        self.max_deceleration = 6.0
         self.footprint = np.array([[ 3.77,  0.94],        # quadrants order
                                    [ 3.77, -0.94],
                                    [-1.0,  -0.94],
