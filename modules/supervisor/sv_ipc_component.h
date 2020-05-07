@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "modules/common/time/time.h"
 #include "cyber/component/timer_component.h"
 #include "cyber/cyber.h"
 #include "modules/supervisor/common/supervisor_runner.h"

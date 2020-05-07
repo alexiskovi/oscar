@@ -40,7 +40,7 @@ void GSupervisor::WarningSignal() {
 bool GSupervisor::Init() {
   auto sv_guardian_node = apollo::cyber::CreateNode("sv_guardian");
   status_reader_ = sv_guardian_node->CreateReader<apollo::supervisor::SV_info>(
-          "supervisor/general", nullptr);
+          "/supervisor/general", nullptr);
   ACHECK(status_reader_ != nullptr);
   last_call_ = Time::Now();
   signal_active_ = false;

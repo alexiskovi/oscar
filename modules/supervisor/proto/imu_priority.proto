@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+message SV_IMU_Conf {
+  optional double timeout_priority = 1;
+  optional double bad_calibration_priority = 2;
+  optional double bad_solve_priority = 3;
+}

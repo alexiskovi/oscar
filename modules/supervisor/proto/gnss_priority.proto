@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+message SV_GNSS_Conf {
+  optional double timeout_priority = 1;
+  optional double max_differential_age = 2;
+  optional double differential_age_timeout_priority = 3;
+  optional double bad_sol_status_priority = 4;
+  optional double bad_sol_type_priority = 5;
+  optional double max_deviation_allowed = 6;
+  optional double bad_deviation_priority = 7;
+}

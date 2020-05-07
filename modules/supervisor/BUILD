@@ -29,8 +29,9 @@ cc_library(
     deps = [
         "//cyber",
         "//modules/common/util:message_util",
-        "//modules/supervisor/software:imu_supervisor",
         "//modules/supervisor/proto:supervisor_proto",
+        "//modules/supervisor/software:imu_supervisor",
+        "//modules/supervisor/software:gnss_supervisor",
     ],
 )
 
