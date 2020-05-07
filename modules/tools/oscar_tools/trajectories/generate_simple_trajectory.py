@@ -44,7 +44,7 @@ def pars_arguments():
     parser.add_argument('-n', '--file_name', required=False,
                         help='name of trajectory file, will be ' + \
                         'saved in oscar_tools/data')
-    parser.add_argument('--rtk_player', required=False, action='store_true', dest='for_rtk_player',
+    parser.add_argument('--rtk-player', required=False, action='store_true', dest='for_rtk_player',
                         help='trajectory file will be saved in ' + \
                         '/data/log/ to be used by rtk_layer')
 

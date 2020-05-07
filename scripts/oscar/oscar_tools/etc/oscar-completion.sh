@@ -59,7 +59,7 @@ _oscar_completions()
 
     elif [ "${COMP_WORDS[3]}" == "8type" ] || [ "${COMP_WORDS[3]}" == "0type" ]; then
         COMP_COUNT=$((${#COMP_WORDS[@]}-1))
-        COMPREPLY=($(compgen -W "-r -a -d -v -n --rtk_player -h" -- "${COMP_WORDS[${COMP_COUNT}]}"))
+        COMPREPLY=($(compgen -W "-r -a -d -v -n --rtk-player -h" -- "${COMP_WORDS[${COMP_COUNT}]}"))
 
     else
       return
