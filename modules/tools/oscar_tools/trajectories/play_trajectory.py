@@ -67,6 +67,8 @@ class TrajectoryPlayer:
         parser = ArgumentParser(description="Script load and paly simple trajectories for cars.")
         parser.add_argument('-l', '--loop', action='store_true', dest='loop',
                             help='Loop trajectory for endless movement')
+        parser.add_argument('--no-loop', action='store_false', dest='loop')
+        parser.set_defaults(loop=False)
         parser.add_argument('-r', '--rate', default=DEFAULT_TRAJ_PUB_RATE, dest='rate',
                             help='Desired trajectory publishing rate in Hz')
         parser.add_argument('-n', '--file_name', help='Name of trajectory file, will be ' + \
