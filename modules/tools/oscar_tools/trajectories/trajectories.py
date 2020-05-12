@@ -21,52 +21,67 @@ import numpy as np
 
 from math import pi, sqrt, cos, sin, copysign
 
+
+class Point():
+    def __init__(self):
+        self.t          = 0.0
+        self.l          = 0.0
+        self.x          = 0.0
+        self.y          = 0.0
+        self.z          = 0.0
+        self.v          = 0.0
+        self.a          = 0.0
+        self.yaw        = 0.0
+        self.dyaw       = 0.0
+        self.ddyaw      = 0.0
+        self.steering   = 0.0
+        self.dsteering  = 0.0
+        self.ddsteering = 0.0
+        self.curvature  = 0.0
+        self.dcurvature = 0.0
+        self.sharpness  = 0.0
+
+
+class Trajectory():
+
+    def __init__(self):
+        self.type   = ""
+        self.length = 0.0
+        self.time   = 0.0
+        self.points = []
+        self.points_num = 0
+        self.closest_point_id = 0
+
+
+    def __getitem__(self, id):
+        return self.points[id]
+
+
+    def __setitem__(self, id, point):
+        self.points[id] = point
+
+
+    def add_point(self, point):
+        self.points.append(point)
+
+
+    def transform_to(self, x, y, yaw, z=0):
+
+        R = np.array([[np.cos(yaw), -np.sin(yaw)],
+                      [np.sin(yaw),  np.cos(yaw)]])
+
+        for point in self.points:
+
+            rotated_pose = R.dot(np.array([point.x, point.y]).T).T
+            point.x = rotated_pose[0] + x
+            point.y = rotated_pose[1] + y
+            point.yaw = point.yaw + yaw
+            point.z = z
+
+        return self
+
+
 class CarTrajectoryGenerator():
-
-    class Point():
-        def __init__(self):
-            self.t          = 0.0
-            self.l          = 0.0
-            self.x          = 0.0
-            self.y          = 0.0
-            self.z          = 0.0
-            self.v          = 0.0
-            self.a          = 0.0
-            self.yaw        = 0.0
-            self.dyaw       = 0.0
-            self.ddyaw      = 0.0
-            self.steering   = 0.0
-            self.dsteering  = 0.0
-            self.ddsteering = 0.0
-            self.curvature  = 0.0
-            self.dcurvature = 0.0
-            self.sharpness  = 0.0
-
-
-    class Trajectory():
-
-        def __init__(self):
-            self.length = 0.0
-            self.time   = 0.0
-            self.points = []
-            self.points_num = 0
-            self.closest_point_id = 0
-
-        def transform_to(self, x, y, yaw, z=0):
-
-            R = np.array([[np.cos(yaw), -np.sin(yaw)],
-                          [np.sin(yaw),  np.cos(yaw)]])
-
-            for point in self.points:
-
-                rotated_pose = R.dot(np.array([point.x, point.y]).T).T
-                point.x = rotated_pose[0] + x
-                point.y = rotated_pose[1] + y
-                point.yaw = point.yaw + yaw
-                point.z = z
-
-            return self
-
 
     class ClothoidGenerator():
 
@@ -287,7 +302,7 @@ class CarTrajectoryGenerator():
         trajectory.time       = trajectory_time
 
         for i in range(trajectory.points_num):
-            trajectory_point = self.Point()
+            trajectory_point = Point()
             trajectory_point.t = i * period
 
             if (trajectory_point.t <= time_to_get_max_vel):
@@ -398,11 +413,11 @@ class CarTrajectoryGenerator():
                                               dec=1.5,
                                               frequency=100.0):
 
-        max_clothoid_angle = copysign(2.27884, min_turn_radius)
+        max_clothoid_angle = copysign(2.2951, min_turn_radius)
         max_curvature = 1.0 / min_turn_radius                           # dtheta_max / ds
         sharpness = (max_curvature ** 2) / (2 * max_clothoid_angle)     # ddtheta / ds
         clothoid_length = abs(max_curvature / sharpness)
-        calc_accuracy = 0.01
+        calc_accuracy = 0.001
 
         clothoid_generator = self.ClothoidGenerator()
 
@@ -412,8 +427,9 @@ class CarTrajectoryGenerator():
                                                                 clothoid_length,
                                                                 calc_accuracy)
 
-        trajectory = self.Trajectory()
+        trajectory = Trajectory()
         trajectory.length = clothoid_length * 4.0
+        trajectory.type = "8type"
 
         dec = float(copysign(dec, -1))
         acc = float(copysign(acc,  1))
@@ -542,7 +558,7 @@ class CarTrajectoryGenerator():
         max_curvature = 1.0 / min_turn_radius                           # dtheta_max / ds
         sharpness = (max_curvature ** 2) / (2 * max_clothoid_angle)     # ddtheta / ds
         clothoid_length = abs(max_curvature / sharpness)
-        calc_accuracy = 0.01
+        calc_accuracy = 0.001
 
         clothoid_generator = self.ClothoidGenerator()
 
@@ -552,8 +568,9 @@ class CarTrajectoryGenerator():
                                                                 clothoid_length,
                                                                 calc_accuracy)
 
-        trajectory = self.Trajectory()
+        trajectory = Trajectory()
         trajectory.length = clothoid_length * 4.0
+        trajectory.type = "0type"
 
         dec = float(copysign(dec, -1))
         acc = float(copysign(acc,  1))

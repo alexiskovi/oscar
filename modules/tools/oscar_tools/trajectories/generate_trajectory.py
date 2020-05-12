@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 ###############################################################################
-# Copyright 2020 Nikolay Dema. All Rights Reserved.
+# Copyright 2020 ScPA StarLine Ltd. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,18 +18,18 @@
 
 from argparse import ArgumentParser
 from math import copysign
-from datetime import datetime
-from shutil import copyfile
 
-import os
-import sys
-import time
+import os, sys, time
 
 from cyber_py import cyber
 from modules.localization.proto import localization_pb2
 
 from cars import Lexus
 from trajectories import CarTrajectoryGenerator
+from fileio import TrajectoryFileHandler
+
+APOLLO_ROOT = os.path.dirname(os.path.abspath(__file__)) + "/../../../.."
+CTRL_FREQUENCY = 20
 
 
 def pars_arguments():
@@ -44,7 +44,7 @@ def pars_arguments():
     parser.add_argument('-n', '--file_name', required=False,
                         help='name of trajectory file, will be ' + \
                         'saved in oscar_tools/data')
-    parser.add_argument('--rtk-player', required=False, action='store_true', dest='for_rtk_player',
+    parser.add_argument('--rtk-player', required=False, action='store_true', dest='rtk_player_compatible',
                         help='trajectory file will be saved in ' + \
                         '/data/log/ to be used by rtk_layer')
 
@@ -56,40 +56,6 @@ def pars_arguments():
         sys.exit(1)
 
     return args
-
-
-class FileHandler():
-
-    def __init__(self, file_path=None):
-        self.handler = None
-        if (file_path):
-            self.open(file_path)
-
-
-    def open(self, file_path):
-
-        if (os.path.isfile(file_path)):
-            mtime_since_epoc = os.path.getmtime(file_path)
-            file_last_mdata = time.strftime('%Y-%m-%d-%H:%M:%S', time.localtime(mtime_since_epoc))
-            new_name_for_prev_file = file_path[:-4] + "-" + file_last_mdata + ".csv"
-            copyfile(file_path, new_name_for_prev_file)
-
-        try:
-            self.handler = open(file_path, 'w')
-        except IOError:
-            print("Can't open file " + file_path)
-            sys.exit(1)
-
-    def write(self, data):
-        if (self.handler):
-            self.handler.write(data)
-            # self.handler.flush()
-
-
-    def __del__(self):
-        if (self.handler):
-            self.handler.flush()
-            self.handler.close()
 
 
 def localization_callback(msg):
@@ -113,8 +79,8 @@ if __name__ == '__main__':
 
     params = pars_arguments()
 
-    if (params.for_rtk_player):
-        trjectory_dir = os.path.dirname(os.path.abspath(__file__)) + "/../../../../data/log"
+    if (params.rtk_player_compatible):
+        trjectory_dir = APOLLO_ROOT + "/data/log"
         if not os.path.exists(trjectory_dir):
             os.makedirs(trjectory_dir)
         trajectory_file = trjectory_dir + "/garage.csv"
@@ -127,9 +93,9 @@ if __name__ == '__main__':
         if (params.file_name):
             trajectory_file = trjectory_dir + "/" + params.file_name + ".csv"
         else:
-            trajectory_file = trjectory_dir + "/" + params.trajectory_type + ".csv"
+            trajectory_file = trjectory_dir + "/trajectory.csv"
 
-    trajectory_file_handler = FileHandler(trajectory_file)
+    trajectory_file_handler = TrajectoryFileHandler(trajectory_file)
 
     car = Lexus()
     localization_recived = False
@@ -148,52 +114,25 @@ if __name__ == '__main__':
                                                                      params.max_vel,
                                                                      params.acc,
                                                                      params.dec,
-                                                                     frequency=20)
+                                                                     frequency=CTRL_FREQUENCY)
     else:
         trajectory = trajGenerator.generate_0type_traj_using_4_clothoids(car,
                                                                      params.min_turn_radius,
                                                                      params.max_vel,
                                                                      params.acc,
                                                                      params.dec,
-                                                                     frequency=20)
+                                                                     frequency=CTRL_FREQUENCY)
 
     while (not localization_recived and not cyber.is_shutdown()):
         time.sleep(0.2)
 
     cyber.shutdown()
-    del cyber_rt_node
+
+    if not localization_recived:
+        sys.exit("Cyber had been shutted down before localization message was recived!\n" + \
+                 "Trajectory was not saved!")
 
     trajectory.transform_to(car.x, car.y, car.yaw, car.z)
 
-    # cube_town
-    # trajectory.transform_to(592697.488346100, 4134465.908913612, 0.0, -0.000195292)
-
-    trajectory_file_handler.write("x,y,z,speed,acceleration,curvature,curvature_change_rate," + \
-                                  "time,theta,gear,s,throttle,brake,steering\n")
-    for point in trajectory.points:
-
-        gear = int(copysign(1,point.v))
-
-        steering = int(point.steering/car.max_steering*100)
-
-        brake = int(0)
-        throttle = int(0)
-        if (point.v * point.a >= 0):
-            throttle = int(abs(point.a) / car.max_acceleration*100)
-        else:
-            brake = int(abs(point.a) / car.max_deceleration*100)
-
-        trajectory_file_handler.write(str(round(point.x, 2)) + ",\t" + \
-                                      str(round(point.y, 2)) + ",\t" + \
-                                      str(round(point.z, 2)) + ",\t" + \
-                                      str(round(point.v, 2)) + ",\t" + \
-                                      str(round(point.a, 2)) + ",\t" + \
-                                      str(round(point.curvature, 3)) + ",\t" + \
-                                      str(round(point.dcurvature,  3)) + ",\t" + \
-                                      str(round(point.t, 2)) + ",\t" + \
-                                      str(round(point.yaw, 2)) + ",\t" + \
-                                      str(gear) + ",\t" + \
-                                      str(round(point.l,   2)) + ",\t" + \
-                                      str(throttle) + ",\t" + \
-                                      str(brake) + ",\t" + \
-                                      str(steering) + "\n")
+    if not trajectory_file_handler.save_trajectory(trajectory, params.rtk_player_compatible):
+        sys.exit("Trajectory was not saved!")

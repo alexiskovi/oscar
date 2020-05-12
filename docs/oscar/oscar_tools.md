@@ -71,4 +71,4 @@ oscar trajectory generate 8type -r 5 -v 4 -a 0.4 -d 0.7 --rtk_player
 
 Вид генерируемой таким образом траектории представлен на рисунке ниже.
 
-![trajectory](images/oscar_tools/8_traj_clot_path_and_angles_full.png)
+<img width="1000" alt="trajectory" src="images/oscar_tools/8_traj_clot_path_and_angles_full.png">
