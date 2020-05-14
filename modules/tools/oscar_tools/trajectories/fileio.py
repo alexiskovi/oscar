@@ -138,7 +138,7 @@ class TrajectoryFileHandler():
                 point.l = point_raw['s']
                 trajectory.add_point(point)
 
-            trajectory.points_num = len(trajectory_raw)
+            # trajectory.points_num = len(trajectory_raw)
             trajectory.time = trajectory.points[-1].t - trajectory.points[0].t
             trajectory.length = trajectory.points[-1].l - trajectory.points[0].l
 
@@ -153,7 +153,7 @@ class TrajectoryFileHandler():
             trajectory.length = trajectory_raw['header']['length']
             trajectory.time = trajectory_raw['header']['time']
             trajectory.type = trajectory_raw['header']['type']
-            trajectory.points_num = trajectory_raw['header']['size']
+            # trajectory.points_num = trajectory_raw['header']['size']
             for point_raw in trajectory_raw['points']:
                 point = Point()
                 point.x = float(point_raw['x'])

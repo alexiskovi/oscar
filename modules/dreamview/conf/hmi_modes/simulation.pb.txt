@@ -60,7 +60,7 @@ modules {
     start_command: "nohup oscar trajectory play -l &"
     stop_command: "oscar trajectory stop"
     process_monitor_config {
-      command_keywords: "oscar_tools/trajectories/play_trajectory.py"
+      command_keywords: "oscar_tools/trajectories/play_trajectory.py -l"
     }
   }
 }

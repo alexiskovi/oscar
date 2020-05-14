@@ -41,7 +41,7 @@ def pars_arguments():
                         help='type of trajectory: 8type, 0type')
     parser.add_argument('-r', '--min_radius', type=float, required=True, dest='min_turn_radius',
                         help='minimal turn radius on trajectory')
-    parser.add_argument('-n', '--file_name', required=False,
+    parser.add_argument('-n', '--file-name', required=False, dest='file_name',
                         help='name of trajectory file, will be ' + \
                         'saved in oscar_tools/data')
     parser.add_argument('--rtk-player', required=False, action='store_true', dest='rtk_player_compatible',
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     localization_recived = False
 
     cyber.init()
-    cyber_rt_node = cyber.Node("simple_trajectory_generator")
+    cyber_rt_node = cyber.Node("oscar_tools_trajectory_generator")
     cyber_rt_node.create_reader('/apollo/localization/pose',
                           localization_pb2.LocalizationEstimate,
                           localization_callback)
@@ -110,18 +110,18 @@ if __name__ == '__main__':
 
     if (params.trajectory_type == "8type"):
         trajectory = trajGenerator.generate_8type_traj_using_4_clothoids(car,
-                                                                     params.min_turn_radius,
-                                                                     params.max_vel,
-                                                                     params.acc,
-                                                                     params.dec,
-                                                                     frequency=CTRL_FREQUENCY)
+                                                                         params.min_turn_radius,
+                                                                         params.max_vel,
+                                                                         params.acc,
+                                                                         params.dec,
+                                                                         frequency=CTRL_FREQUENCY)
     else:
         trajectory = trajGenerator.generate_0type_traj_using_4_clothoids(car,
-                                                                     params.min_turn_radius,
-                                                                     params.max_vel,
-                                                                     params.acc,
-                                                                     params.dec,
-                                                                     frequency=CTRL_FREQUENCY)
+                                                                         params.min_turn_radius,
+                                                                         params.max_vel,
+                                                                         params.acc,
+                                                                         params.dec,
+                                                                         frequency=CTRL_FREQUENCY)
 
     while (not localization_recived and not cyber.is_shutdown()):
         time.sleep(0.2)

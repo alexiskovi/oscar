@@ -57,10 +57,29 @@ function trajectory_play() {
     cd $EXEC_PATH
 }
 
-function trajectory_stop() {
+function trajectory_plot() {
+    cd $OSCAR_ROOT_DIR
+    NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectories/plot_trajectory.py")"
+    if [ "${NUM_PROCESSES}" -ne 0 ]; then
+      pkill -SIGKILL -f oscar_tools/trajectories/plot_trajectory.py
+    fi
+
+    # nohup python modules/tools/oscar_tools/trajectories/plot_trajectory.py "${@}" > modules/tools/oscar_tools/trajectories/plotting_nohup.out &
+    python modules/tools/oscar_tools/trajectories/plot_trajectory.py "${@}"
+    cd $EXEC_PATH
+}
+
+function trajectory_stop_playing() {
     NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectories/play_trajectory.py")"
     if [ "${NUM_PROCESSES}" -ne 0 ]; then
       pkill -SIGKILL -f oscar_tools/trajectories/play_trajectory.py
+    fi
+}
+
+function trajectory_stop_plotting() {
+    NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectories/plot_trajectory.py")"
+    if [ "${NUM_PROCESSES}" -ne 0 ]; then
+      pkill -SIGKILL -f oscar_tools/trajectories/plot_trajectory.py
     fi
 }
 
@@ -120,8 +139,18 @@ elif [ "$1" == "trajectory" ]; then
 
     elif [ "$2" == "play" ]; then
         trajectory_play "${@:3}"
+
+    elif [ "$2" == "plot" ]; then
+        trajectory_plot "${@:3}"
+
     elif [ "$2" == "stop" ]; then
-        trajectory_stop
+
+        if [ "$3" == "plotting" ]; then
+            trajectory_stop_plotting
+        else
+            trajectory_stop_playing
+        fi
+
     else
         printf "Possible arguments:\n"
         printf "oscar trajectory generate - Generates simple trajectories depend on params\n"

@@ -24,49 +24,6 @@ function oscarcd() {
 
 _oscar_completions()
 {
-    # if [ "${#COMP_WORDS[@]}" == "2" ]; then
-    #     #printf "${COMP_WORDS[1]}"
-    #     COMPREPLY=($(compgen -W "docker trajectory test help" -- "${COMP_WORDS[1]}"))
-    #
-    # elif [ "${#COMP_WORDS[@]}" == "3" ]; then
-    #
-    #     if [ "${COMP_WORDS[1]}" == "docker" ]; then
-    #         COMPREPLY=($(compgen -W "start stop into" -- "${COMP_WORDS[2]}"))
-    #
-    #     elif [ "${COMP_WORDS[1]}" == "trajectory" ]; then
-    #         COMPREPLY=($(compgen -W "generate play stop" -- "${COMP_WORDS[2]}"))
-    #
-    #     elif [ "${COMP_WORDS[1]}" == "test" ]; then
-    #         COMPREPLY=($(compgen -W "val1 val2" -- "${COMP_WORDS[2]}"))
-    #
-    #     else
-    #         return
-    #     fi
-    #
-    # elif [ "${#COMP_WORDS[@]}" == "4" ]; then
-    #
-    #     if [ "${COMP_WORDS[1]}" == "trajectory" ]; then
-    #
-    #         if [ "${COMP_WORDS[2]}" == "generate" ]; then
-    #             COMPREPLY=($(compgen -W "8type 0type" -- "${COMP_WORDS[3]}"))
-    #
-    #         else
-    #             return
-    #         fi
-    #
-    #     else
-    #         return
-    #     fi
-    #
-    # elif [ "${COMP_WORDS[3]}" == "8type" ] || [ "${COMP_WORDS[3]}" == "0type" ]; then
-    #     COMP_COUNT=$((${#COMP_WORDS[@]}-1))
-    #     COMPREPLY=($(compgen -W "-r -a -d -v -n --rtk-player -h" -- "${COMP_WORDS[${COMP_COUNT}]}"))
-    #
-    # elif [ "${COMP_WORDS[2]}" == "play" ]; then
-    #
-    # else
-    #   return
-    # fi
 
     if [ "${#COMP_WORDS[@]}" == "2" ]; then
         COMPREPLY=($(compgen -W "docker trajectory help" -- "${COMP_WORDS[1]}"))
@@ -81,7 +38,7 @@ _oscar_completions()
     elif [ "${COMP_WORDS[1]}" == "trajectory" ]; then
 
         if [ "${#COMP_WORDS[@]}" == "3" ]; then
-            COMPREPLY=($(compgen -W "generate play stop" -- "${COMP_WORDS[2]}"))
+            COMPREPLY=($(compgen -W "generate play plot stop" -- "${COMP_WORDS[2]}"))
 
         else
 
@@ -101,8 +58,15 @@ _oscar_completions()
                 COMP_COUNT=$((${#COMP_WORDS[@]}-1))
                 COMPREPLY=($(compgen -W "-r -n -l -h --loop --rtk-recorder" -- "${COMP_WORDS[${COMP_COUNT}]}"))
 
+            elif [ "${COMP_WORDS[2]}" == "plot" ]; then
+                COMP_COUNT=$((${#COMP_WORDS[@]}-1))
+                COMPREPLY=($(compgen -W "-r --rate --car-path --traj-frames --traj-car-footprints -n -h" -- "${COMP_WORDS[${COMP_COUNT}]}"))
+
             elif [ "${COMP_WORDS[2]}" == "stop" ]; then
-                return
+
+                if [ "${#COMP_WORDS[@]}" == "4" ]; then
+                    COMPREPLY=($(compgen -W "plotting playing" -- "${COMP_WORDS[3]}"))
+                fi
             else
                 return
             fi

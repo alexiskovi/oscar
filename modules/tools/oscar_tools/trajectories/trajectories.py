@@ -63,6 +63,11 @@ class Trajectory():
 
     def add_point(self, point):
         self.points.append(point)
+        self.points_num += 1
+
+    def remove_point(self, id):
+        self.points.pop(id)
+        self.points_num -= 1
 
 
     def transform_to(self, x, y, yaw, z=0):

@@ -51,7 +51,7 @@ class TrajectoryPlayer:
         self.nearest_point_id = 0
 
         cyber.init()
-        self.cyber_node = cyber.Node("simple_trajectory_player")
+        self.cyber_node = cyber.Node("oscar_tools_trajectory_player")
         self.cyber_trajectory_pub = self.cyber_node.create_writer('/apollo/planning',
                                                                   planning_pb2.ADCTrajectory)
 
@@ -64,15 +64,16 @@ class TrajectoryPlayer:
 
 
     def pars_arguments(self):
-        parser = ArgumentParser(description="Script load and paly simple trajectories for cars.")
+        parser = ArgumentParser(description="Script load and play simple trajectories for cars.")
         parser.add_argument('-l', '--loop', action='store_true', dest='loop',
                             help='Loop trajectory for endless movement')
         parser.add_argument('--no-loop', action='store_false', dest='loop')
         parser.set_defaults(loop=False)
         parser.add_argument('-r', '--rate', default=DEFAULT_TRAJ_PUB_RATE, dest='rate',
                             help='Desired trajectory publishing rate in Hz')
-        parser.add_argument('-n', '--file_name', help='Name of trajectory file, will be ' + \
-                                                      'saved in oscar_tools/data')
+        parser.add_argument('-n', '--file-name', dest='file_name', required=False,
+                            help='Name of trajectory file, will be ' + \
+                            'loaded from oscar_tools/data/trajectories')
         parser.add_argument('--rtk-recorder', required=False, action='store_true', dest='from_rtk_recorder',
                             help='Trajectory file will be loaded from ' + \
                             '/data/log/garage.csv (recorded by rtk_recorder)')
