@@ -64,3 +64,8 @@ source ~/.bashrc
 ```
 
 [Документация по использованию oscar_tools](oscar_tools.md)
+
+
+### Пример начала работы с OSCAR
+
+[![](http://img.youtube.com/vi/9XCLKZ7Pb8s/0.jpg)](http://www.youtube.com/watch?v=9XCLKZ7Pb8s "")
