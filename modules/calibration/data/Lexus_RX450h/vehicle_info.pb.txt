@@ -1,6 +1,6 @@
-name : "MKZ"
-brand : LINCOLN
-model : MKZ
-vehicle_id {
+name : "RX450H"
+brand : LEXUS
+model : RX
+license {
     vin : "<VIN>"
 }
