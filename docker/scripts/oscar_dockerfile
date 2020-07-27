@@ -1,0 +1,4 @@
+FROM apolloauto/apollo:dev-18.04-x86_64-20191111_1530
+
+RUN apt update && apt install -y alsa-base pulseaudio sox sudo
+RUN pip3 install pygame
