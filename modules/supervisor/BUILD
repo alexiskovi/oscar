@@ -11,7 +11,9 @@ cc_library(
         "//modules/common/util:message_util",
         "//modules/supervisor/common:supervisor_runner",
         "//modules/supervisor/proto:supervisor_proto",
+        "//modules/canbus/proto:canbus_proto",
         "//modules/supervisor/submodules/gnss:gnss_submodule",
+
     ],
 )
 
