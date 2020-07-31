@@ -1,0 +1,10 @@
+module_config {
+    module_library : "/apollo/bazel-bin/modules/supervisor/sv_lib.so"
+    timer_components {
+        class_name : "Supervisor"
+        config {
+            name: "sv_node"
+            interval: 200
+        }
+    }
+}

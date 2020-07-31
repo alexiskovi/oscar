@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+message sv_gnss_conf {
+  optional int64 not_ready_priority = 1;
+  optional double max_timeout_s = 2;
+  optional int64 timeout_priority = 3;
+  optional double max_differential_age = 4;
+  optional int64 differential_age_timeout_priority = 5;
+  optional int64 bad_sol_status_priority = 6;
+  optional int64 bad_sol_type_priority = 7;
+  optional double max_deviation_allowed = 8;
+  optional int64 bad_deviation_priority = 9;
+}

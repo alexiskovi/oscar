@@ -1,3 +1,0 @@
-timeout_priority: 26
-bad_calibration_priority: 21
-bad_solve_priority: 28

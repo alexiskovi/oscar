@@ -1,0 +1,9 @@
+not_ready_priority: 0
+max_timeout_s: 2.0
+timeout_priority: 27
+max_differential_age: 2.0
+differential_age_timeout_priority: 16
+bad_sol_status_priority: 26
+bad_sol_type_priority: 22
+max_deviation_allowed: 1.0
+bad_deviation_priority: 18

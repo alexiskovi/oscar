@@ -1,17 +1,16 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_proto_library(
-    name = "supervisor_proto",
+    name = "sv_submodule_proto",
     deps = [
-        ":supervisor_proto_lib",
+        ":sv_submodule_proto_lib",
     ],
 )
 
 proto_library(
-    name = "supervisor_proto_lib",
+    name = "sv_submodule_proto_lib",
     srcs = [
-        "sv_decision.proto",
-        "parameter_server.proto",
+        "gnss_conf.proto",
     ],
     deps = [
         "//modules/common/proto:header_proto_lib",

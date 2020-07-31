@@ -13,24 +13,24 @@
 #include "cyber/common/log.h"
 #include "modules/common/adapters/adapter_gflags.h"
 #include "cyber/component/timer_component.h"
-#include "modules/supervisor/proto/imu_priority.pb.h"
-#include "modules/drivers/gnss/proto/ins.pb.h"
+#include "modules/supervisor/submodules/proto/gnss_conf.pb.h"
+#include "modules/drivers/gnss/proto/gnss_best_pose.pb.h"
 
 
 namespace apollo {
 namespace supervisor {
 
-class IMUSupervisor : public SupervisorRunner {
+class GNSSSupervisor : public SupervisorRunner {
  public:
-  IMUSupervisor();
+  GNSSSupervisor();
   void RunOnce(const double current_time) override;
   void GetStatus(int* status, std::string* debug_msg);
  private:
   int status_;
   std::string debug_msg_;
-  std::shared_ptr<apollo::cyber::Node> sv_sub_node_;
-  std::shared_ptr<apollo::cyber::Reader<apollo::drivers::gnss::InsStat>> imu_reader_;
-  SV_IMU_Conf imu_conf_;
+  std::shared_ptr<apollo::cyber::Node> sv_gnss_node_;
+  std::shared_ptr<apollo::cyber::Reader<apollo::drivers::gnss::GnssBestPose>> best_pose_reader_;
+  sv_gnss_conf gnss_conf_;
 };
 
 }
