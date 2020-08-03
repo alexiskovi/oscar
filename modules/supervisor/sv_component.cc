@@ -42,12 +42,26 @@ void Supervisor::GetCurrentMode(bool* status) {
   }
 }
 
+void PreferencesCallback(const std::shared_ptr<apollo::supervisor::sv_set_get>& msg) {
+  if(msg->cmd() == "get_parameters") {
+    AERROR << "Sending parameters..";
+    return void();
+  }
+  if(msg->cmd() == "change_parameters") {
+    AERROR << "Changing parameters...";
+    return void();
+  }
+  AERROR << "Unknown cmd parameter: " << msg->cmd();
+}
+
 bool Supervisor::Init() {
   // Collecting sub-supervisors
   supervisors_.emplace_back(new GNSSSupervisor());
 
   std::shared_ptr<apollo::cyber::Node> supervisor_node_(apollo::cyber::CreateNode("supervisor"));
   writer_ = supervisor_node_->CreateWriter<apollo::supervisor::sv_decision>("/supervisor/decision");
+
+  preferences_reader_ = supervisor_node_->CreateReader<apollo::supervisor::sv_set_get>("/supervisor/preferences", apollo::supervisor::PreferencesCallback);
 
   // Loading preferences
   ACHECK(

@@ -2,15 +2,15 @@ import time
 import argparse
 import sys
 from cyber_py3 import cyber
-from modules.supervisor.proto.general_msg_pb2 import SV_info
+from modules.supervisor.sv_decision_msg_pb2 import sv_decision
 
 TIMEOUT_CONST_TIME = 0.5
 STD_DELAY = 0.2
 timer_set = True
 
 parser = argparse.ArgumentParser(description='Specify message content')
-parser.add_argument('--f', type=float, default=0, help='FATAL after F seconds')
-parser.add_argument('--t', type=float, default=0, help='TIMEOUT after T seconds')
+parser.add_argument('--f', type=float, default=0, help='Start sending FATAL after F seconds')
+parser.add_argument('--t', type=float, default=0, help='Start sending TIMEOUT after T seconds')
 args = parser.parse_args()
 
 if args.f == 0 and args.t > 0:
@@ -39,7 +39,7 @@ while not(cyber.is_shutdown()):
 
     current_time = time.time()
 
-    msg = SV_info()
+    msg = sv_decision()
     msg.header.timestamp_sec = current_time
 
     if current_time - begin_time < timer_s or not(timer_set):

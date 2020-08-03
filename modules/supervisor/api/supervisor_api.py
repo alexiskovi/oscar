@@ -1,5 +1,5 @@
 from cyber_py3 import cyber
-from modules.supervisor.proto.parameter_server_pb2 import sv_parameters
+from modules.supervisor.proto.parameter_server_pb2 import sv_set_get
 from modules.supervisor.proto.sv_decision_pb2 import sv_decision
 
 
@@ -17,26 +17,25 @@ class SupervisorPreferences:
         self.DEBUG_MESSAGE = decision_data.message
 
     def create_preferences_publisher(self):
-        self.preferences_pub = self.node.create_writer("/supervisor/preferences", sv_parameters, 5)
+        self.preferences_pub = self.node.create_writer("/supervisor/preferences", sv_set_get, 5)
 
     def create_decision_subscriber(self):
         self.node.create_reader("/supervisor/decision", sv_decision, self.decision_callback)
 
-    def get_current_config(self):
-        # to do
-        pass
-
-    def send_config_change(self, module_name, config_name, new_value):
+    def send_config_change(self, cmd, module_name="", config_name="", new_value=""):
         # Publishes changing of *config_name* in
         # module *module_name*. New config value is
         # int code *new_value*
         
-        msg = sv_parameters()
-        msg.module_name = module_name
-        msg.config_name = config_name
-        msg.new_value = new_value
+        msg = sv_set_get()
+        msg.cmd = cmd
+        if not(module_name==""):
+            msg.module_name = module_name
+            msg.config_name = config_name
+            msg.new_value = new_value
 
         self.preferences_pub.write(msg)
+        print(msg.cmd)
 
     def __exit__(self):
         cyber.shutdown()

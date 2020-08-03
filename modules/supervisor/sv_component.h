@@ -24,6 +24,7 @@ class Supervisor : public apollo::cyber::TimerComponent {
   void WarningSignal();
   bool LaunchParameterService();
   void GetCurrentMode(bool* status);
+  void PreferencesCallback(const std::shared_ptr<apollo::supervisor::sv_set_get>& msg);
   ~Supervisor();
  private:
   std::shared_ptr<apollo::cyber::Node> supervisor_node_;
@@ -35,6 +36,8 @@ class Supervisor : public apollo::cyber::TimerComponent {
   parameters sv_preferences_;
   std::shared_ptr<cyber::Reader<apollo::canbus::ChassisDetail>>
       chassis_detail_reader_;
+  std::shared_ptr<cyber::Reader<apollo::supervisor::sv_set_get>>
+      preferences_reader_;
 };
 
 CYBER_REGISTER_COMPONENT(Supervisor)

@@ -296,6 +296,9 @@ class Node(object):
         return Client(c, response_data_type)
 
     def service_callback(self, name):
+        print(self.services)
+        name = name.decode('UTF-8')
+        print(name)
         v = self.services[name]
         msg_str = _CYBER.PyService_read(v[0])
         if (len(msg_str) > 0):
