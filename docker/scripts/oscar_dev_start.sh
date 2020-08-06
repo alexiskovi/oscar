@@ -8,7 +8,7 @@ declare -a images_list=("apolloauto/apollo:paddlepaddle_volume-x86_64-2.0.0" "ap
 
 dev_container="apollo_dev_oscar5_$USER"
 apollo_base_image="apolloauto/apollo:$VERSION_X86_64"
-dev_image="apollo_oscar_dev_$USER"
+#dev_image="apollo_oscar_dev_$USER"
 
 function show_usage()
 {
@@ -180,10 +180,10 @@ ${DOCKER_RUN} -it \
     -v ${XDG_RUNTIME_DIR}/pulse/native:${XDG_RUNTIME_DIR}/pulse/native \
     -v ~/.config/pulse/cookie:/root/.config/pulse/cookie \
     --group-add $(getent group audio | cut -d: -f3) \
-    $dev_image \
+    $apollo_base_image \
     /bin/bash
 if [ $? -ne 0 ];then
-    echo "Failed to start docker container \"${dev_container}\" based on image: $dev_image"
+    echo "Failed to start docker container \"${dev_container}\" based on image: $apollo_base_image"
     exit 1
 fi
 
@@ -219,6 +219,7 @@ do
       printf "\033[31m[FAILED]\033[0m\n"
     fi
 done
+run_new_containers
 exit 0
 }
 
@@ -229,7 +230,6 @@ function pull_images()
         docker pull $i
     done
     docker pull ${apollo_base_image}
-    docker build -f docker/scripts/oscar_dockerfile -t ${dev_image} .
     exit 0
 }
 
@@ -298,8 +298,7 @@ function main()
     if [ "$failed_flag" -eq 0 ];then
         print_into_usage
     else
-        #Running new images due to failed ones"
-        run_new_containers
+        echo "No containers found. Try to renew containers with -r option."
     fi
 }
 
