@@ -55,8 +55,9 @@ void Steering7FB::UpdateData(uint8_t *data) {
         acc_res_on_cnt = 0;
     }
     else {
-        if ( ( acc_res_on_cnt <= 690 ) && ( acc_res_on_cnt >= 640  ) )  {
-            AERROR << "Previous ACC RES button state is OFF. Try to enable ACC RES button. Cnt: " << acc_res_on_cnt;
+        if ( ( ( acc_res_on_cnt <= 690 ) && ( acc_res_on_cnt >= 640  ) ) || 
+           ( ( acc_res_on_cnt <= 970 ) && ( acc_res_on_cnt >= 890  ) ) )	{
+            AERROR << "!!! Previous ACC RES button state is OFF. Try to enable ACC RES button. Cnt: " << acc_res_on_cnt;
             frame_5.set_value(0x01, 0, 8);
             /* Enable acc RES+ button */
             acc_res_on = true;

@@ -1,0 +1,6 @@
+name : "RX450H"
+brand : LEXUS
+model : RX
+license {
+    vin : "<VIN>"
+}

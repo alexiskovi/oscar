@@ -1,0 +1,17 @@
+header:
+  seq: 0
+  stamp:
+    secs: 0
+    nsecs: 0
+  frame_id: world
+child_frame_id: front_6mm
+transform:
+  rotation:
+    y: 0.7071068
+    x: 0.0
+    w: 0.7071068
+    z: 0.0
+  translation:
+    x: -0.4
+    y: 2.0
+    z: 0.7

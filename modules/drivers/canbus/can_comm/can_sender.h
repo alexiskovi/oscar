@@ -111,6 +111,8 @@ class SenderMessage {
    */
   int32_t curr_period() const;
 
+   void incrSendCounter() { protocol_data_->incrCounter(); }
+
  private:
   uint32_t message_id_ = 0;
   ProtocolData<SensorType> *protocol_data_ = nullptr;
@@ -307,6 +309,7 @@ void CanSender<SensorType>::PowerSendThreadFunc() {
       if (enable_log()) {
         ADEBUG << "send_can_frame#" << can_frame.CanFrameString();
       }
+      message.incrSendCounter();
     }
     delta_period = new_delta_period;
     tm_end = absl::ToUnixMicros(common::time::Clock::Now());

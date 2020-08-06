@@ -47,7 +47,14 @@ void Steering7F1::UpdateData(uint8_t *data) {
         acc_on_cnt = 0;
     }
     else {
-        if ( acc_on_cnt <=5 ) {
+	if ( acc_on_cnt <=40 ) {
+        //if ( !acc_button_on ) {
+            AERROR << "Previous ACC ON button state is OFF. Try to enable ACC ON button. Cnt: " << acc_on_cnt;
+            frame.set_value(0x01, 0, 8);
+            /* Enable acc ON button */
+            acc_button_on = true;
+        }
+	else if ( acc_on_cnt <= 60 ) {
         //if ( !acc_button_on ) {
             AERROR << "Previous ACC ON button state is OFF. Try to enable ACC ON button. Cnt: " << acc_on_cnt;
             frame.set_value(0x05, 0, 8);
@@ -56,7 +63,7 @@ void Steering7F1::UpdateData(uint8_t *data) {
         }
         else if ( ( acc_on_cnt <=310 ) && ( acc_on_cnt >=300  ) )  {
         //else if ( !acc_button_set ) {
-            AERROR << "Previous ACC SET button state is OFF. Try to enable ACC SET button. Cnt: " << acc_on_cnt;
+            AERROR << "!!! Previous ACC SET button state is OFF. Try to enable ACC SET button. Cnt: " << acc_on_cnt;
             frame.set_value(0x09, 0, 8);
             /* Enable acc SET- button */
             acc_button_set = true;

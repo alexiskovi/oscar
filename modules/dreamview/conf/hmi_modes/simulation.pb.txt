@@ -45,6 +45,26 @@ modules {
   }
 }
 modules {
+  key: "Traj_player"
+  value: {
+    start_command: "nohup oscar trajectory play --no-loop &"
+    stop_command: "oscar trajectory stop"
+    process_monitor_config {
+      command_keywords: "oscar_tools/trajectories/play_trajectory.py --no-loop"
+    }
+  }
+}
+modules {
+  key: "Traj_player_l"
+  value: {
+    start_command: "nohup oscar trajectory play -l &"
+    stop_command: "oscar trajectory stop"
+    process_monitor_config {
+      command_keywords: "oscar_tools/trajectories/play_trajectory.py -l"
+    }
+  }
+}
+modules {
   key: "Data Recorder"
   value: {
     start_command: "/apollo/scripts/record_bag.py --start"

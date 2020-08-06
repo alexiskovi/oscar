@@ -1,0 +1,110 @@
+data {
+    format: NOVATEL_BINARY
+    serial {
+        device: "/dev/ttyUSB0"
+        baud_rate: 115200
+    }
+}
+
+#rtk_from {
+#    format: RTCM_V3
+#    ntrip {
+#        address: "185.129.96.88"
+#        port: 8081
+#        mount_point: "STARLINE0"
+#        user: "Starline1"
+#        password: "Starline1234567890"
+#        timeout_s: 5
+#    }
+#    push_location: true
+#}
+
+rtk_to {
+    format: NOVATEL_BINARY
+    serial {
+        device: "/dev/ttyUSB1"
+        baud_rate: 115200
+    }
+}
+
+command {
+    format: NOVATEL_BINARY
+    serial {
+        device: "/dev/ttyUSB2"
+        baud_rate: 115200
+    }
+}
+
+rtk_solution_type: RTK_RECEIVER_SOLUTION
+gpsbin_folder: "/apollo/data/gpsbin"
+proj4_text: "+proj=utm +zone=36 +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
+
+tf {
+    frame_id: "world"
+    child_frame_id: "novatel"
+    enable: true
+}
+
+wheel_parameters: "SETWHEELPARAMETERS 100 1 1\r\n"
+
+#########################################################################
+# notice: only for debug, won't configure device through driver online!!!
+#########################################################################
+login_commands: "WIFICONFIG OFF\r\n"
+login_commands: "UNLOGALL THISPORT\r\n"
+login_commands: "INSCOMMAND ENABLE\r\n"
+login_commands: "SETIMUORIENTATION 5\r\n"
+login_commands: "ALIGNMENTMODE AUTOMATIC\r\n"
+login_commands: "VEHICLEBODYROTATION 0 0 0\r\n"
+login_commands: "SERIALCONFIG COM1 9600 N 8 1 N OFF\r\n"
+login_commands: "SERIALCONFIG COM2 9600 N 8 1 N OFF\r\n"
+login_commands: "INTERFACEMODE COM1 NOVATEL NOVATEL ON\r\n"
+#login_commands: "INTERFACEMODE USB2 RTCMV3 NONE OFF\r\n"
+login_commands: "PPSCONTROL ENABLE POSITIVE 1.0 10000\r\n"
+login_commands: "MARKCONTROL MARK1 ENABLE POSITIVE\r\n"
+login_commands: "EVENTINCONTROL MARK1 ENABLE POSITIVE 0 2\r\n"
+login_commands: "RTKSOURCE AUTO ANY\r\n"
+login_commands: "PSRDIFFSOURCE AUTO ANY\r\n"
+#login_commands: "SETINSTRANSLATION ANT1 0.00 0.39 0.95 0.03 0.03 0.03\r\n"
+#login_commands: "SETINSTRANSLATION ANT2 0.00 1.89 0.92 0.03 0.03 0.03\r\n"
+login_commands: "SETINSTRANSLATION ANT1 -0.55 0.25 0.90 0.03 0.03 0.03\r\n"
+login_commands: "SETINSTRANSLATION ANT2 0.55 0.25 0.90 0.03 0.03 0.03\r\n"
+login_commands: "SETINSTRANSLATION USER 0.00 0.00 0.00\r\n"
+login_commands: "THISANTENNATYPE NOV804\r\n"
+login_commands: "BASEANTENNATYPE NOV850\r\n"
+login_commands: "EVENTOUTCONTROL MARK2 ENABLE POSITIVE 999999990 10\r\n"
+login_commands: "EVENTOUTCONTROL MARK1 ENABLE POSITIVE 500000000 500000000\r\n"
+
+login_commands: "LOG COM2 GPRMC ONTIME 1.0 0.25\r\n"
+login_commands: "LOG USB1 GPGGA ONTIME 1.0\r\n"
+login_commands: "LOG USB1 BESTGNSSPOSB ONTIME 0.1\r\n"
+login_commands: "LOG USB1 BESTGNSSVELB ONTIME 0.1\r\n"
+login_commands: "LOG USB1 BESTPOSB ONTIME 0.1\r\n"
+login_commands: "LOG USB1 INSPVAXB ONTIME 1\r\n"
+login_commands: "LOG USB1 INSPVASB ONTIME 0.01\r\n"
+login_commands: "LOG USB1 CORRIMUDATASB ONTIME 0.01\r\n"
+login_commands: "LOG USB1 RAWIMUSXB ONNEW 0 0\r\n"
+login_commands: "LOG USB1 MARK1PVAB ONNEW\r\n"
+login_commands: "LOG USB1 HEADING2A ONNEW\r\n"
+login_commands: "LOG USB1 HEADINGRATEA ONCHANGED\r\n"
+
+login_commands: "LOG USB1 RANGEB ONTIME 1\r\n"
+login_commands: "LOG USB1 BDSEPHEMERISB ONTIME 15\r\n"
+login_commands: "LOG USB1 GPSEPHEMB ONTIME 15\r\n"
+login_commands: "LOG USB1 GLOEPHEMERISB ONTIME 15\r\n"
+
+login_commands: "LOG USB1 INSCONFIGB ONCE\r\n"
+login_commands: "LOG USB1 VEHICLEBODYROTATIONB ONCHANGED\r\n"
+#login_commands: "NTRIPCONFIG NCOM1 CLIENT V1 185.129.96.88:8081 STARLINE0 Starline1 Starline1234567890\r\n"
+login_commands: "NTRIPCONFIG NCOM1 CLIENT V1 178.79.147.17:7047 SPB2 hive90097 nigmatulin@starline.ru\r\n"
+
+login_commands: "FILEDELETE *\r\n"
+login_commands: "FILEMEDIACONFIG INTERNAL_FLASH\r\n"
+login_commands: "FILECONFIG OPEN\r\n"
+login_commands: "LOG FILE VERSIONA\r\n"
+ 
+login_commands: "LOG FILE BESTPOSA ONTIME 1\r\n"
+login_commands: "LOG FILE RTKPOSA ONTIME 1\r\n"
+login_commands: "LOG FILE BESTSATS ONTIME 1\r\n"
+
+login_commands: "SAVECONFIG\r\n"

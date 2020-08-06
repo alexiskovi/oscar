@@ -3,7 +3,7 @@ import React from "react";
 import classNames from "classnames";
 
 import RENDERER from "renderer";
-import loaderImg from "assets/images/logo_apollo.png";
+import loaderImg from "assets/images/logo_starline.png";
 import loaderGif from "assets/images/loader_apollo.gif";
 
 export default class Loader extends React.PureComponent {

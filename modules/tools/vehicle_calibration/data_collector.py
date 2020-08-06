@@ -99,13 +99,46 @@ class DataCollector(object):
         self.controlcmd.steering_rate = 100
         self.controlcmd.steering_target = 0
         self.controlcmd.gear_location = chassis_pb2.Chassis.GEAR_DRIVE
+        self.control_pub.write(self.controlcmd)
+
+        #
+        # BE CAREFUL !
+        # HERE IS A BIG CRUTCH !
+        #
+        
+        # Stopping car after waiting for cruise to become active
+
+        if len(self.cmd) == 4:
+
+            print('Wait for stop')
+            has_stopped = False
+            has_started = False
+            while not(has_stopped):
+                
+                self.controlcmd.throttle = 0
+                self.controlcmd.brake = 10
+                self.controlcmd.steering_rate = 100
+                self.controlcmd.steering_target = 0
+                self.controlcmd.gear_location = chassis_pb2.Chassis.GEAR_DRIVE
+                self.control_pub.write(self.controlcmd)
+                time.sleep(0.2)
+
+                if not(has_started):
+                    has_started = self.vehicle_speed > 1.0
+
+                else:
+                    if self.vehicle_speed < 0.01:
+                        has_stopped = True
+
+            print('Stopped. Beginning calibration loop')
 
         self.canmsg_received = False
-
+        self.case = 'a'
+        
         while self.in_session:
             now = cyber_time.Time.now().to_sec()
             self.publish_control()
-            sleep_time = 0.01 - (cyber_time.Time.now().to_sec() - now)
+            sleep_time = 0.25 - (cyber_time.Time.now().to_sec() - now)
             if sleep_time > 0:
                 time.sleep(sleep_time)
 
@@ -226,8 +259,8 @@ def main():
                 if os.path.exists(data_collector.outfile):
                     os.remove(data_collector.outfile)
                 else:
-                    print('File does not exist: %s' % date_collector.outfile)
-        elif len(cmd) == 3:
+                    print('File does not exist: %s' % data_collector.outfile)
+        elif len(cmd) == 3 or len(cmd) == 4:
             data_collector.run(cmd)
 
 if __name__ == '__main__':

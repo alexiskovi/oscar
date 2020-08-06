@@ -166,7 +166,7 @@ DEFINE_double(smoothed_reference_line_max_diff, 5.0,
               "Maximum position difference between the smoothed and the raw "
               "reference lines.");
 
-DEFINE_double(planning_upper_speed_limit, 31.3,
+DEFINE_double(planning_upper_speed_limit, 4.5,
               "Maximum speed (m/s) in planning.");
 
 DEFINE_double(trajectory_time_length, 8.0, "Trajectory time length");
@@ -320,7 +320,7 @@ DEFINE_bool(enable_multi_thread_in_dp_st_graph, false,
 
 /// Lattice Planner
 DEFINE_double(numerical_epsilon, 1e-6, "Epsilon in lattice planner.");
-DEFINE_double(default_cruise_speed, 5.0, "default cruise speed");
+DEFINE_double(default_cruise_speed, 4.0, "default cruise speed");
 DEFINE_double(trajectory_time_resolution, 0.1,
               "Trajectory time resolution in planning");
 DEFINE_double(trajectory_space_resolution, 1.0,

@@ -742,10 +742,11 @@ void LexusRxController::Brake(double pedal) {
     */
     //pedal *= 1.5;
     if ( pedal >= 0.01 ) {
+       //AERROR << "Receive breaking pedal: " << pedal;
        throttle_343_->set_pedal(-pedal);
     }
-    else
-       AINFO << "Break value is zero. Ignore";
+    //else
+    //   AINFO << "Break value is zero. Ignore";
 }
 
 // drive with old acceleration
@@ -759,19 +760,23 @@ void LexusRxController::Throttle(double pedal) {
         return;
     }
     */
-    //if ( pedal >= 1.0 && pedal <= 40.0) {
+    if ( pedal >= 1.0 && pedal <= 100.0) {
+	//AERROR << "Receive throttle: " << pedal;
         throttle_343_->set_pedal(pedal);
-    //}
+    }
 }
 
 // drive with acceleration/deceleration
 // acc:-7.0 ~ 5.0, unit:m/s^2
 void LexusRxController::Acceleration(double acc) {
+	AERROR << "Receive acceleration command: " << acc;
+  /*
   if (driving_mode() != Chassis::COMPLETE_AUTO_DRIVE &&
       driving_mode() != Chassis::AUTO_SPEED_ONLY) {
     AINFO << "The current drive mode does not need to set acceleration.";
     return;
   }
+  */
   // None
 }
 

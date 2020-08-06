@@ -17,3 +17,5 @@
 ###############################################################################
 
 # Setup a newly-started container, including one-time and daemon jobs.
+
+apt update && apt install -y alsa-base pulseaudio sox sudo

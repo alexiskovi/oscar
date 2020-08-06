@@ -43,27 +43,29 @@
     bash scripts/bootstrap.sh
     ```
 
-    В случае отсутствия UI Dreamview по localhost:8888 требуется пересобрать frontend Dreamview в подгрузкой соответствующих зависимостей:
-
-    ```
-    cd modules/dreamview/frontend
-    yarn install && yarn build
-    ```
-
     В случае наличия UI установку можно считать законченой. Работу с проектом можно начать используя [симулятор](lgsvl_simulator.md).
 
 
-[Устранение возможных проблем](docs/oscar/possible_problems.md)
+[Устранение возможных проблем](possible_problems.md)
 
 ### Настройка и калибровка датчиков
 
-Для калибровки камер, а так же определения и настройки фокусного растояния камер ознакомтесь с соответствующией инструкцией - [README](../../scripts/oscar/sensor_calibration/camera/README.md)
+Для калибровки камер, а так же определения и настройки фокусного растояния камер ознакомтесь с соответствующией инструкцией - [README](../../scripts/oscar/sensor_calibration/camera/README.md).
 
-### oscar tools
+### oscar_tools
 
-Для использования oscar tools нужно добавить соответствующие переменные окружения:
+*oscar_tools* - набор утилит, позволяющий упростить навигацию по проекту и реализующий интерфейс к разрабатываему в рамках проекта ПО.
+
+Для использования *oscar_tools* вне контейнера задайте соответствующие переменные окружения:
 
 ```
 echo "source path-to-oscar-root/scripts/oscar/oscar_tools/setup.sh" >> ~/.bashrc
 source ~/.bashrc
 ```
+
+[Документация по использованию oscar_tools](oscar_tools.md)
+
+
+### Пример начала работы с OSCAR
+
+[![](http://img.youtube.com/vi/9XCLKZ7Pb8s/0.jpg)](http://www.youtube.com/watch?v=9XCLKZ7Pb8s "")

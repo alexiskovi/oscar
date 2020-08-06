@@ -33,7 +33,7 @@ message ControlConf {
   optional double lock_steer_speed = 15 [default = 0.081];
   optional bool enable_navigation_mode_error_filter = 16 [default = false];
   optional bool enable_navigation_mode_position_update = 17 [default = true];
-  optional bool enable_persistent_estop = 18 [default = true];
+  optional bool enable_persistent_estop = 18 [default = false];
 
   // original config
   optional double control_period = 19;

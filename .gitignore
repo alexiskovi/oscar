@@ -66,3 +66,6 @@ docs/demo_guide/*.record
 
 # Bash Environment
 .dev_bash_hist
+
+# oscar_tools data
+modules/tools/oscar_tools/data/

@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 
+###############################################################################
+# Copyright 2019 Nikolay Dema. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+###############################################################################
+
 OSCAR_ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../../.." && pwd )"
 
 OSCAR_SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -24,45 +40,68 @@ function docker_into() {
     cd $EXEC_PATH
 }
 
-function trajectory_generation() {
+function generate_trajectory() {
     cd $OSCAR_ROOT_DIR
-    NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectory_generator.py")"
-    if [ "${NUM_PROCESSES}" -ne 0 ]; then
-      pkill -SIGKILL -f oscar_tools/trajectory_generator.py
-    fi
-
-    python modules/tools/oscar_tools/trajectory_generator.py
+    python modules/tools/oscar_tools/trajectories/generate_trajectory.py "${@}"
     cd $EXEC_PATH
 }
 
 function trajectory_play() {
     cd $OSCAR_ROOT_DIR
-    NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectory_player.py")"
+    NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectories/play_trajectory.py")"
     if [ "${NUM_PROCESSES}" -ne 0 ]; then
-      pkill -SIGKILL -f oscar_tools/trajectory_player.py
+      pkill -SIGKILL -f oscar_tools/trajectories/play_trajectory.py
     fi
 
-    python modules/tools/oscar_tools/trajectory_player.py
+    python modules/tools/oscar_tools/trajectories/play_trajectory.py "${@}"
     cd $EXEC_PATH
 }
 
-function trajectory_stop() {
-    pkill -SIGKILL -f oscar_tools/trajectory_player.py
+function trajectory_plot() {
+    cd $OSCAR_ROOT_DIR
+    NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectories/plot_trajectory.py")"
+    if [ "${NUM_PROCESSES}" -ne 0 ]; then
+      pkill -SIGKILL -f oscar_tools/trajectories/plot_trajectory.py
+    fi
+
+    # nohup python modules/tools/oscar_tools/trajectories/plot_trajectory.py "${@}" > modules/tools/oscar_tools/trajectories/plotting_nohup.out &
+    python modules/tools/oscar_tools/trajectories/plot_trajectory.py "${@}"
+    cd $EXEC_PATH
+}
+
+function trajectory_stop_playing() {
+    NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectories/play_trajectory.py")"
+    if [ "${NUM_PROCESSES}" -ne 0 ]; then
+      pkill -SIGKILL -f oscar_tools/trajectories/play_trajectory.py
+    fi
+}
+
+function trajectory_stop_plotting() {
+    NUM_PROCESSES="$(pgrep -c -f "oscar_tools/trajectories/plot_trajectory.py")"
+    if [ "${NUM_PROCESSES}" -ne 0 ]; then
+      pkill -SIGKILL -f oscar_tools/trajectories/plot_trajectory.py
+    fi
 }
 
 function print_help() {
     printf "Possible arguments:\n"
-    printf "oscar docker start - launches all apollo docker containers\n"
-    printf "oscar docker stop  - stops all apollo docker containers\n"
-    printf "oscar docker into  - open bash in apollo docker container\n"
+    printf "oscar docker start - Launches all apollo docker containers\n"
+    printf "oscar docker stop  - Stops all apollo docker containers\n"
+    printf "oscar docker into  - Open bash in apollo docker container\n"
     printf "\n"
-    printf "oscar trajectory generate - generates\n"
-    printf "oscar trajectory paly     - play\n"
-    printf "oscar trajectory stop     - stops\n"
+    printf "oscar trajectory generate - Generates simple trajectories depend on params\n"
+    printf "                            Possible trajectory types:\n"
+    printf "                               8type - Eight-type trajectory with trapezoidal linear\n"
+    printf "                                       velocity profile and constant sharpness\n"
+    printf "                               0type - Zero-type trajectory with trapezoidal linear\n"
+    printf "                                       velocity profile and constant sharpness\n"
+    printf "oscar trajectory paly     - Play simple trajectories depend on params\n"
+    printf "oscar trajectory stop     - Stops playing and recording trajectory\n"
     printf "\n"
-    printf "oscar help         - show this help\n"
+    printf "oscar help         - Show this help\n"
+    printf "\n"
+    printf "Plaese use Tab to get autocompleted arguments.\n"
 }
-
 
 if [ -z "$1" ]; then
   echo "No command passed\n"
@@ -80,24 +119,43 @@ if [ "$1" == "docker" ]; then
         docker_into
     else
         printf "Possible arguments:\n"
-        printf "start - launches all apollo docker containers\n"
-        printf "stop -  stops all apollo docker containers\n"
-        printf "into -  open bash in apollo docker container\n"
+        printf "start - Launches all apollo docker containers\n"
+        printf "stop -  Stops all apollo docker containers\n"
+        printf "into -  Open bash in apollo docker container\n"
     fi
 
 
 elif [ "$1" == "trajectory" ]; then
     if [ "$2" == "generate" ]; then
-        trajectory_generation
+        if [ "$3" == "8type" ] || [ "$3" == "0type" ]; then
+            generate_trajectory "-t" "${3}" "${@:4}"
+        else
+            printf "Possible trajectory types:\n"
+            printf "   8type - Eight-type trajectory with trapezoidal linear\n"
+            printf "           velocity profile and constant sharpness\n"
+            printf "   0type - Zero-type trajectory with trapezoidal linear\n"
+            printf "           velocity profile and constant sharpness\n"
+        fi
+
     elif [ "$2" == "play" ]; then
-        trajectory_play
+        trajectory_play "${@:3}"
+
+    elif [ "$2" == "plot" ]; then
+        trajectory_plot "${@:3}"
+
     elif [ "$2" == "stop" ]; then
-        trajectory_stop
+
+        if [ "$3" == "plotting" ]; then
+            trajectory_stop_plotting
+        else
+            trajectory_stop_playing
+        fi
+
     else
         printf "Possible arguments:\n"
-        printf "generate - generates\n"
-        printf "paly     - play\n"
-        printf "stop     - stops\n"
+        printf "oscar trajectory generate - Generates simple trajectories depend on params\n"
+        printf "oscar trajectory paly     - Play simple trajectories depend on params\n"
+        printf "oscar trajectory stop     - Stops playing and recording trajectory\n"
     fi
 
 elif [ "$1" == "help" ]; then
