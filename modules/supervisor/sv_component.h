@@ -6,6 +6,7 @@
 #include "modules/common/time/time.h"
 #include "cyber/component/timer_component.h"
 #include "cyber/cyber.h"
+#include "boost/bind.hpp"
 #include "modules/supervisor/common/supervisor_runner.h"
 #include "modules/supervisor/proto/sv_decision.pb.h"
 #include "modules/supervisor/proto/parameter_server.pb.h"
@@ -22,8 +23,10 @@ class Supervisor : public apollo::cyber::TimerComponent {
   bool Proc() override;
   void ErrorSignal();
   void WarningSignal();
-  bool LaunchParameterService();
   void GetCurrentMode(bool* status);
+  void SendDefinedParameters();
+  void SendAllParameters();
+  void ChangeParameter(std::string module, std::string parameter, int new_value);
   void PreferencesCallback(const std::shared_ptr<apollo::supervisor::sv_set_get>& msg);
   ~Supervisor();
  private:

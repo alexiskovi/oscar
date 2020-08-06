@@ -12,7 +12,6 @@ class SupervisorPreferences:
         self.DEBUG_MESSAGE = "no msg recieved"
 
     def decision_callback(self, decision_data):
-        # Callback from /supervisor/decision
         self.CURRENT_GLOBAL_STATUS = decision_data.status
         self.DEBUG_MESSAGE = decision_data.message
 
@@ -22,11 +21,7 @@ class SupervisorPreferences:
     def create_decision_subscriber(self):
         self.node.create_reader("/supervisor/decision", sv_decision, self.decision_callback)
 
-    def send_config_change(self, cmd, module_name="", config_name="", new_value=""):
-        # Publishes changing of *config_name* in
-        # module *module_name*. New config value is
-        # int code *new_value*
-        
+    def send_config_change(self, cmd, module_name="", config_name="", new_value=""):        
         msg = sv_set_get()
         msg.cmd = cmd
         if not(module_name==""):

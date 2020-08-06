@@ -42,13 +42,30 @@ void Supervisor::GetCurrentMode(bool* status) {
   }
 }
 
-void PreferencesCallback(const std::shared_ptr<apollo::supervisor::sv_set_get>& msg) {
+void Supervisor::SendAllParameters() {
+  AERROR << "Sending all parameters";
+}
+
+void Supervisor::SendDefinedParameters() {
+  AERROR << "Sending defined parameter";
+}
+
+void Supervisor::ChangeParameter(std::string module, std::string parameter, int new_value) {
+  AERROR << "Changing parameter";
+}
+
+void Supervisor::PreferencesCallback(const std::shared_ptr<apollo::supervisor::sv_set_get>& msg) {
   if(msg->cmd() == "get_parameters") {
-    AERROR << "Sending parameters..";
+    if(msg->module_name() != "") {
+      Supervisor::SendDefinedParameters();
+    }
+    else {
+      Supervisor::SendAllParameters();
+    }
     return void();
   }
   if(msg->cmd() == "change_parameters") {
-    AERROR << "Changing parameters...";
+    Supervisor::ChangeParameter(msg->module_name(), msg->config_name(), msg->new_value());
     return void();
   }
   AERROR << "Unknown cmd parameter: " << msg->cmd();
@@ -61,7 +78,8 @@ bool Supervisor::Init() {
   std::shared_ptr<apollo::cyber::Node> supervisor_node_(apollo::cyber::CreateNode("supervisor"));
   writer_ = supervisor_node_->CreateWriter<apollo::supervisor::sv_decision>("/supervisor/decision");
 
-  preferences_reader_ = supervisor_node_->CreateReader<apollo::supervisor::sv_set_get>("/supervisor/preferences", apollo::supervisor::PreferencesCallback);
+  preferences_reader_ = supervisor_node_->CreateReader<apollo::supervisor::sv_set_get>
+    ("/supervisor/preferences", boost::bind(&Supervisor::PreferencesCallback, this, _1));
 
   // Loading preferences
   ACHECK(
