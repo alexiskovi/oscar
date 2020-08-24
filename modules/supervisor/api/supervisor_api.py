@@ -2,6 +2,12 @@ from cyber_py3 import cyber
 from modules.supervisor.proto.parameter_server_pb2 import sv_set_get
 from modules.supervisor.proto.sv_decision_pb2 import sv_decision
 
+CHANGE_PARAMETER = "change_parameters"
+SUPERVISOR_MODULE = "sv"
+GNSS_MODULE = "gnss"
+DEBUG_MODE = "debug_mode_on"
+SOUND_MODE = "sound_on"
+
 
 class SupervisorPreferences:
 
@@ -21,16 +27,21 @@ class SupervisorPreferences:
     def create_decision_subscriber(self):
         self.node.create_reader("/supervisor/decision", sv_decision, self.decision_callback)
 
-    def send_config_change(self, cmd, module_name="", config_name="", new_value=""):        
+    def DefineGNSSSoundState(self, state):
         msg = sv_set_get()
-        msg.cmd = cmd
-        if not(module_name==""):
-            msg.module_name = module_name
-            msg.config_name = config_name
-            msg.new_value = new_value
-
+        msg.cmd = CHANGE_PARAMETER
+        msg.module_name = GNSS_MODULE
+        msg.config_name = SOUND_MODE
+        msg.new_value = int(state)
         self.preferences_pub.write(msg)
-        print(msg.cmd)
+
+    def DefineGNSSDebugState(self, state):
+        msg = sv_set_get()
+        msg.cmd = CHANGE_PARAMETER
+        msg.module_name = GNSS_MODULE
+        msg.config_name = DEBUG_MODE
+        msg.new_value = int(state)
+        self.preferences_pub.write(msg)
 
     def __exit__(self):
         cyber.shutdown()

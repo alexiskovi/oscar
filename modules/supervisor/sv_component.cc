@@ -7,6 +7,10 @@ using apollo::cyber::Time;
 DEFINE_bool(sound_auto_only, true,
             "Make sound signals only in autonomous mode");  
 
+DEFINE_string(sv_preferences_file, "/apollo/modules/supervisor/conf/preferences.yaml",
+            "Path to supervisor submodules preferences file");  
+
+
 namespace apollo {
 namespace supervisor {
 
@@ -42,30 +46,30 @@ void Supervisor::GetCurrentMode(bool* status) {
   }
 }
 
-void Supervisor::SendAllParameters() {
-  AERROR << "Sending all parameters";
+void Supervisor::GetModuleParameters(std::string module_name) {
+  submodule_parameters callback_msg;
+  callback_msg.set_sound_on(sv_preferences_["module_name"]["sound_on"]);
+  callback_msg.set_debug_mode(sv_preferences_["module_name"]["debug_mode"]);
+  callback_writer_->Write(callback_msg);
 }
 
-void Supervisor::SendDefinedParameters() {
-  AERROR << "Sending defined parameter";
-}
-
-void Supervisor::ChangeParameter(std::string module, std::string parameter, int new_value) {
-  AERROR << "Changing parameter";
+bool Supervisor::SetParameter(std::string module, bool config, bool value) {
+  try {
+    sv_preferences_["module"]["config"] = value;
+    return true;
+  }
+  catch(const std::exception& e) {
+    return false;
+  }
 }
 
 void Supervisor::PreferencesCallback(const std::shared_ptr<apollo::supervisor::sv_set_get>& msg) {
   if(msg->cmd() == "get_parameters") {
-    if(msg->module_name() != "") {
-      Supervisor::SendDefinedParameters();
-    }
-    else {
-      Supervisor::SendAllParameters();
-    }
+    Supervisor::GetModuleParameters(msg->submodule().module_name());
     return void();
   }
   if(msg->cmd() == "change_parameters") {
-    Supervisor::ChangeParameter(msg->module_name(), msg->config_name(), msg->new_value());
+    Supervisor::SetParameter(msg->submodule().module_name(), msg->submodule().config_name(), msg->submodule().new_value());
     return void();
   }
   AERROR << "Unknown cmd parameter: " << msg->cmd();
@@ -74,27 +78,27 @@ void Supervisor::PreferencesCallback(const std::shared_ptr<apollo::supervisor::s
 bool Supervisor::Init() {
   // Collecting sub-supervisors
   supervisors_.emplace_back(new GNSSSupervisor());
-
+  
   std::shared_ptr<apollo::cyber::Node> supervisor_node_(apollo::cyber::CreateNode("supervisor"));
-  writer_ = supervisor_node_->CreateWriter<apollo::supervisor::sv_decision>("/supervisor/decision");
-
+  decision_writer_ = supervisor_node_->CreateWriter<apollo::supervisor::sv_decision>("/supervisor/decision");
+  callback_writer_ = supervisor_node_->CreateWriter<apollo::supervisor::submodule_parameters>("/supervisor/callback");
   preferences_reader_ = supervisor_node_->CreateReader<apollo::supervisor::sv_set_get>
     ("/supervisor/preferences", boost::bind(&Supervisor::PreferencesCallback, this, _1));
-
-  // Loading preferences
-  ACHECK(
-    cyber::common::GetProtoFromFile("/apollo/modules/supervisor/conf/preferences.pb.txt", &sv_preferences_))
-    << "Unable to load supervisor conf file: /apollo/modules/supervisor/conf/preferences.pb.txt";
+  
+  YAML::Node sv_preferences_ = YAML::LoadFile("/apollo/modules/supervisor/conf/preferences.yaml");
 
   //Creating chassis_detail reader to get driving mode status
   chassis_detail_reader_ = supervisor_node_->CreateReader<apollo::canbus::ChassisDetail>("/apollo/canbus/chassis_detail", nullptr);
 
   // If sound switched on default, check sound
-  if(sv_preferences_.sv_parameters().sound_on()){
+  if(sv_preferences_["sv"]["sound_on"].as<bool>()) {
     system("play -nq -t alsa synth 0.1 sine 300");
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     system("play -nq -t alsa synth 0.1 sine 300");
   }
+
+  SaveCurrentConfig(sv_preferences_);
+  
   return true;
 }
 
@@ -104,12 +108,13 @@ bool Supervisor::Proc() {
   int worst_status = -1;
   apollo::supervisor::sv_decision_Status overall_status = apollo::supervisor::sv_decision::OK;
   std::string debug = "";
+  std::string submodule_name = "";
 
   for (auto& sv : supervisors_) {
     int status;
     std::string debug_msg;
     sv->Tick(current_time);
-    sv->GetStatus(&status, &debug_msg);
+    sv->GetStatus(&submodule_name, &status, &debug_msg);
     if(status > worst_status){
       if((status >= 10)&&(status < 20)) overall_status = apollo::supervisor::sv_decision::WARN;
       if((status >= 20)&&(status < 30)) overall_status = apollo::supervisor::sv_decision::ERROR;
@@ -152,9 +157,15 @@ bool Supervisor::Proc() {
   msg.mutable_header()->set_timestamp_sec(Time::Now().ToSecond());
   msg.set_status(overall_status);
   msg.set_message(debug);
-  writer_->Write(msg);
+  decision_writer_->Write(msg);
 
   return true;
+}
+
+void Supervisor::SaveCurrentConfig(YAML::Node sv_preferences_) {
+  std::ofstream fout(FLAGS_sv_preferences_file);
+  fout << sv_preferences_;
+  fout.close();
 }
 
 Supervisor::~Supervisor() {

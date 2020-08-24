@@ -86,7 +86,8 @@ void GNSSSupervisor::RunOnce(const double current_time) {
   }
 }
 
-void GNSSSupervisor::GetStatus(int* status, std::string* debug_msg) {
+void GNSSSupervisor::GetStatus(std::string* submodule_name, int* status, std::string* debug_msg) {
+  *submodule_name = "gnss";
   *status = status_;
   *debug_msg = debug_msg_;
 }

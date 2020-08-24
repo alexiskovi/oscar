@@ -24,7 +24,7 @@ class GNSSSupervisor : public SupervisorRunner {
  public:
   GNSSSupervisor();
   void RunOnce(const double current_time) override;
-  void GetStatus(int* status, std::string* debug_msg);
+  void GetStatus(std::string* submodule_name, int* status, std::string* debug_msg);
  private:
   int status_;
   std::string debug_msg_;

@@ -13,7 +13,7 @@ cc_library(
         "//modules/supervisor/proto:supervisor_proto",
         "//modules/canbus/proto:canbus_proto",
         "//modules/supervisor/submodules/gnss:gnss_submodule",
-
+        "@yaml_cpp//:yaml",
     ],
 )
 
