@@ -27,8 +27,8 @@ class Supervisor : public apollo::cyber::TimerComponent {
   void WarningSignal();
   void GetCurrentMode(bool* status);
   void GetModuleParameters(std::string module_name);
-  void SaveCurrentConfig(YAML::Node sv_preferences_);
-  bool SetParameter(std::string module, bool config, bool value);
+  void SaveCurrentConfig();
+  bool SetParameter(std::string module, std::string config, std::string value);
   void PreferencesCallback(const std::shared_ptr<apollo::supervisor::sv_set_get>& msg);
   ~Supervisor();
  private:

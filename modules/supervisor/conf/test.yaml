@@ -1,6 +1,0 @@
-sv:
-  sound_on: false
-  debug_mode: false
-gnss:
-  debug_mode: false
-  sound_on: true

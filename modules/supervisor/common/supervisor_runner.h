@@ -14,7 +14,7 @@ class SupervisorRunner {
 
   virtual void RunOnce(const double current_time) = 0;
 
-  virtual void GetStatus(int* status, std::string* debug_msg) = 0;
+  virtual void GetStatus(std::string* submodule_name, int* status, std::string* debug_msg) = 0;
 
  protected:
   std::string name_;

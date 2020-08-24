@@ -4,7 +4,7 @@
 
 using apollo::cyber::Time;
 
-DEFINE_bool(sound_auto_only, true,
+DEFINE_bool(sound_auto_only, false,
             "Make sound signals only in autonomous mode");  
 
 DEFINE_string(sv_preferences_file, "/apollo/modules/supervisor/conf/preferences.yaml",
@@ -53,9 +53,9 @@ void Supervisor::GetModuleParameters(std::string module_name) {
   callback_writer_->Write(callback_msg);
 }
 
-bool Supervisor::SetParameter(std::string module, bool config, bool value) {
+bool Supervisor::SetParameter(std::string module, std::string config, std::string value) {
   try {
-    sv_preferences_["module"]["config"] = value;
+    sv_preferences_[module][config] = value;
     return true;
   }
   catch(const std::exception& e) {
@@ -72,6 +72,10 @@ void Supervisor::PreferencesCallback(const std::shared_ptr<apollo::supervisor::s
     Supervisor::SetParameter(msg->submodule().module_name(), msg->submodule().config_name(), msg->submodule().new_value());
     return void();
   }
+  if(msg->cmd() == "save_parameters") {
+    Supervisor::SaveCurrentConfig();
+    return void();
+  }
   AERROR << "Unknown cmd parameter: " << msg->cmd();
 }
 
@@ -85,7 +89,7 @@ bool Supervisor::Init() {
   preferences_reader_ = supervisor_node_->CreateReader<apollo::supervisor::sv_set_get>
     ("/supervisor/preferences", boost::bind(&Supervisor::PreferencesCallback, this, _1));
   
-  YAML::Node sv_preferences_ = YAML::LoadFile("/apollo/modules/supervisor/conf/preferences.yaml");
+  sv_preferences_ = YAML::LoadFile("/apollo/modules/supervisor/conf/preferences.yaml");
 
   //Creating chassis_detail reader to get driving mode status
   chassis_detail_reader_ = supervisor_node_->CreateReader<apollo::canbus::ChassisDetail>("/apollo/canbus/chassis_detail", nullptr);
@@ -96,8 +100,6 @@ bool Supervisor::Init() {
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     system("play -nq -t alsa synth 0.1 sine 300");
   }
-
-  SaveCurrentConfig(sv_preferences_);
   
   return true;
 }
@@ -108,11 +110,12 @@ bool Supervisor::Proc() {
   int worst_status = -1;
   apollo::supervisor::sv_decision_Status overall_status = apollo::supervisor::sv_decision::OK;
   std::string debug = "";
-  std::string submodule_name = "";
+  std::string bad_submodule_name = "";
 
   for (auto& sv : supervisors_) {
     int status;
     std::string debug_msg;
+    std::string submodule_name;
     sv->Tick(current_time);
     sv->GetStatus(&submodule_name, &status, &debug_msg);
     if(status > worst_status){
@@ -120,37 +123,41 @@ bool Supervisor::Proc() {
       if((status >= 20)&&(status < 30)) overall_status = apollo::supervisor::sv_decision::ERROR;
       if((status >= 30)&&(status < 40)) overall_status = apollo::supervisor::sv_decision::FATAL;
       worst_status = status;
+      bad_submodule_name = submodule_name;
       debug = debug_msg;
     }
   }
 
-  switch (overall_status) {
-    case apollo::supervisor::sv_decision::OK:
-      // all ok
-    break;
-    case apollo::supervisor::sv_decision::WARN:
-      if((!FLAGS_sound_auto_only)||(auto_driving_mode_)){
-        if(!signal_active_flag_) {
-          if(signal_thread_.joinable()) {
-            signal_thread_.join();
+  // Sound information
+  if((sv_preferences_["sv"]["sound_on"].as<bool>())&&(sv_preferences_[bad_submodule_name]["sound_on"].as<bool>())) {
+    switch (overall_status) {
+      case apollo::supervisor::sv_decision::OK:
+        // all ok
+      break;
+      case apollo::supervisor::sv_decision::WARN:
+        if((!FLAGS_sound_auto_only)||(auto_driving_mode_)){
+          if(!signal_active_flag_) {
+            if(signal_thread_.joinable()) {
+              signal_thread_.join();
+            }
+            signal_thread_ = std::thread(&Supervisor::WarningSignal, this);
           }
-          signal_thread_ = std::thread(&Supervisor::WarningSignal, this);
         }
-      }
-    break;
-    case apollo::supervisor::sv_decision::ERROR:
-      if((!FLAGS_sound_auto_only)||(auto_driving_mode_)){
-        if(!signal_active_flag_) {
-          if(signal_thread_.joinable()) {
-            signal_thread_.join();
+      break;
+      case apollo::supervisor::sv_decision::ERROR:
+        if((!FLAGS_sound_auto_only)||(auto_driving_mode_)){
+          if(!signal_active_flag_) {
+            if(signal_thread_.joinable()) {
+              signal_thread_.join();
+            }
+            signal_thread_ = std::thread(&Supervisor::ErrorSignal, this);
           }
-          signal_thread_ = std::thread(&Supervisor::ErrorSignal, this);
         }
-      }
-    break;
-    case apollo::supervisor::sv_decision::FATAL:
-      // fatal signal thread
-    break;
+      break;
+      case apollo::supervisor::sv_decision::FATAL:
+        // fatal signal thread
+      break;
+    }
   }
 
   sv_decision msg;
@@ -162,7 +169,7 @@ bool Supervisor::Proc() {
   return true;
 }
 
-void Supervisor::SaveCurrentConfig(YAML::Node sv_preferences_) {
+void Supervisor::SaveCurrentConfig() {
   std::ofstream fout(FLAGS_sv_preferences_file);
   fout << sv_preferences_;
   fout.close();
