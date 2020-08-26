@@ -12,7 +12,7 @@ SUPERVISOR_MODULE = "sv"
 GNSS_MODULE = "gnss"
 DEBUG_MODE = "debug_mode_on"
 SOUND_MODE = "sound_on"
-
+WAIT_FOR_PARAMETER = 0.025
 
 class SupervisorPreferences:
 
@@ -25,6 +25,7 @@ class SupervisorPreferences:
             "sound_on" : "",
             "debug_mode" : "",
         }
+        self.parameters_flag = False
         self.create_callback_subscriber()
         self.create_decision_subscriber()
         self.create_preferences_publisher()
@@ -35,6 +36,7 @@ class SupervisorPreferences:
         self.DEBUG_MESSAGE = decision_data.message
 
     def parameters_callback(self, submodule_data):
+        self.parameters_flag = True
         self.params["sound_on"] = submodule_data.sound_on
         self.params["debug_mode"] = submodule_data.debug_mode
 
@@ -74,7 +76,9 @@ class SupervisorPreferences:
         msg.cmd = GET_PARAMETERS
         msg.submodule.module_name = GNSS_MODULE
         self.preferences_pub.write(msg)
-        time.sleep(0.1)
+        while not(parameters_flag):
+            time.sleep(WAIT_FOR_PARAMETER)
+        self.parameters_flag = False
         return self.params
 
     def DefineSVSoundState(self, state):
@@ -104,7 +108,19 @@ class SupervisorPreferences:
         msg.cmd = GET_PARAMETERS
         msg.submodule.module_name = SUPERVISOR_MODULE
         self.preferences_pub.write(msg)
-        time.sleep(0.1)
+        while not(parameters_flag):
+            time.sleep(WAIT_FOR_PARAMETER)
+        self.parameters_flag = False
+        return self.params
+    
+    def GetGNSSParameters(self):
+        msg = sv_set_get()
+        msg.cmd = GET_PARAMETERS
+        msg.submodule.module_name = GNSS_MODULE
+        self.preferences_pub.write(msg)
+        while not(parameters_flag):
+            time.sleep(WAIT_FOR_PARAMETER)
+        self.parameters_flag = False
         return self.params
 
     def SaveCurrentParameters(self):
