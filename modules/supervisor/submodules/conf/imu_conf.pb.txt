@@ -1,0 +1,4 @@
+ins_stat_not_ready_priority: 15
+timeout_priority: 25
+bad_calibration_priority: 25
+max_timeout_s: 1.0

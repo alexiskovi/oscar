@@ -1,6 +1,7 @@
 #include "modules/supervisor/sv_component.h"
 
 #include "modules/supervisor/submodules/gnss/sv_gnss_submodule.h"
+#include "modules/supervisor/submodules/imu/sv_imu_submodule.h"
 
 using apollo::cyber::Time;
 
@@ -82,6 +83,7 @@ void Supervisor::PreferencesCallback(const std::shared_ptr<apollo::supervisor::s
 bool Supervisor::Init() {
   // Collecting sub-supervisors
   supervisors_.emplace_back(new GNSSSupervisor());
+  supervisors_.emplace_back(new IMUSupervisor());
   
   std::shared_ptr<apollo::cyber::Node> supervisor_node_(apollo::cyber::CreateNode("supervisor"));
   decision_writer_ = supervisor_node_->CreateWriter<apollo::supervisor::sv_decision>("/supervisor/decision");

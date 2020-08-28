@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+message sv_imu_conf {
+  optional int64 ins_stat_not_ready_priority = 1;
+  optional int64 timeout_priority = 2;
+  optional int64 bad_calibration_priority = 3;
+  optional double max_timeout_s = 4;
+}
