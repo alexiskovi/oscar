@@ -10,9 +10,14 @@ print("Initializating...")
 time.sleep(3.0)
 
 params = sv_test.GetGNSSParameters()
+print("GNSS parameters:")
 print(params)
+params = sv_test.GetIMUParameters()
+print("IMU parameters:")
+print(params)
+time.sleep(2.0)
 
-sv_test.DefineSVSoundState(False)
+sv_test.DefineGNSSSoundState(False)
 
 sv_test.SaveCurrentParameters()
 

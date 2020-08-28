@@ -49,8 +49,8 @@ void Supervisor::GetCurrentMode(bool* status) {
 
 void Supervisor::GetModuleParameters(std::string module_name) {
   submodule_parameters callback_msg;
-  callback_msg.set_sound_on(sv_preferences_["module_name"]["sound_on"]);
-  callback_msg.set_debug_mode(sv_preferences_["module_name"]["debug_mode"]);
+  callback_msg.set_sound_on(sv_preferences_[module_name]["sound_on"].as<bool>());
+  callback_msg.set_debug_mode(sv_preferences_[module_name]["debug_mode"].as<bool>());
   callback_writer_->Write(callback_msg);
 }
 

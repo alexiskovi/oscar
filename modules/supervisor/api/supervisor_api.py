@@ -10,6 +10,7 @@ CHANGE_PARAMETER = "change_parameters"
 SAVE_PARAMETERS = "save_parameters"
 SUPERVISOR_MODULE = "sv"
 GNSS_MODULE = "gnss"
+IMU_MODULE = "imu"
 DEBUG_MODE = "debug_mode_on"
 SOUND_MODE = "sound_on"
 WAIT_FOR_PARAMETER = 0.025
@@ -22,8 +23,8 @@ class SupervisorPreferences:
         self.CURRENT_GLOBAL_STATUS = 0
         self.DEBUG_MESSAGE = "no msg recieved"
         self.params = {
-            "sound_on" : "",
-            "debug_mode" : "",
+            "sound_on" : False,
+            "debug_mode" : False,
         }
         self.parameters_flag = False
         self.create_callback_subscriber()
@@ -52,8 +53,8 @@ class SupervisorPreferences:
     def DefineGNSSSoundState(self, state):
         msg = sv_set_get()
         msg.cmd = CHANGE_PARAMETER
-        msg.module_name = GNSS_MODULE
-        msg.config_name = SOUND_MODE
+        msg.submodule.module_name = GNSS_MODULE
+        msg.submodule.config_name = SOUND_MODE
         if state:
             msg.submodule.new_value = "true"
         else:
@@ -76,7 +77,7 @@ class SupervisorPreferences:
         msg.cmd = GET_PARAMETERS
         msg.submodule.module_name = GNSS_MODULE
         self.preferences_pub.write(msg)
-        while not(parameters_flag):
+        while not(self.parameters_flag):
             time.sleep(WAIT_FOR_PARAMETER)
         self.parameters_flag = False
         return self.params
@@ -108,17 +109,39 @@ class SupervisorPreferences:
         msg.cmd = GET_PARAMETERS
         msg.submodule.module_name = SUPERVISOR_MODULE
         self.preferences_pub.write(msg)
-        while not(parameters_flag):
+        while not(self.parameters_flag):
             time.sleep(WAIT_FOR_PARAMETER)
         self.parameters_flag = False
         return self.params
-    
-    def GetGNSSParameters(self):
+
+    def DefineIMUSoundState(self, state):
+        msg = sv_set_get()
+        msg.cmd = CHANGE_PARAMETER
+        msg.submodule.module_name = IMU_MODULE
+        msg.submodule.config_name = SOUND_MODE
+        if state:
+            msg.submodule.new_value = "true"
+        else:
+            msg.submodule.new_value = "false"
+        self.preferences_pub.write(msg)
+
+    def DefineIMUDebugState(self, state):
+        msg = sv_set_get()
+        msg.cmd = CHANGE_PARAMETER
+        msg.submodule.module_name = IMU_MODULE
+        msg.submodule.config_name = DEBUG_MODE
+        if state:
+            msg.submodule.new_value = "true"
+        else:
+            msg.submodule.new_value = "false"
+        self.preferences_pub.write(msg)
+
+    def GetIMUParameters(self):
         msg = sv_set_get()
         msg.cmd = GET_PARAMETERS
-        msg.submodule.module_name = GNSS_MODULE
+        msg.submodule.module_name = IMU_MODULE
         self.preferences_pub.write(msg)
-        while not(parameters_flag):
+        while not(self.parameters_flag):
             time.sleep(WAIT_FOR_PARAMETER)
         self.parameters_flag = False
         return self.params
