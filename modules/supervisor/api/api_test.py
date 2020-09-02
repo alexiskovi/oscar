@@ -9,16 +9,16 @@ sv_test = SupervisorPreferences()
 print("Initializating...")
 time.sleep(3.0)
 
-params = sv_test.GetGNSSParameters()
+params = sv_test.get_gnss_parameters()
 print("GNSS parameters:")
 print(params)
-params = sv_test.GetIMUParameters()
+params = sv_test.get_imu_parameters()
 print("IMU parameters:")
 print(params)
 time.sleep(2.0)
 
-sv_test.DefineGNSSSoundState(False)
+sv_test.define_gnss_sound_state(False)
 
-sv_test.SaveCurrentParameters()
+sv_test.save_current_parameters()
 
 print("Terminated")
