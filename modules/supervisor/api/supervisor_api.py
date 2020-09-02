@@ -18,6 +18,9 @@ WAIT_FOR_PARAMETER = 0.025
 class SupervisorPreferences:
 
     def __init__(self):
+        #
+        # Creating Cyber RT Node, publishers and subscribers
+        #
         cyber.init()
         self.node = cyber.Node("api_node")
         self.CURRENT_GLOBAL_STATUS = 0
@@ -27,30 +30,37 @@ class SupervisorPreferences:
             "debug_mode" : False,
         }
         self.parameters_flag = False
-        self.create_callback_subscriber()
-        self.create_decision_subscriber()
-        self.create_preferences_publisher()
+        self._create_callback_subscriber()
+        self._create_decision_subscriber()
+        self._create_preferences_publisher()
 
 
-    def decision_callback(self, decision_data):
+    def _decision_callback(self, decision_data):
+        # Callback function for supervisor global decision
         self.CURRENT_GLOBAL_STATUS = decision_data.status
         self.DEBUG_MESSAGE = decision_data.message
 
-    def parameters_callback(self, submodule_data):
+    def _parameters_callback(self, submodule_data):
+        # Callback function for getting current parameters
         self.parameters_flag = True
         self.params["sound_on"] = submodule_data.sound_on
         self.params["debug_mode"] = submodule_data.debug_mode
 
-    def create_preferences_publisher(self):
+    def _create_preferences_publisher(self):
+        # Publisher for preferences set and get interface
         self.preferences_pub = self.node.create_writer("/supervisor/preferences", sv_set_get, 5)
 
-    def create_decision_subscriber(self):
-        self.node.create_reader("/supervisor/decision", sv_decision, self.decision_callback)
+    def _create_decision_subscriber(self):
+        # Subscriber for global supervisor decision channel
+        self.node.create_reader("/supervisor/decision", sv_decision, self._decision_callback)
     
-    def create_callback_subscriber(self):
-        self.node.create_reader("/supervisor/callback", submodule_parameters, self.parameters_callback)
+    def _create_callback_subscriber(self):
+        # Subscriber for supervisor module callbacks
+        self.node.create_reader("/supervisor/callback", submodule_parameters, self._parameters_callback)
 
-    def DefineGNSSSoundState(self, state):
+    def define_gnss_sound_state(self, state):
+        # Sending new state setting for sound in GNSS module
+        # incoming: bool state
         msg = sv_set_get()
         msg.cmd = CHANGE_PARAMETER
         msg.submodule.module_name = GNSS_MODULE
@@ -61,7 +71,9 @@ class SupervisorPreferences:
             msg.submodule.new_value = "false"
         self.preferences_pub.write(msg)
 
-    def DefineGNSSDebugState(self, state):
+    def define_gnss_debug_state(self, state):
+        # Sending new state setting for debug in GNSS module
+        # incoming: bool state
         msg = sv_set_get()
         msg.cmd = CHANGE_PARAMETER
         msg.submodule.module_name = GNSS_MODULE
@@ -72,7 +84,8 @@ class SupervisorPreferences:
             msg.submodule.new_value = "false"
         self.preferences_pub.write(msg)
 
-    def GetGNSSParameters(self):
+    def get_gnss_parameters(self):
+        # Sending request to get current GNSS parameters
         msg = sv_set_get()
         msg.cmd = GET_PARAMETERS
         msg.submodule.module_name = GNSS_MODULE
@@ -82,7 +95,9 @@ class SupervisorPreferences:
         self.parameters_flag = False
         return self.params
 
-    def DefineSVSoundState(self, state):
+    def define_sv_sound_state(self, state):
+        # Sending new state setting for sound in Supervisor module
+        # incoming: bool state
         msg = sv_set_get()
         msg.cmd = CHANGE_PARAMETER
         msg.submodule.module_name = SUPERVISOR_MODULE
@@ -93,7 +108,9 @@ class SupervisorPreferences:
             msg.submodule.new_value = "false"
         self.preferences_pub.write(msg)
 
-    def DefineSVDebugState(self, state):
+    def define_sv_debug_state(self, state):
+        # Sending new state setting for debug in Supervisor module
+        # incoming: bool state
         msg = sv_set_get()
         msg.cmd = CHANGE_PARAMETER
         msg.submodule.module_name = SUPERVISOR_MODULE
@@ -104,7 +121,8 @@ class SupervisorPreferences:
             msg.submodule.new_value = "false"
         self.preferences_pub.write(msg)
 
-    def GetSVParameters(self):
+    def get_sv_parameters(self):
+        # Sending request to get current Supervisor parameters
         msg = sv_set_get()
         msg.cmd = GET_PARAMETERS
         msg.submodule.module_name = SUPERVISOR_MODULE
@@ -114,7 +132,9 @@ class SupervisorPreferences:
         self.parameters_flag = False
         return self.params
 
-    def DefineIMUSoundState(self, state):
+    def define_imu_sound_state(self, state):
+        # Sending new state setting for sound in IMU module
+        # incoming: bool state
         msg = sv_set_get()
         msg.cmd = CHANGE_PARAMETER
         msg.submodule.module_name = IMU_MODULE
@@ -125,7 +145,9 @@ class SupervisorPreferences:
             msg.submodule.new_value = "false"
         self.preferences_pub.write(msg)
 
-    def DefineIMUDebugState(self, state):
+    def define_imu_debug_state(self, state):
+        # Sending new state setting for debug in IMU module
+        # incoming: bool state
         msg = sv_set_get()
         msg.cmd = CHANGE_PARAMETER
         msg.submodule.module_name = IMU_MODULE
@@ -136,7 +158,8 @@ class SupervisorPreferences:
             msg.submodule.new_value = "false"
         self.preferences_pub.write(msg)
 
-    def GetIMUParameters(self):
+    def get_imu_parameters(self):
+        # Sending request to get current IMU parameters
         msg = sv_set_get()
         msg.cmd = GET_PARAMETERS
         msg.submodule.module_name = IMU_MODULE
@@ -146,7 +169,8 @@ class SupervisorPreferences:
         self.parameters_flag = False
         return self.params
 
-    def SaveCurrentParameters(self):
+    def save_current_parameters(self):
+        # Sending request to save current parameters (rewrites file preferences.yaml)
         msg = sv_set_get()
         msg.cmd = SAVE_PARAMETERS
         self.preferences_pub.write(msg)
