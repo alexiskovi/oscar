@@ -175,5 +175,25 @@ class SupervisorPreferences:
         msg.cmd = SAVE_PARAMETERS
         self.preferences_pub.write(msg)
 
+    #
+    # Crutches for now
+    #
+
+    def get_gnss_status_word(self):
+        # TO DO
+        return "OK"
+    
+    def get_gnss_status(self):
+        # TO DO
+        params = {
+            "a": 1,
+            "b": 2,
+            "c": 3,
+            "d": 4,
+            "e": 5,
+            "f": 6,
+        }
+        return params
+
     def __exit__(self):
         cyber.shutdown()
