@@ -32,6 +32,7 @@ GNSSSupervisor::GNSSSupervisor()
   ACHECK(
     cyber::common::GetProtoFromFile(FLAGS_sv_gnss_conf_file, &gnss_conf_))
     << "Unable to load gnss conf file: " + FLAGS_sv_gnss_conf_file;
+  gnss_status_writer_ = sv_gnss_node_->CreateWriter<sv_gnss_msg>("/supervisor/gnss/status");
 }
 
 void GNSSSupervisor::RunOnce(const double current_time) {
@@ -84,6 +85,18 @@ void GNSSSupervisor::RunOnce(const double current_time) {
       debug_msg_ = "Standart GNSS deviation is above threshold";
     }
   }
+
+  // Fill status message
+  sv_gnss_msg msg;
+  msg.set_differential_age(best_pose_msg->differential_age());
+  msg.set_lateral_error(lat_std_dev);
+  msg.set_longitudinal_error(lon_std_dev);
+  if(status_ < 10) msg.set_overall_status("OK");
+  if((status_ >= 10)&&(status_ < 20)) msg.set_overall_status("WARNING");
+  if((status_ >= 20)&&(status_ < 30)) msg.set_overall_status("ERROR");
+  if((status_ >= 30)&&(status_ < 40)) msg.set_overall_status("FATAL");
+
+  gnss_status_writer_->Write(msg);
 }
 
 void GNSSSupervisor::GetStatus(std::string* submodule_name, int* status, std::string* debug_msg) {

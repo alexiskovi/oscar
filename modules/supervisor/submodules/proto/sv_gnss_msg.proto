@@ -1,0 +1,10 @@
+syntax = "proto2";
+
+message sv_gnss_msg {
+  optional string overall_status = 1;
+  optional double differential_age = 2;
+  optional string sol_status = 3;
+  optional string sol_type = 4;
+  optional double lateral_error = 5;
+  optional double longitudinal_error = 6;
+}

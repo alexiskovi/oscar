@@ -11,6 +11,7 @@ proto_library(
     name = "sv_submodule_proto_lib",
     srcs = [
         "gnss_conf.proto",
+        "sv_gnss_msg.proto",
         "imu_conf.proto",
     ],
     deps = [

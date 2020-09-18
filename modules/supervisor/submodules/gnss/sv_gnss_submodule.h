@@ -14,7 +14,9 @@
 #include "modules/common/adapters/adapter_gflags.h"
 #include "cyber/component/timer_component.h"
 #include "modules/supervisor/submodules/proto/gnss_conf.pb.h"
+#include "modules/supervisor/submodules/proto/sv_gnss_msg.pb.h"
 #include "modules/drivers/gnss/proto/gnss_best_pose.pb.h"
+
 
 
 namespace apollo {
@@ -30,6 +32,7 @@ class GNSSSupervisor : public SupervisorRunner {
   std::string debug_msg_;
   std::shared_ptr<apollo::cyber::Node> sv_gnss_node_;
   std::shared_ptr<apollo::cyber::Reader<apollo::drivers::gnss::GnssBestPose>> best_pose_reader_;
+  std::shared_ptr<cyber::Writer<sv_gnss_msg>> gnss_status_writer_;
   sv_gnss_conf gnss_conf_;
 };
 

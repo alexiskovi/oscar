@@ -121,13 +121,13 @@ bool Supervisor::Proc() {
     sv->Tick(current_time);
     sv->GetStatus(&submodule_name, &status, &debug_msg);
     if(status > worst_status){
-      if((status >= 10)&&(status < 20)) overall_status = apollo::supervisor::sv_decision::WARN;
-      if((status >= 20)&&(status < 30)) overall_status = apollo::supervisor::sv_decision::ERROR;
-      if((status >= 30)&&(status < 40)) overall_status = apollo::supervisor::sv_decision::FATAL;
       worst_status = status;
       bad_submodule_name = submodule_name;
       debug = debug_msg;
     }
+    if((worst_status >= 10)&&(worst_status < 20)) overall_status = apollo::supervisor::sv_decision::WARN;
+    if((worst_status >= 20)&&(worst_status < 30)) overall_status = apollo::supervisor::sv_decision::ERROR;
+    if((worst_status >= 30)&&(worst_status < 40)) overall_status = apollo::supervisor::sv_decision::FATAL;
   }
 
   // Sound information
