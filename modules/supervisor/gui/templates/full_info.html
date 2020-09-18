@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Oscar Supervisor</title>
+    <style>
+
+      #A, .block_style{
+         color:white;
+         width:20%;
+         height:100%;
+         background: blue;
+      }
+      .container {
+          width: 100%;
+          max-width: 100%;
+          align-items: center;
+          margin: 0 auto;
+
+      }
+
+      .col-1-5 {
+          width:auto;
+          max-width: 80%;
+          height: 95%;
+          text-align: center;
+          margin: 0 auto;
+      }
+
+      .container:after {
+          content: "";
+          display: table;
+          clear: both;
+      }
+      .blue-border{
+        border: 3px solid blue;
+        padding: 5px;
+        margin: 20px;
+        font-size: 3vh;
+        font-family: Gill Sans, sans-serif;
+      }
+
+      .yellow-border{
+        border: 3px solid #ffb01f;
+        padding: 5px;
+        margin: 20px;
+        font-size: 3vh;
+        font-family: Gill Sans, sans-serif;
+      }
+    </style>
+    <script type="text/javascript">
+    var ws = null;
+    var current_page="";
+    function get_server_state() {
+        ws.send("get_full_info_"+current_page);
+    }
+
+    function change_page(page_name){}
+
+
+    function init() {
+        if ("WebSocket" in window) {
+            ws = new WebSocket("ws://127.0.0.1:8888/ws_full_info/");
+            ws.onopen = function() {
+                console.log("Connection is opened");
+            }
+            ws.onclose = function() {
+                console.log("Connection is closed");
+            }
+            ws.onmessage = function(msg) {
+                console.log(msg);
+                dict=JSON.parse(msg.data);
+                for (key in dict){
+                  console.log(dict[key])
+                  document.getElementById(key).innerHTML = dict[key];
+                }
+            }
+        } else {
+            console.log('Your browser doesnt support WebSocket!')
+        }
+        setInterval(get_server_state, 500);
+    }
+
+
+    </script>
+
+  </head>
+
+
+
+  <body style="width:100%; height:100%; margin:0;" onload="init();">
+    <div class="container">
+      <div class="col-1-5">
+        <h1 class="sigma-text">Oscar Supervisor</h1>
+        <div class="blue-border"><b>CANBUS:</b>
+          <div id="canbus">ok</div>
+        </div>
+        <div class="blue-border"><b>CONTROL:</b>
+          <div id="control">ok</div>
+        </div>
+        <div class="blue-border"><b>PERCEPTION:</b>
+          <div id="perception"></div>
+        </div>
+        <div class="blue-border"><b>GNSS:</b>
+          <div id="gnss"></div>
+        </div>
+        <div class="blue-border"><b>LOCALIZATION:</b>
+          <div id="localization"></div>
+        </div>
+        <div class="blue-border"><b>PLANNING:</b>
+          <div id="planning">малая часть работы</div>
+        </div>
+        <div class="yellow-border" id="save_config" onclick="send()" ><b>Сохранить текущую конфигурацию</b>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
