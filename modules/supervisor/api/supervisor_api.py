@@ -195,5 +195,120 @@ class SupervisorPreferences:
         }
         return params
 
-    def __exit__(self):
+    def define_canbus_sound_state(self, state):
+        # TO DO
+        pass
+
+    def define_canbus_debug_state(self, state):
+        # TO DO
+        pass
+
+    def get_canbus_parameters(self):
+        # TO DO
+        return self.params
+
+    def get_canbus_status_word(self):
+        # TO DO
+        return "WARNING"
+    
+    def get_canbus_status(self):
+        # TO DO
+        params = {
+            "submodule is not ready": 0,
+        }
+        return params
+
+    def define_control_sound_state(self, state):
+        # TO DO
+        pass
+
+    def define_control_debug_state(self, state):
+        # TO DO
+        pass
+
+    def get_control_parameters(self):
+        # TO DO
+        return self.params
+
+    def get_control_status_word(self):
+        # TO DO
+        return "WARNING"
+    
+    def get_control_status(self):
+        # TO DO
+        params = {
+            "submodule is not ready": 0,
+        }
+        return params
+
+    def define_perception_sound_state(self, state):
+        # TO DO
+        pass
+
+    def define_perception_debug_state(self, state):
+        # TO DO
+        pass
+
+    def get_perception_parameters(self):
+        # TO DO
+        return self.params
+
+    def get_perception_status_word(self):
+        # TO DO
+        return "WARNING"
+    
+    def get_perception_status(self):
+        # TO DO
+        params = {
+            "submodule is not ready": 0,
+        }
+        return params
+
+    def define_localization_sound_state(self, state):
+        # TO DO
+        pass
+
+    def define_localization_debug_state(self, state):
+        # TO DO
+        pass
+
+    def get_localization_parameters(self):
+        # TO DO
+        return self.params
+
+    def get_localization_status_word(self):
+        # TO DO
+        return "WARNING"
+    
+    def get_localization_status(self):
+        # TO DO
+        params = {
+            "submodule is not ready": 0,
+        }
+        return params
+    
+    def define_planning_sound_state(self, state):
+        # TO DO
+        pass
+
+    def define_planning_debug_state(self, state):
+        # TO DO
+        pass
+
+    def get_planning_parameters(self):
+        # TO DO
+        return self.params
+
+    def get_planning_status_word(self):
+        # TO DO
+        return "WARNING"
+    
+    def get_planning_status(self):
+        # TO DO
+        params = {
+            "submodule is not ready": 0,
+        }
+        return params
+
+    def __del__(self):
         cyber.shutdown()
