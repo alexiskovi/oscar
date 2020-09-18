@@ -464,3 +464,5 @@ if [ $APOLLO_IN_DOCKER = "true" ]; then
     export APOLLO_BASE_SOURCED=1
   fi
 fi
+
+export PYTHONPATH="${PYTHONPATH}/apollo/modules/supervisor"
