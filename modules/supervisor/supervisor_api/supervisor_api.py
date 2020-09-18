@@ -1,4 +1,5 @@
 import time
+import sys
 
 from cyber_py3 import cyber
 from modules.supervisor.proto.parameter_server_pb2 import sv_set_get
@@ -14,6 +15,7 @@ IMU_MODULE = "imu"
 DEBUG_MODE = "debug_mode_on"
 SOUND_MODE = "sound_on"
 WAIT_FOR_PARAMETER = 0.025
+SV_TIMEOUT = 0.5
 
 class SupervisorPreferences:
 
@@ -33,6 +35,17 @@ class SupervisorPreferences:
         self._create_callback_subscriber()
         self._create_decision_subscriber()
         self._create_preferences_publisher()
+
+
+    def _wait_for_callback(self):
+        time_exceed = 0.0
+        while not(self.parameters_flag):
+            time.sleep(WAIT_FOR_PARAMETER)
+            time_exceed += WAIT_FOR_PARAMETER
+            if time_exceed >= SV_TIMEOUT:
+                print("Connection timeout!")
+                sys.exit()
+
 
 
     def _decision_callback(self, decision_data):
@@ -90,8 +103,7 @@ class SupervisorPreferences:
         msg.cmd = GET_PARAMETERS
         msg.submodule.module_name = GNSS_MODULE
         self.preferences_pub.write(msg)
-        while not(self.parameters_flag):
-            time.sleep(WAIT_FOR_PARAMETER)
+        self._wait_for_callback()
         self.parameters_flag = False
         return self.params
 
@@ -127,8 +139,7 @@ class SupervisorPreferences:
         msg.cmd = GET_PARAMETERS
         msg.submodule.module_name = SUPERVISOR_MODULE
         self.preferences_pub.write(msg)
-        while not(self.parameters_flag):
-            time.sleep(WAIT_FOR_PARAMETER)
+        self._wait_for_callback()
         self.parameters_flag = False
         return self.params
 
@@ -164,8 +175,7 @@ class SupervisorPreferences:
         msg.cmd = GET_PARAMETERS
         msg.submodule.module_name = IMU_MODULE
         self.preferences_pub.write(msg)
-        while not(self.parameters_flag):
-            time.sleep(WAIT_FOR_PARAMETER)
+        self._wait_for_callback()
         self.parameters_flag = False
         return self.params
 
