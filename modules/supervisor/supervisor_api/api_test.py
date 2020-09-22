@@ -17,8 +17,8 @@ print("IMU parameters:")
 print(params)
 time.sleep(2.0)
 
+print(sv_test.get_gnss_status())
 sv_test.define_gnss_sound_state(False)
-
 sv_test.save_current_parameters()
 
 print("Terminated")

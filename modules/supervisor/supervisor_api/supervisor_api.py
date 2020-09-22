@@ -5,6 +5,7 @@ from cyber_py3 import cyber
 from modules.supervisor.proto.parameter_server_pb2 import sv_set_get
 from modules.supervisor.proto.parameter_server_pb2 import submodule_parameters
 from modules.supervisor.proto.sv_decision_pb2 import sv_decision
+from modules.supervisor.submodules.proto.sv_gnss_msg_pb2 import sv_gnss_msg
 
 GET_PARAMETERS = "get_parameters"
 CHANGE_PARAMETER = "change_parameters"
@@ -35,6 +36,7 @@ class SupervisorPreferences:
         self._create_callback_subscriber()
         self._create_decision_subscriber()
         self._create_preferences_publisher()
+        self._create_gnss_status_subscriber()
 
 
     def _wait_for_callback(self):
@@ -70,6 +72,38 @@ class SupervisorPreferences:
     def _create_callback_subscriber(self):
         # Subscriber for supervisor module callbacks
         self.node.create_reader("/supervisor/callback", submodule_parameters, self._parameters_callback)
+
+    def _create_gnss_status_subscriber(self):
+        self.node.create_reader("/supervisor/gnss/status", sv_gnss_msg, self._update_gnss_msg)
+    
+    def _update_gnss_msg(self, gnss_status):
+        self.last_gnss_msg = gnss_status
+    
+    def _gnss_msg_to_dict(self):
+        params = {
+            "Differential age: ": "",
+            "Solution status: ": "",
+            "Solution type: ": "",
+            "Lateral error: ": "",
+            "Longitudinal error: ": "",
+            "Overall status: ": ""
+        }
+        try:
+            params["Overall status: "] = self.last_gnss_msg.overall_status
+            params["Differential age: "] = self.last_gnss_msg.differential_age
+            params["Solution status: "] = self.last_gnss_msg.sol_status
+            params["Solution type: "] = self.last_gnss_msg.sol_type
+            params["Lateral error: "] = self.last_gnss_msg.lateral_error
+            params["Longitudinal error: "] = self.last_gnss_msg.longitudinal_error
+        except:
+            self._fill_zeros(params)
+        return params
+
+    def _fill_zeros(self, params):
+        for key in params.keys():
+            params[key] = "No data yet"
+
+
 
     def define_gnss_sound_state(self, state):
         # Sending new state setting for sound in GNSS module
@@ -190,19 +224,10 @@ class SupervisorPreferences:
     #
 
     def get_gnss_status_word(self):
-        # TO DO
-        return "OK"
+        return self._gnss_msg_to_dict()["Overall status: "]
     
     def get_gnss_status(self):
-        # TO DO
-        params = {
-            "a": 1,
-            "b": 2,
-            "c": 3,
-            "d": 4,
-            "e": 5,
-            "f": 6,
-        }
+        params = self._gnss_msg_to_dict()
         return params
 
     def define_canbus_sound_state(self, state):

@@ -37,7 +37,7 @@ GNSSSupervisor::GNSSSupervisor()
 
 void GNSSSupervisor::RunOnce(const double current_time) {
   status_ = 0;
-
+  debug_msg_ = "";
   best_pose_reader_->Observe();
   const auto &best_pose_msg = best_pose_reader_->GetLatestObserved();
 
