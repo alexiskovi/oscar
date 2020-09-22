@@ -16,11 +16,12 @@ IMUSupervisor::IMUSupervisor()
   ACHECK(
     cyber::common::GetProtoFromFile(FLAGS_sv_imu_conf_file, &imu_conf_))
     << "Unable to load IMU conf file: " + FLAGS_sv_imu_conf_file;
+  imu_status_writer_ = sv_imu_node_->CreateWriter<sv_imu_msg>("/supervisor/imu/status");
 }
 
 void IMUSupervisor::RunOnce(const double current_time) {
   status_ = 0;
-
+  debug_msg_ = "";
   ins_stat_reader_->Observe();
   const auto &ins_stat_msg = ins_stat_reader_->GetLatestObserved();
 
@@ -44,6 +45,16 @@ void IMUSupervisor::RunOnce(const double current_time) {
       debug_msg_ = "IMU invalid calibration status";
     }
   }
+
+  sv_imu_msg msg;
+  msg.set_calibration_status(ins_stat_msg->ins_status());
+  if(status_ < 10) msg.set_overall_status("OK");
+  if((status_ >= 10)&&(status_ < 20)) msg.set_overall_status("WARNING");
+  if((status_ >= 20)&&(status_ < 30)) msg.set_overall_status("ERROR");
+  if((status_ >= 30)&&(status_ < 40)) msg.set_overall_status("FATAL");
+
+  imu_status_writer_->Write(msg);
+
 }
 
 void IMUSupervisor::GetStatus(std::string* submodule_name, int* status, std::string* debug_msg) {

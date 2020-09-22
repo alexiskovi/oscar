@@ -6,6 +6,7 @@ from modules.supervisor.proto.parameter_server_pb2 import sv_set_get
 from modules.supervisor.proto.parameter_server_pb2 import submodule_parameters
 from modules.supervisor.proto.sv_decision_pb2 import sv_decision
 from modules.supervisor.submodules.proto.sv_gnss_msg_pb2 import sv_gnss_msg
+from modules.supervisor.submodules.proto.sv_imu_msg_pb2 import sv_imu_msg
 
 GET_PARAMETERS = "get_parameters"
 CHANGE_PARAMETER = "change_parameters"
@@ -37,6 +38,7 @@ class SupervisorPreferences:
         self._create_decision_subscriber()
         self._create_preferences_publisher()
         self._create_gnss_status_subscriber()
+        self._create_imu_status_subscriber()
 
 
     def _wait_for_callback(self):
@@ -76,8 +78,14 @@ class SupervisorPreferences:
     def _create_gnss_status_subscriber(self):
         self.node.create_reader("/supervisor/gnss/status", sv_gnss_msg, self._update_gnss_msg)
     
+    def _create_imu_status_subscriber(self):
+        self.node.create_reader("/supervisor/imu/status", sv_gnss_msg, self._update_imu_msg)
+    
     def _update_gnss_msg(self, gnss_status):
         self.last_gnss_msg = gnss_status
+    
+    def _update_imu_msg(self, imu_status):
+        self.last_imu_msg = imu_status
     
     def _gnss_msg_to_dict(self):
         params = {
@@ -95,6 +103,18 @@ class SupervisorPreferences:
             params["Solution type: "] = self.last_gnss_msg.sol_type
             params["Lateral error: "] = self.last_gnss_msg.lateral_error
             params["Longitudinal error: "] = self.last_gnss_msg.longitudinal_error
+        except:
+            self._fill_zeros(params)
+        return params
+    
+    def _imu_msg_to_dict(self):
+        params = {
+            "Calibration status: ": "",
+            "Overall status: ": ""
+        }
+        try:
+            params["Overall status: "] = self.last_imu_msg.overall_status
+            params["Calibration status: "] = self.last_imu_msg.calibration_status
         except:
             self._fill_zeros(params)
         return params
@@ -228,6 +248,13 @@ class SupervisorPreferences:
     
     def get_gnss_status(self):
         params = self._gnss_msg_to_dict()
+        return params
+    
+    def get_imu_status_word(self):
+        return self._imu_msg_to_dict()["Overall status: "]
+    
+    def get_imu_status(self):
+        params = self._imu_msg_to_dict()
         return params
 
     def define_canbus_sound_state(self, state):

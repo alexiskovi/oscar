@@ -14,6 +14,7 @@
 #include "modules/common/adapters/adapter_gflags.h"
 #include "cyber/component/timer_component.h"
 #include "modules/supervisor/submodules/proto/imu_conf.pb.h"
+#include "modules/supervisor/submodules/proto/sv_imu_msg.pb.h"
 #include "modules/drivers/gnss/proto/ins.pb.h"
 #include "modules/drivers/gnss/proto/imu.pb.h"
 
@@ -31,6 +32,7 @@ class IMUSupervisor : public SupervisorRunner {
   std::string debug_msg_;
   std::shared_ptr<apollo::cyber::Node> sv_imu_node_;
   std::shared_ptr<apollo::cyber::Reader<apollo::drivers::gnss::InsStat>> ins_stat_reader_;
+  std::shared_ptr<cyber::Writer<sv_imu_msg>> imu_status_writer_;
   sv_imu_conf imu_conf_;
 };
 

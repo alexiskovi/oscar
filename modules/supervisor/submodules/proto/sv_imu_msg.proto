@@ -1,0 +1,6 @@
+syntax = "proto2";
+
+message sv_imu_msg {
+  optional string overall_status = 1;
+  optional int64 calibration_status = 2;
+}

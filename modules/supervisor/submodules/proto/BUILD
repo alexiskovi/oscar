@@ -13,6 +13,7 @@ proto_library(
         "gnss_conf.proto",
         "sv_gnss_msg.proto",
         "imu_conf.proto",
+        "sv_imu_msg.proto",
     ],
     deps = [
         "//modules/common/proto:header_proto_lib",
