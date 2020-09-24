@@ -4,6 +4,17 @@
     <meta charset="utf-8" />
     <title>Oscar Supervisor</title>
     <style>
+    body{
+      -ms-user-select: none;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      width:100%;
+      height:100%;
+      margin:0;
+      font-size: 3vh;
+      font-family: Gill Sans, sans-serif;
+    }
 
       #A, .block_style{
          color:white;
@@ -11,6 +22,7 @@
          height:100%;
          background: blue;
       }
+
       .container {
           width: 100%;
           max-width: 100%;
@@ -57,6 +69,14 @@
         ws.send("get_server_state");
     }
 
+    function send_message(message){
+        ws.send(message);
+        if (message=="save_config"){
+          console.log("save_config");
+          alert("Текущая конфигурация сохранена");
+        }
+    }
+
     function set_color(elem, color){
       document.getElementById(elem).style.border="3px solid "+color;
     }
@@ -74,14 +94,23 @@
             ws.onmessage = function(msg) {
                 dict=JSON.parse(msg.data);
                 for (key in dict){
-                  document.getElementById(key).innerHTML = dict[key];
-                  if (dict[key]==="OK"){
-                    set_color(key+"_border", "blue");
-                  }else if(dict[key]==="WARNING"){
-                    set_color(key+"_border", "#ffb01f");
-                  }else if(dict[key]==="-"){
-                    set_color(key+"_border", "grey");
-                  }else{set_color(key+"_border", "red");}
+                  if ((key=="sound_on")||(key=="debug_mode")){
+                    if (dict[key]){ set_color(key, "blue");
+                      if(key=="sound_on"){
+                        document.getElementById(key).innerHTML = "Выключить звуковые уведомления";
+                      }else{document.getElementById(key).innerHTML = "Отключить DEBUG";}
+                    }
+                    else{ set_color(key, "#555558");
+                      if(key=="sound_on"){
+                        document.getElementById(key).innerHTML = "Включить звуковые уведомления";
+                      }else{document.getElementById(key).innerHTML = "Включить DEBUG";}
+                    }
+                  }else{
+                    document.getElementById(key).innerHTML = dict[key];
+                    if (dict[key]==="OK"){set_color(key+"_border", "blue");}
+                    else if(dict[key]==="WARNING"){set_color(key+"_border", "#ffb01f");}
+                    else if(dict[key]==="-"){set_color(key+"_border", "grey");}
+                    else{set_color(key+"_border", "red");}}
                 }
             }
         } else {
@@ -94,7 +123,7 @@
 
 
 
-  <body style="width:100%; height:100%; margin:0; font-size: 3vh; font-family: Gill Sans, sans-serif;" onload="init();">
+  <body onload="init();">
     <div class="container">
       <div class="col-1-5">
         <h1 style="font-size: 4vh;">Oscar Supervisor</h1>
@@ -119,10 +148,10 @@
         <div class="grey-border" id="imu_border" onclick="document.location.href='http://10.1.14.71:8888/info_imu'"><b>IMU:</b>
           <div id="imu">—</div>
         </div>
-        <div class="yellow-border" id="save_config"><b>Сохранить текущую конфигурацию</b>
+        <div class="yellow-border" id="save_config" onclick="send_message('save_config')"><b>Сохранить текущую конфигурацию</b>
         </div>
-        <div class="blue-border" id="sound">Выключить звуковые уведомления</div>
-        <div class="blue-border" id="debug">Отключить DEBUG</div>
+        <div class="blue-border" id="sound_on" onclick="send_message('sound_on_off')">Выключить звуковые уведомления</div>
+        <div class="blue-border" id="debug_mode" onclick="send_message('change_debug_mode')">Отключить DEBUG</div>
       </div>
     </div>
   </body>

@@ -10,48 +10,49 @@ import sys
 import asyncio
 
 server_started = {'state': True}
-
+supervisor = SupervisorPreferences()
+server_global_preferences={'sound_on':True, 'debug_mode': True}
 server_state = {
     'canbus': {
         'status': '-',
-        'sound': 'ON',
-        'debug': 'ON',
+        'sound_on': True,
+        'debug_mode': True,
         'text_field': '-'},
 
     'control': {
         'status': '-',
-        'sound': 'ON',
-        'debug': 'ON',
+        'sound_on': True,
+        'debug_mode': True,
         'text_field': '-'},
 
     'perception': {
         'status': '-',
-        'sound': 'ON',
-        'debug': 'ON',
+        'sound_on': True,
+        'debug_mode': True,
         'text_field': '-'},
 
     'gnss': {
         'status': '-',
-        'sound': 'ON',
-        'debug': 'ON',
+        'sound_on': True,
+        'debug_mode': True,
         'text_field': '-'},
 
     'localization': {
         'status': '-',
-        'sound': 'ON',
-        'debug': 'ON',
+        'sound_on': True,
+        'debug_mode': True,
         'text_field': '-'},
 
     'planning': {
         'status': '-',
-        'sound': 'ON',
-        'debug': 'ON',
+        'sound_on': True,
+        'debug_mode': True,
         'text_field': '-'},
 
     'imu': {
         'status': '-',
-        'sound': 'ON',
-        'debug': 'ON',
+        'sound_on': True,
+        'debug_mode': True,
         'text_field': '-'}
 }
 
@@ -61,29 +62,17 @@ def make_text_field_text(status, name):
 
 
 def get_status_dict(supervisor):
-    print('get_status_dict')
-    server_state['canbus']['status'] = supervisor.get_canbus_status_word()
-    server_state['control']['status'] = supervisor.get_control_status_word()
-    server_state['perception']['status'] = supervisor.get_perception_status_word()
-    server_state['gnss']['status'] = supervisor.get_gnss_status_word()
-    server_state['localization']['status'] = supervisor.get_localization_status_word()
-    server_state['planning']['status'] = supervisor.get_planning_status_word()
-    server_state['imu']['status'] = supervisor.get_imu_status_word()
-    make_text_field_text(supervisor.get_canbus_status(), 'canbus')
-    make_text_field_text(supervisor.get_control_status(), 'control')
-    make_text_field_text(supervisor.get_perception_status(), 'perception')
-    make_text_field_text(supervisor.get_gnss_status(), 'gnss')
-    make_text_field_text(supervisor.get_localization_status(), 'localization')
-    make_text_field_text(supervisor.get_planning_status(), 'planning')
-    make_text_field_text(supervisor.get_imu_status(), 'imu')
-    print('supervisor.get_parameters', supervisor.get_gnss_parameters())
+    modules=['canbus', 'control', 'perception', 'gnss', 'localization', 'planning', 'imu']
+    server_global_preferences.update(supervisor.get_sv_parameters())
+    for module in modules:
+        server_state[module]['status'] = getattr(supervisor, 'get_'+module+'_status_word')()
+        make_text_field_text(getattr(supervisor, 'get_'+module+'_status')(), module)
+        server_state[module].update(getattr(supervisor, 'get_'+module+'_parameters')())
 
 
 def status_check():
-    supervisor = SupervisorPreferences()
     i = 0
     while server_started['state']:
-        #print('Got supervisor')
         try:
             get_status_dict(supervisor)
             time.sleep(0.3)
@@ -93,7 +82,8 @@ def status_check():
 
 def get_status_words():
     modules=['canbus', 'control', 'perception', 'gnss', 'localization', 'planning', 'imu']
-    dict={}
+    dict={'sound_on': server_global_preferences['sound_on'],
+          'debug_mode': server_global_preferences['debug_mode']}
     for i in modules:
         dict[i]=server_state[i]['status']
     return dict
@@ -131,12 +121,25 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         # self.write_message("Welcome!")
 
     def on_message(self, message):
-        print("New message {}".format(message))
+        #print("New message {}".format(message))
         if message == 'get_server_state':
+            print(server_global_preferences)
             self.write_message(get_status_words())
         elif 'get_server_state' in message:
             message = message.replace('get_server_state_', "")
             self.write_message(server_state.get(message))
+        elif message=='sound_on_off':
+            supervisor.define_sv_sound_state(not server_global_preferences['sound_on'])
+        elif 'sound_on_off' in message:
+            cur_module = message.replace('sound_on_off_', "")
+            getattr(supervisor, 'define_'+cur_module+'_sound_state')(not server_state[cur_module]['sound_on'])
+        elif message == 'change_debug_mode':
+            supervisor.define_sv_debug_state(not server_global_preferences['debug_mode'])
+        elif 'change_debug_mode' in message:
+            cur_module = message.replace('change_debug_mode_', "")
+            getattr(supervisor, 'define_'+cur_module+'_debug_state')(not server_state[cur_module]['debug_mode'])
+        elif message=='save_config':
+            supervisor.save_current_parameters()
 
     def on_close(self):
         print("Connection closed")
