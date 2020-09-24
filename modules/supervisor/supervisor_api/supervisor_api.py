@@ -17,7 +17,7 @@ IMU_MODULE = "imu"
 DEBUG_MODE = "debug_mode_on"
 SOUND_MODE = "sound_on"
 WAIT_FOR_PARAMETER = 0.025
-SV_TIMEOUT = 2.5
+SV_TIMEOUT = 1.0
 
 class SupervisorPreferences:
 
@@ -39,6 +39,7 @@ class SupervisorPreferences:
         self._create_preferences_publisher()
         self._create_gnss_status_subscriber()
         self._create_imu_status_subscriber()
+        time.sleep(2.0)
 
 
     def _wait_for_callback(self):
@@ -277,7 +278,7 @@ class SupervisorPreferences:
     def get_canbus_status(self):
         # TO DO
         params = {
-            "submodule is not ready": 0,
+            "submodule is not ready": "",
         }
         return params
 
@@ -300,7 +301,7 @@ class SupervisorPreferences:
     def get_control_status(self):
         # TO DO
         params = {
-            "submodule is not ready": 0,
+            "submodule is not ready": "",
         }
         return params
 
@@ -323,7 +324,7 @@ class SupervisorPreferences:
     def get_perception_status(self):
         # TO DO
         params = {
-            "submodule is not ready": 0,
+            "submodule is not ready": "",
         }
         return params
 
@@ -346,7 +347,7 @@ class SupervisorPreferences:
     def get_localization_status(self):
         # TO DO
         params = {
-            "submodule is not ready": 0,
+            "submodule is not ready": "",
         }
         return params
 
@@ -369,7 +370,7 @@ class SupervisorPreferences:
     def get_planning_status(self):
         # TO DO
         params = {
-            "submodule is not ready": 0,
+            "submodule is not ready": "",
         }
         return params
 
