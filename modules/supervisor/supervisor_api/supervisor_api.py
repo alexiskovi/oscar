@@ -17,7 +17,7 @@ IMU_MODULE = "imu"
 DEBUG_MODE = "debug_mode_on"
 SOUND_MODE = "sound_on"
 WAIT_FOR_PARAMETER = 0.025
-SV_TIMEOUT = 0.5
+SV_TIMEOUT = 2.5
 
 class SupervisorPreferences:
 
@@ -48,7 +48,8 @@ class SupervisorPreferences:
             time_exceed += WAIT_FOR_PARAMETER
             if time_exceed >= SV_TIMEOUT:
                 print("Connection timeout!")
-                sys.exit()
+                break
+        return
 
 
 
@@ -70,23 +71,23 @@ class SupervisorPreferences:
     def _create_decision_subscriber(self):
         # Subscriber for global supervisor decision channel
         self.node.create_reader("/supervisor/decision", sv_decision, self._decision_callback)
-    
+
     def _create_callback_subscriber(self):
         # Subscriber for supervisor module callbacks
         self.node.create_reader("/supervisor/callback", submodule_parameters, self._parameters_callback)
 
     def _create_gnss_status_subscriber(self):
         self.node.create_reader("/supervisor/gnss/status", sv_gnss_msg, self._update_gnss_msg)
-    
+
     def _create_imu_status_subscriber(self):
         self.node.create_reader("/supervisor/imu/status", sv_gnss_msg, self._update_imu_msg)
-    
+
     def _update_gnss_msg(self, gnss_status):
         self.last_gnss_msg = gnss_status
-    
+
     def _update_imu_msg(self, imu_status):
         self.last_imu_msg = imu_status
-    
+
     def _gnss_msg_to_dict(self):
         params = {
             "Differential age: ": "",
@@ -106,7 +107,7 @@ class SupervisorPreferences:
         except:
             self._fill_zeros(params)
         return params
-    
+
     def _imu_msg_to_dict(self):
         params = {
             "Calibration status: ": "",
@@ -245,14 +246,14 @@ class SupervisorPreferences:
 
     def get_gnss_status_word(self):
         return self._gnss_msg_to_dict()["Overall status: "]
-    
+
     def get_gnss_status(self):
         params = self._gnss_msg_to_dict()
         return params
-    
+
     def get_imu_status_word(self):
         return self._imu_msg_to_dict()["Overall status: "]
-    
+
     def get_imu_status(self):
         params = self._imu_msg_to_dict()
         return params
@@ -272,7 +273,7 @@ class SupervisorPreferences:
     def get_canbus_status_word(self):
         # TO DO
         return "WARNING"
-    
+
     def get_canbus_status(self):
         # TO DO
         params = {
@@ -295,7 +296,7 @@ class SupervisorPreferences:
     def get_control_status_word(self):
         # TO DO
         return "WARNING"
-    
+
     def get_control_status(self):
         # TO DO
         params = {
@@ -318,7 +319,7 @@ class SupervisorPreferences:
     def get_perception_status_word(self):
         # TO DO
         return "WARNING"
-    
+
     def get_perception_status(self):
         # TO DO
         params = {
@@ -341,14 +342,14 @@ class SupervisorPreferences:
     def get_localization_status_word(self):
         # TO DO
         return "WARNING"
-    
+
     def get_localization_status(self):
         # TO DO
         params = {
             "submodule is not ready": 0,
         }
         return params
-    
+
     def define_planning_sound_state(self, state):
         # TO DO
         pass
@@ -364,7 +365,7 @@ class SupervisorPreferences:
     def get_planning_status_word(self):
         # TO DO
         return "WARNING"
-    
+
     def get_planning_status(self):
         # TO DO
         params = {

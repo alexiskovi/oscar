@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Oscar Supervisor</title>
+    <style>
+
+      #A, .block_style{
+         color:white;
+         width:20%;
+         height:100%;
+         background: blue;
+      }
+      .container {
+          width: 100%;
+          max-width: 100%;
+          align-items: center;
+          margin: 0 auto;
+
+      }
+
+      .col-1-5 {
+          width:auto;
+          max-width: 80%;
+          height: 95%;
+          text-align: center;
+          margin: 0 auto;
+      }
+
+      .container:after {
+          content: "";
+          display: table;
+          clear: both;
+      }
+      .blue-border{
+        border: 3px solid blue;
+        padding: 5px;
+        margin: 20px;
+      }
+      .no-border{
+        border: 3px solid white;
+        padding: 1vh;
+        padding-bottom: 5vh;
+        text-align: center;
+        margin-top: 1vh;
+      }
+
+      .yellow-border{
+        border: 3px solid #ffb01f;
+        padding: 5px;
+        margin: 20px;
+      }
+    </style>
+    <div id="title" style="display: none">{{title}}</div>
+    <script type="text/javascript">
+    var ws = null;
+    var current_module=document.getElementById("title").innerHTML;
+
+    function get_server_state() {
+        ws.send("get_server_state_"+current_module);
+    }
+
+    function set_color(elem, color){
+      document.getElementById(elem).style.border="3px solid "+color;
+    }
+
+    function init() {
+        if ("WebSocket" in window) {
+            ws = new WebSocket("ws://10.1.14.71:8888/ws/");
+            ws.onopen = function() {
+                console.log("Connection is opened");
+                get_server_state();
+                setInterval(get_server_state, 500);
+            }
+            ws.onclose = function() {
+                console.log("Connection is closed");
+            }
+            ws.onmessage = function(msg) {
+                dict=JSON.parse(msg.data);
+                for (key in dict){
+                  if ((key=="sound")||(key=="debug")){
+                    if (dict[key]==="ON"){ set_color(key, "blue");}
+                    else{set_color(key, "#555558");}
+                  }
+                  else{
+                    document.getElementById(key).innerHTML = dict[key];
+                    if (key!="text_field"){
+                      if (dict[key]==="OK"){
+                        set_color(key+"_border", "blue");
+                      }else if(dict[key]==="WARNING"){
+                        set_color(key+"_border", "#ffb01f");
+                      }else if(dict[key]==="-"){
+                        set_color(key+"_border", "grey");
+                      }else{set_color(key+"_border", "red");}}
+                  }
+                }
+            }
+
+        } else {
+            console.log('Your browser doesnt support WebSocket!')
+        }
+
+    }
+    </script>
+  </head>
+
+
+
+ <body style="width:100%; height:100%; margin:0; font-size: 3vh; font-family: Gill Sans, sans-serif;" onload="init();">
+    <div class="container">
+      <div class="col-1-5">
+        <div class="no-border" onclick="document.location.href='http://10.1.14.71:8888/'">
+          <div style="width: 3%; float: left; font-size: 6vh;"><b><</b></div>
+          <div style="width: 94%; float: left; font-size: 4vh; padding-top:1vh;"><b>Oscar Supervisor</b></div>
+          <div style="width: 3%; float: right;"> </div>
+        </div>
+        <div class="blue-border" id="status_border"><span style="text-transform: uppercase;">{{title}}:</span>
+          <div id="status">ok</div>
+        </div>
+        <div class="blue-border" id="sound">Выключить звуковые уведомления</div>
+        <div class="blue-border" id="debug">Отключить DEBUG</div>
+        <div id="text_field"></div>
+      </div>
+    </div>
+  </body>
+</html>
