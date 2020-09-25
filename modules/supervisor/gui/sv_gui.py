@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import threading
 import time
 from supervisor_api import SupervisorPreferences
@@ -8,8 +9,12 @@ from tornado.escape import json_encode
 from tornado.options import define, options, parse_command_line
 import sys
 import asyncio
+import configparser
 
-server_started = {'state': True}
+config = configparser.ConfigParser()
+config.read('/apollo/modules/supervisor/gui/config.ini', encoding='utf-8')
+host_ip=config.get('server', 'host_ip')
+server_started = {'state': True, 'tornado_thread': None, 'check_status_thread': None}
 supervisor = SupervisorPreferences()
 server_global_preferences={'sound_on':True, 'debug_mode': True}
 server_state = {
@@ -107,23 +112,19 @@ class StoppableThread(threading.Thread):
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self, route_name):
-        print(route_name)
         if not route_name:
-            self.render("templates/index.html")
+            self.render("templates/index.html", host_ip=host_ip)
         elif 'info' in route_name:
             route_name = route_name.replace("info_", "")
-            self.render("templates/index0.html", title=route_name)
+            self.render("templates/index0.html", title=route_name, host_ip=host_ip)
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self, *args):
         print("New connection")
-        # self.write_message("Welcome!")
 
     def on_message(self, message):
-        #print("New message {}".format(message))
         if message == 'get_server_state':
-            print(server_global_preferences)
             self.write_message(get_status_words())
         elif 'get_server_state' in message:
             message = message.replace('get_server_state_', "")
@@ -140,6 +141,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             getattr(supervisor, 'define_'+cur_module+'_debug_state')(not server_state[cur_module]['debug_mode'])
         elif message=='save_config':
             supervisor.save_current_parameters()
+        elif message=='stop server':
+            close_app(server_started['tornado_thread'], server_started['check_status_thread'])
 
     def on_close(self):
         print("Connection closed")
@@ -147,54 +150,29 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
 def tornado_start():
     asyncio.set_event_loop(asyncio.new_event_loop())
-    define("port", default=8888, type=int)
+    define("port", default=8989, type=int)
     app = tornado.web.Application([
         (r'/(info_\w+)*', IndexHandler),
         (r'/ws/', WebSocketHandler),
     ])
     app.listen(options.port)
-    # tornado_instance=
     server_started['tornado_instance'] = tornado.ioloop.IOLoop.instance()
     server_started['tornado_instance'].start()
 
 
 def close_app(thread1, thread2):
-    while True:
-        if input() == 'Q':
-            print('START stop')
-            thread1.stop()
-            thread2.stop()
-            server_started['state'] = False
-            print('thread1 stopped', thread1.stopped())
-            print(server_started)
-            break
+    thread1.stop()
+    thread2.stop()
+    server_started['state'] = False
+    supervisor.stop()
+    print('App closed')
 
 
 if __name__ == '__main__':
-
-    tornado_thread = threading.Thread(target=tornado_start)
-    tornado_thread.start()
-    # tornado.ioloop.IOLoop.instance().start()
-    # input_thread=threading.Thread(target=read_keyboard_input, args=(tornado_instance, ))
-    # input_thread.start()
-
-    # print('Here1')
-    status_check_thread = StoppableThread(
+    server_started['tornado_thread'] = StoppableThread(target=tornado_start)
+    server_started['tornado_thread'].start()
+    server_started['check_status_thread'] = StoppableThread(
         target=status_check, delete_link=True)
-    status_check_thread.start()
-    print('Here2')
-    #
-    # time.sleep(2)
-    # server_started['tornado_instance'].stop()
-    # server_started['tornado_instance']=None
+    server_started['check_status_thread'].start()
     # close_app_thread=threading.Thread(target=close_app, args=(tornado_thread, status_check_thread, ))
     # close_app_thread.start()
-    # print('Here3')
-    # # tornado_instance.start()
-    # print('Started joining')
-    # # input_thread.join()
-    #
-    # tornado_thread.join()
-    # status_check_thread.join()
-    # close_app_thread.join()
-    print('Here3')

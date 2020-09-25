@@ -20,3 +20,4 @@
 
 apt update && apt install -y alsa-base pulseaudio sox sudo
 pip3 install tornado
+pip3 install websockets

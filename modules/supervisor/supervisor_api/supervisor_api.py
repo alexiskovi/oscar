@@ -1,6 +1,6 @@
 import time
 import sys
-
+import os, signal
 from cyber_py3 import cyber
 from modules.supervisor.proto.parameter_server_pb2 import sv_set_get
 from modules.supervisor.proto.parameter_server_pb2 import submodule_parameters
@@ -43,7 +43,7 @@ class SupervisorPreferences:
 
     def _wait_for_callback(self):
         time_exceed = 0.0
-        while not(self.parameters_flag):
+        while not(self.parameters_flag) and not cyber.is_shutdown():
             time.sleep(WAIT_FOR_PARAMETER)
             time_exceed += WAIT_FOR_PARAMETER
             if time_exceed >= SV_TIMEOUT:
@@ -373,5 +373,6 @@ class SupervisorPreferences:
         }
         return params
 
-    def __del__(self):
-        cyber.shutdown()
+    def stop(self):
+        print('STOP')
+        os.kill(os.getpid(), signal.SIGTERM)

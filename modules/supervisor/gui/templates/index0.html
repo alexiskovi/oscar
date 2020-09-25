@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <title>Oscar Supervisor</title>
+    <div id="title" style="display: none">{{title}}</div>
+    <div id="host_ip" style="display: none">{{host_ip}}</div>
     <style>
     body{
       -ms-user-select: none;
@@ -62,10 +64,14 @@
         margin: 20px;
       }
     </style>
-    <div id="title" style="display: none">{{title}}</div>
+
     <script type="text/javascript">
     var ws = null;
     var current_module=document.getElementById("title").innerHTML;
+    var host_ip = document.getElementById("host_ip").innerHTML;
+    function make_link(){
+      document.location.href="http://"+host_ip+":8989/";
+    }
 
     function change_debug_mode(){ws.send("change_debug_mode_"+current_module);}
 
@@ -81,7 +87,7 @@
 
     function init() {
         if ("WebSocket" in window) {
-            ws = new WebSocket("ws://10.1.14.71:8888/ws/");
+            ws = new WebSocket("ws://192.168.88.195:8989/ws/");
             ws.onopen = function() {
                 console.log("Connection is opened");
                 get_server_state();
@@ -130,7 +136,7 @@
  <body onload="init();">
     <div class="container">
       <div class="col-1-5">
-        <div class="no-border" onclick="document.location.href='http://10.1.14.71:8888/'">
+        <div class="no-border" onclick="make_link()">
           <div style="width: 3%; float: left; font-size: 6vh;"><b><</b></div>
           <div style="width: 94%; float: left; font-size: 4vh; padding-top:1vh;"><b>Oscar Supervisor</b></div>
           <div style="width: 3%; float: right;"> </div>
