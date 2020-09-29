@@ -282,7 +282,7 @@ class SupervisorPreferences:
     def get_canbus_status(self):
         # TO DO
         params = {
-            "submodule is not ready": 0,
+            "submodule is not ready": "",
         }
         return params
 
@@ -305,7 +305,7 @@ class SupervisorPreferences:
     def get_control_status(self):
         # TO DO
         params = {
-            "submodule is not ready": 0,
+            "submodule is not ready": "",
         }
         return params
 
@@ -328,7 +328,7 @@ class SupervisorPreferences:
     def get_perception_status(self):
         # TO DO
         params = {
-            "submodule is not ready": 0,
+            "submodule is not ready": "",
         }
         return params
 
@@ -351,7 +351,7 @@ class SupervisorPreferences:
     def get_localization_status(self):
         # TO DO
         params = {
-            "submodule is not ready": 0,
+            "submodule is not ready": "",
         }
         return params
 
@@ -374,7 +374,7 @@ class SupervisorPreferences:
     def get_planning_status(self):
         # TO DO
         params = {
-            "submodule is not ready": 0,
+            "submodule is not ready": "",
         }
         return params
 
