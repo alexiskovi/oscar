@@ -72,7 +72,7 @@ void GNSSSupervisor::RunOnce(const double current_time) {
   if(!std::any_of(sol_types_allowed.begin(), sol_types_allowed.end(), compare(best_pose_msg->sol_type()))){
     if(status_ < (int)gnss_conf_.bad_sol_type_priority()){
       status_ = (int)gnss_conf_.bad_sol_type_priority();
-      debug_msg_ = "current GNSS solution type is not in white-list";
+      debug_msg_ = "Current GNSS solution type is not in white-list";
     }
   }
   // Check standart deviation
@@ -95,7 +95,7 @@ void GNSSSupervisor::RunOnce(const double current_time) {
   if((status_ >= 10)&&(status_ < 20)) msg.set_overall_status("WARNING");
   if((status_ >= 20)&&(status_ < 30)) msg.set_overall_status("ERROR");
   if((status_ >= 30)&&(status_ < 40)) msg.set_overall_status("FATAL");
-
+  msg.set_debug_message(debug_msg_);
   gnss_status_writer_->Write(msg);
 }
 

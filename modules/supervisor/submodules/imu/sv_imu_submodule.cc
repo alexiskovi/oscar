@@ -52,7 +52,7 @@ void IMUSupervisor::RunOnce(const double current_time) {
   if((status_ >= 10)&&(status_ < 20)) msg.set_overall_status("WARNING");
   if((status_ >= 20)&&(status_ < 30)) msg.set_overall_status("ERROR");
   if((status_ >= 30)&&(status_ < 40)) msg.set_overall_status("FATAL");
-
+  msg.set_debug_message(debug_msg_);
   imu_status_writer_->Write(msg);
 
 }

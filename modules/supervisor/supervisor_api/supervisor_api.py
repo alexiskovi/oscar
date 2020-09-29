@@ -95,15 +95,18 @@ class SupervisorPreferences:
             "Solution type: ": "",
             "Lateral error: ": "",
             "Longitudinal error: ": "",
-            "Overall status: ": ""
+            "Overall status: ": "",
+            "Debug message: ": ""
+
         }
         try:
             params["Overall status: "] = self.last_gnss_msg.overall_status
-            params["Differential age: "] = self.last_gnss_msg.differential_age
+            params["Debug message: "] = self.last_gnss_msg.debug_message
+            params["Differential age: "] = self.last_gnss_msg.differential_age[:5]
             params["Solution status: "] = self.last_gnss_msg.sol_status
             params["Solution type: "] = self.last_gnss_msg.sol_type
-            params["Lateral error: "] = self.last_gnss_msg.lateral_error
-            params["Longitudinal error: "] = self.last_gnss_msg.longitudinal_error
+            params["Lateral error: "] = self.last_gnss_msg.lateral_error[:5]
+            params["Longitudinal error: "] = self.last_gnss_msg.longitudinal_error[:5]
         except:
             self._fill_zeros(params)
         return params
@@ -111,11 +114,13 @@ class SupervisorPreferences:
     def _imu_msg_to_dict(self):
         params = {
             "Calibration status: ": "",
+            "Debug message: ": "",
             "Overall status: ": ""
         }
         try:
             params["Overall status: "] = self.last_imu_msg.overall_status
             params["Calibration status: "] = self.last_imu_msg.calibration_status
+            params["Debug message: "] = self.last_imu_msg.debug_message
         except:
             self._fill_zeros(params)
         return params
