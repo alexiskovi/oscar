@@ -5,6 +5,7 @@
     <title>Oscar Supervisor</title>
     <div id="title" style="display: none">{{title}}</div>
     <div id="host_ip" style="display: none">{{host_ip}}</div>
+    <div id="port" style="display: none">{{port}}</div>
     <style>
     body{
       -ms-user-select: none;
@@ -69,8 +70,9 @@
     var ws = null;
     var current_module=document.getElementById("title").innerHTML;
     var host_ip = document.getElementById("host_ip").innerHTML;
+    var port = document.getElementById("port").innerHTML;
     function make_link(){
-      document.location.href="http://"+host_ip+":8989/";
+      document.location.href="http://"+host_ip+":"+port+"/";
     }
 
     function change_debug_mode(){ws.send("change_debug_mode_"+current_module);}
@@ -87,7 +89,8 @@
 
     function init() {
         if ("WebSocket" in window) {
-            ws = new WebSocket("ws://192.168.88.195:8989/ws/");
+            console.log("ws://"+host_ip+":"+port+"/ws/");
+            ws = new WebSocket("ws://"+host_ip+":"+port+"/ws/");
             ws.onopen = function() {
                 console.log("Connection is opened");
                 get_server_state();

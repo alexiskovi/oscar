@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>Oscar Supervisor</title>
     <div id="host_ip" style="display: none">{{host_ip}}</div>
+    <div id="port" style="display: none">{{port}}</div>
     <style>
     body{
       -ms-user-select: none;
@@ -67,7 +68,7 @@
     <script type="text/javascript">
     var ws = null;
     var host_ip = document.getElementById("host_ip").innerHTML;
-    console.log(config.host_ip);
+    var port = document.getElementById("port").innerHTML;
     function get_server_state() {
         ws.send("get_server_state");
     }
@@ -86,7 +87,7 @@
 
     function init() {
         if ("WebSocket" in window) {
-            ws = new WebSocket("ws://"+host_ip+":8989/ws/");
+            ws = new WebSocket("ws://"+host_ip+":"+port+"/ws/");
             ws.onopen = function() {
                 console.log("Connection is opened");
                 setInterval(get_server_state, 500);
@@ -122,7 +123,7 @@
 
     }
     function make_link(mdl){
-      document.location.href="http://"+host_ip+":8989/info_"+mdl;
+      document.location.href="http://"+host_ip+":"+port+"/info_"+mdl;
     }
     </script>
   </head>

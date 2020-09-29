@@ -14,6 +14,7 @@ import configparser
 config = configparser.ConfigParser()
 config.read('/apollo/modules/supervisor/gui/config.ini', encoding='utf-8')
 host_ip=config.get('server', 'host_ip')
+tornado_port=config.get('server', 'port')
 server_started = {'state': True, 'tornado_thread': None, 'check_status_thread': None}
 supervisor = SupervisorPreferences()
 server_global_preferences={'sound_on':True, 'debug_mode': True}
@@ -113,10 +114,10 @@ class StoppableThread(threading.Thread):
 class IndexHandler(tornado.web.RequestHandler):
     def get(self, route_name):
         if not route_name:
-            self.render("templates/index.html", host_ip=host_ip)
+            self.render("templates/index.html", host_ip=host_ip, port=tornado_port)
         elif 'info' in route_name:
             route_name = route_name.replace("info_", "")
-            self.render("templates/index0.html", title=route_name, host_ip=host_ip)
+            self.render("templates/index0.html", title=route_name, host_ip=host_ip, port=tornado_port)
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -150,7 +151,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
 def tornado_start():
     asyncio.set_event_loop(asyncio.new_event_loop())
-    define("port", default=8989, type=int)
+    define("port", default=int(tornado_port), type=int)
     app = tornado.web.Application([
         (r'/(info_\w+)*', IndexHandler),
         (r'/ws/', WebSocketHandler),
@@ -174,5 +175,3 @@ if __name__ == '__main__':
     server_started['check_status_thread'] = StoppableThread(
         target=status_check, delete_link=True)
     server_started['check_status_thread'].start()
-    # close_app_thread=threading.Thread(target=close_app, args=(tornado_thread, status_check_thread, ))
-    # close_app_thread.start()
