@@ -27,7 +27,7 @@
       }
 
       .container {
-          max-width: 850px;
+          max-width: 950px;
           width: 100%;
           align-items: center;
           margin: 0 auto;
@@ -45,12 +45,14 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        width: 18%;
+        width: 20%;
         margin-right: 2%;
-        border-radius: 8px;
+        border-radius: 2vh;
         text-align: center;
         background-color: #BAC8D3;
         align-items: center;
+        text-shadow: #CFCFCF 1px 1px 0, #CFCFCF -1px -1px 0,
+                 #CFCFCF -1px 1px 0, #CFCFCF 1px -1px 0;
       }
 
       .info-box-right {
@@ -59,7 +61,7 @@
         justify-content: center;
         flex-direction: column;
         width: 80%;
-        border-radius: 8px;
+        border-radius: 2vh;
         text-align: center;
         background-color: #BAC8D3;
         align-items: center;
@@ -147,7 +149,7 @@
   <body onload="init();">
     <div class="container">
 
-        <h1 style="font-size: 3vh; text-align:left; color: #CFCFCF">OSCAR SUPERVISOR</h1>
+        <h1 style="font-size: 2vh; text-align:left; color: #CFCFCF">OSCAR SUPERVISOR</h1>
         <div onclick="make_link('canbus')" class='info-row'>
           <div id='name_canbus' class="info-box-left">CAN</div>
           <div id='text_canbus' class="info-box-right">-</div>
@@ -184,13 +186,13 @@
         </div>
 
         <div class='info-row'>
-          <div class="info-box-left" style="width:32%; background: #B1DDF0; font-size: 2vh;" id="save_config" onclick="send_message('save_config')">
+          <div class="info-box-left" style="width:32%; background: #B1DDF0; font-size: 2vh; padding:10px;" id="save_config" onclick="send_message('save_config')">
             Сохранить текущую конфигурацию
           </div>
-          <div class="info-box-left" style="width:32%; background: #B1DDF0; font-size: 2vh;" id="sound_on" onclick="send_message('sound_on_off')">
+          <div class="info-box-left" style="width:32%; background: #B1DDF0; font-size: 2vh; padding:10px;" id="sound_on" onclick="send_message('sound_on_off')">
             Выключить звуковые уведомления
           </div>
-          <div class="info-box-right" style="width:32%; background: #B1DDF0; font-size: 2vh; padding:5px;" id="debug_mode" onclick="send_message('change_debug_mode')">
+          <div class="info-box-right" style="width:32%; background: #B1DDF0; font-size: 2vh; padding:10px;" id="debug_mode" onclick="send_message('change_debug_mode')">
             Отключить DEBUG
           </div>
         </div>

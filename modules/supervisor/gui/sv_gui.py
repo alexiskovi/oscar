@@ -63,8 +63,15 @@ server_state = {
 }
 
 def make_text_field_text(status, name):
-    server_state[name]['text_field'] = '<br>'.join('{}{}'.format(
-        key, value) for key, value in status.items())
+    # server_state[name]['text_field'] = '<br>'.join('{}{}'.format(
+    #     key, value) for key, value in status.items())
+
+    server_state[name]['text_field'] = '<tr>'+'</tr><tr>'.join('<td>{}</td><td>{}</td>'.format(
+        key, value) for key, value in status.items())+'</tr>'
+    # server_state[name]['tf1']='<br>'.join(status.keys())
+    # server_state[name]['tf2']='<br>'.join(status.values())
+    #print("tf2",server_state[name]['tf2'])
+    #print('VALUES:','<br>'.join(status.values()))
 
 
 def get_status_dict(supervisor):

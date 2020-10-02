@@ -16,7 +16,7 @@
       width:100%;
       height:100%;
       margin:0;
-      font-size: 1vh;
+      font-size: 3vw;
       font-family: Roboto;
       background: #00041F;
     }
@@ -30,7 +30,7 @@
 
       .container {
           max-width: 850px;
-          width: 100%;
+          width: 95%;
           align-items: center;
           margin: 0 auto;
 
@@ -42,6 +42,20 @@
           clear: both;
       }
 
+      .text-field-row {
+        display:flex;
+        flex-direction: row;
+      }
+
+      .text-field-item {
+        display: flex;
+        align-items: left;
+        flex-direction: column;
+        padding-right: 2%;
+        text-align: left;
+        font-size: 3vh;
+      }
+
       .info-box-left {
         display: flex;
         align-items: center;
@@ -49,7 +63,7 @@
         flex-direction: column;
         width: 25%;
         margin-right: 2%;
-        border-radius: 8px;
+        border-radius: 2vh;
         text-align: center;
         background-color: #BAC8D3;
         align-items: center;
@@ -61,7 +75,7 @@
         justify-content: center;
         flex-direction: column;
         width: 73%;
-        border-radius: 8px;
+        border-radius: 2vh;
         text-align: center;
         background-color: #BAC8D3;
         align-items: center;
@@ -166,7 +180,7 @@
                       }else{document.getElementById(key).innerHTML = "Включить DEBUG";}
                     }
                   }else if(key=="status"){set_status(dict[key]);}
-                  else if(key=="text_field"){document.getElementById(key).innerHTML = dict[key];}
+                  else if(key=="text_field" || key=="values_table"){document.getElementById(key).innerHTML = dict[key];}
                   else{set_color('footer_'+key, get_color_by_name(dict[key]));}
                 }
             }
@@ -174,7 +188,6 @@
         } else {
             console.log('Your browser doesnt support WebSocket!')
         }
-
     }
     </script>
   </head>
@@ -183,7 +196,7 @@
 
   <body onload="init();" onready="set_status();">
     <div class="container">
-      <div style="min-height: calc(100vh - 15vh);">
+      <div style="height: calc(100vh - 20vh);" id="info_container">
 
         <div class="info-row" style="font-size: 2vh; color: #CFCFCF; margin-top:2vh; margin-bottom:2vh; height:auto;">
           <div style="text-align:left; width:50%"><b>OSCAR SUPERVISOR</b></div>
@@ -191,21 +204,27 @@
           <div class="square" id="status_square"></div>
         </div>
 
-        <div class='info-row'>
+        <div class="info-row">
           <div class="info-box-left" style="width:50%; background: #B1DDF0; font-size: 2vh;" id="sound_on" onclick="sound_on_off()">Выключить звуковые уведомления</div>
           <div class="info-box-right" style="width:50%; background: #B1DDF0; font-size: 2vh;" id="debug_mode" onclick="change_debug_mode()">Отключить DEBUG</div>
         </div>
-        <div id="text_field" style="color: #CFCFCF;"></div>
+        <!-- <div id="text_field" style="color: #CFCFCF; font-size: 3vh;"></div> -->
+        <!-- <div class="text-field-row">
+          <div class="text-field-item" style="width:40%; color: #CFCFCF;" id="tf1">Выключить звуковые уведомления</div>
+          <div class="text-field-item" style="width:60%; color: #CFCFCF;" id="tf2">Отключить DEBUG</div>
+        </div> -->
+        <table id="text_field" style="color: #CFCFCF; font-size: 3vh; border-spacing: 10px 5px;"> </table>
+
       </div>
 
-      <div class="status-bar" style="text-align:center; width=100%">
-        <div id="footer_canbus"class="footer-elem" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px;">CAN</div>
+      <div class="status-bar" style="text-align:center; width=100%" id="status_bar">
+        <div id="footer_canbus"class="footer-elem" style="border-top-left-radius: 3vh; border-bottom-left-radius: 3vh;">CAN</div>
         <div id="footer_control" class="footer-elem">CTL</div>
         <div id="footer_perception" class="footer-elem">PRC</div>
         <div id="footer_gnss" class="footer-elem">GNSS</div>
         <div id="footer_localization" class="footer-elem">LOC</div>
         <div id="footer_planning" class="footer-elem">PLAN</div>
-        <div id="footer_imu" class="footer-elem" style="margin-right=0; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">IMU</div>
+        <div id="footer_imu" class="footer-elem" style="margin-right=0; border-top-right-radius: 3vh; border-bottom-right-radius: 3vh;">IMU</div>
       </div>
 
     </div>

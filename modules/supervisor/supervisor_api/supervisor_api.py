@@ -102,12 +102,13 @@ class SupervisorPreferences:
         try:
             params["Overall status: "] = self.last_gnss_msg.overall_status
             params["Debug message: "] = self.last_gnss_msg.debug_message
-            params["Differential age: "] = self.last_gnss_msg.differential_age[:5]
+            params["Differential age: "] = "%.4f" % self.last_gnss_msg.differential_age
             params["Solution status: "] = self.last_gnss_msg.sol_status
             params["Solution type: "] = self.last_gnss_msg.sol_type
-            params["Lateral error: "] = self.last_gnss_msg.lateral_error[:5]
-            params["Longitudinal error: "] = self.last_gnss_msg.longitudinal_error[:5]
+            params["Lateral error: "] = "%.4f" % self.last_gnss_msg.lateral_error
+            params["Longitudinal error: "] = "%.4f" % self.last_gnss_msg.longitudinal_error
         except:
+            print('Fill zero')
             self._fill_zeros(params)
         return params
 
