@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Oscar Supervisor</title>
+    <div id="host_ip" style="display: none">{{host_ip}}</div>
+    <div id="port" style="display: none">{{port}}</div>
+    <style>
+    body{
+      -ms-user-select: none;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      width:100%;
+      height:100%;
+      margin:0;
+      font-size: 3vh;
+      font-family: Roboto;
+      background: #00041F;
+    }
+
+      #A, .block_style{
+         color:white;
+         width:20%;
+         height:100%;
+         background: blue;
+      }
+
+      .container {
+          max-width: 800px;
+          width: 90%;
+          align-items: center;
+          margin: 0 auto;
+
+      }
+
+      .container:after {
+          content: "";
+          display: table;
+          clear: both;
+      }
+
+      .info-box-left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 18%;
+        margin-right: 2%;
+        border-radius: 8px;
+        text-align: center;
+        background-color: #BAC8D3;
+        align-items: center;
+      }
+
+      .info-box-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 80%;
+        border-radius: 8px;
+        text-align: center;
+        background-color: #BAC8D3;
+        align-items: center;
+      }
+
+      .info-row {
+        display:flex;
+        flex-direction: row;
+        height:8vh;
+        margin-bottom:2vh;
+      }
+
+      }
+    </style>
+    <script type="text/javascript">
+    var ws = null;
+    var host_ip = document.getElementById("host_ip").innerHTML;
+    var port = document.getElementById("port").innerHTML;
+    function get_server_state() {
+        ws.send("get_server_state");
+    }
+
+    function send_message(message){
+        ws.send(message);
+        if (message=="save_config"){
+          console.log("save_config");
+          alert("Текущая конфигурация сохранена");
+        }
+    }
+
+    function set_color_info(elem, color){
+      document.getElementById("name_"+elem).style.background=color;
+      document.getElementById("text_"+elem).style.background=color;
+    }
+
+    function set_color_button(elem, color){
+      document.getElementById(elem).style.background=color;
+    }
+
+    function init() {
+        if ("WebSocket" in window) {
+            ws = new WebSocket("ws://"+host_ip+":"+port+"/ws/");
+            ws.onopen = function() {
+                console.log("Connection is opened");
+                setInterval(get_server_state, 500);
+            }
+            ws.onclose = function() {
+                console.log("Connection is closed");
+            }
+            ws.onmessage = function(msg) {
+                dict=JSON.parse(msg.data);
+                for (key in dict){
+                  if ((key=="sound_on")||(key=="debug_mode")){
+                    if (dict[key]){ set_color_button(key, "#B1DDF0");
+                      if(key=="sound_on"){
+                        document.getElementById(key).innerHTML = "Выключить звуковые уведомления";
+                      }else{document.getElementById(key).innerHTML = "Отключить DEBUG";}
+                    }
+                    else{ set_color_button(key, "#BAC8D3");
+                      if(key=="sound_on"){
+                        document.getElementById(key).innerHTML = "Включить звуковые уведомления";
+                      }else{document.getElementById(key).innerHTML = "Включить DEBUG";}
+                    }
+                  }else{
+                    document.getElementById("text_"+key).innerHTML = dict[key];
+                    if (dict[key]==="OK"){set_color_info(key, "#B7E8DD");}
+                    else if(dict[key]==="WARNING"){set_color_info(key, "#F9FFC4");}
+                    else if(dict[key]=="-"||dict[key]=="No data yet"){set_color_info(key, "#BAC8D3");}
+                    else{set_color_info(key, "#F8BCCE");}}
+                }
+            }
+        } else {
+            console.log('Your browser doesnt support WebSocket!')
+        }
+
+    }
+    function make_link(mdl){
+      document.location.href="http://"+host_ip+":"+port+"/info_"+mdl;
+    }
+    </script>
+  </head>
+
+
+
+  <body onload="init();">
+    <div class="container">
+
+        <h1 style="font-size: 3vh; text-align:left; color: #CFCFCF">OSCAR SUPERVISOR</h1>
+        <div onclick="make_link('canbus')" class='info-row'>
+          <div id='name_canbus' class="info-box-left">CAN</div>
+          <div id='text_canbus' class="info-box-right">-</div>
+        </div>
+
+        <div onclick="make_link('control')" class='info-row'>
+          <div id='name_control' class="info-box-left">CTL</div>
+          <div id='text_control' class="info-box-right">-</div>
+        </div>
+
+        <div onclick="make_link('perception')" class='info-row'>
+          <div id='name_perception' class="info-box-left">PRC</div>
+          <div id='text_perception' class="info-box-right">-</div>
+        </div>
+
+        <div onclick="make_link('gnss')" class='info-row'>
+          <div id='name_gnss' class="info-box-left">GNSS</div>
+          <div id='text_gnss' class="info-box-right">-</div>
+        </div>
+
+        <div onclick="make_link('localization')" class='info-row'>
+          <div id='name_localization' class="info-box-left">LOC</div>
+          <div id='text_localization' class="info-box-right">-</div>
+        </div>
+
+        <div onclick="make_link('planning')" class='info-row'>
+          <div id='name_planning' class="info-box-left">PLAN</div>
+          <div id='text_planning' class="info-box-right">-</div>
+        </div>
+
+        <div onclick="make_link('imu')" class='info-row'>
+          <div id='name_imu' class="info-box-left">IMU</div>
+          <div id='text_imu' class="info-box-right">-</div>
+        </div>
+
+        <div class='info-row'>
+          <div class="info-box-left" style="width:32%; background: #B1DDF0; font-size: 2vh;" id="save_config" onclick="send_message('save_config')">
+            Сохранить текущую конфигурацию
+          </div>
+          <div class="info-box-left" style="width:32%; background: #B1DDF0; font-size: 2vh;" id="sound_on" onclick="send_message('sound_on_off')">
+            Выключить звуковые уведомления
+          </div>
+          <div class="info-box-right" style="width:32%; background: #B1DDF0; font-size: 2vh; padding:5px;" id="debug_mode" onclick="send_message('change_debug_mode')">
+            Отключить DEBUG
+          </div>
+        </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Oscar Supervisor</title>
+    <div id="title" style="display: none">{{title}}</div>
+    <div id="host_ip" style="display: none">{{host_ip}}</div>
+    <div id="port" style="display: none">{{port}}</div>
+    <div id="current_state" style="display: none">{{current_state}}</div>
+    <style>
+    body{
+      -ms-user-select: none;
+      -moz-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      width:100%;
+      height:100%;
+      margin:0;
+      font-size: 3vh;
+      font-family: Roboto;
+      background: #00041F;
+    }
+
+      #A, .block_style{
+         color:white;
+         width:20%;
+         height:100%;
+         background: blue;
+      }
+
+      .container {
+          max-width: 800px;
+          width: 90%;
+          align-items: center;
+          margin: 0 auto;
+
+      }
+
+      .container:after {
+          content: "";
+          display: table;
+          clear: both;
+      }
+
+      .info-box-left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 25%;
+        margin-right: 2%;
+        border-radius: 8px;
+        text-align: center;
+        background-color: #BAC8D3;
+        align-items: center;
+      }
+
+      .info-box-right {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 73%;
+        border-radius: 8px;
+        text-align: center;
+        background-color: #BAC8D3;
+        align-items: center;
+      }
+
+      .info-row {
+        display:flex;
+        flex-direction: row;
+        height:8vh;
+        margin-bottom:2vh;
+      }
+
+      .status-bar {
+        display:flex;
+        flex-direction: row;
+        margin-bottom:2vh;
+      }
+
+      .square{
+        width:2vh;
+        height:2vh;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+      }
+
+      .footer-elem{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 15%;
+        margin-right: 1%;
+        text-align: center;
+        background-color: #BAC8D3;
+        align-items: center;
+        font-size: 2vh;
+      }
+
+      }
+    </style>
+    <script type="text/javascript">
+    var ws = null;
+    var current_module=document.getElementById("title").innerHTML;
+    var host_ip = document.getElementById("host_ip").innerHTML;
+    var port = document.getElementById("port").innerHTML;
+    var current_state = document.getElementById("current_state").innerHTML;
+
+
+    function set_status(status){
+      document.getElementById("status_text").innerHTML = "<b>"+current_module+": "+status+"</b>";
+      document.getElementById("status_square").style.background=get_color_by_name(status);
+    }
+
+    function get_color_by_name(name){
+      if (name=="OK"){ return "#B7E8DD"; }
+      else if(name=="WARNING"){ return "#F9FFC4"; }
+      else if(name=="-"||name=="No data yet"){ return "#BAC8D3"; }
+      else{ return "#F8BCCE"; }
+    }
+
+    function make_link(){
+      document.location.href="http://"+host_ip+":"+port+"/";
+    }
+
+    function change_debug_mode(){ws.send("change_debug_mode_"+current_module);}
+
+    function sound_on_off(){ws.send("sound_on_off_"+current_module);}
+
+    function get_server_state() {
+        ws.send("get_server_state_"+current_module);
+    }
+
+    function set_color(elem, color){
+      document.getElementById(elem).style.background=color;
+    }
+
+    function init() {
+        set_status(current_state);
+        if ("WebSocket" in window) {
+            console.log("ws://"+host_ip+":"+port+"/ws/");
+            ws = new WebSocket("ws://"+host_ip+":"+port+"/ws/");
+            ws.onopen = function() {
+                console.log("Connection is opened");
+                get_server_state();
+                setInterval(get_server_state, 500);
+            }
+            ws.onclose = function() {
+                console.log("Connection is closed");
+            }
+            ws.onmessage = function(msg) {
+                dict=JSON.parse(msg.data);
+                for (key in dict){
+                  if ((key=="sound_on")||(key=="debug_mode")){
+                    if (dict[key]){ set_color(key, "#B1DDF0");
+                      if(key=="sound_on"){
+                        document.getElementById(key).innerHTML = "Выключить звуковые уведомления";
+                      }else{document.getElementById(key).innerHTML = "Отключить DEBUG";}
+                    }
+                    else{ set_color(key, "#BAC8D3");
+                      if(key=="sound_on"){
+                        document.getElementById(key).innerHTML = "Включить звуковые уведомления";
+                      }else{document.getElementById(key).innerHTML = "Включить DEBUG";}
+                    }
+                  }else if(key=="status"){set_status(dict[key]);}
+                  else if(key=="text_field"){document.getElementById(key).innerHTML = dict[key];}
+                  else{set_color('footer_'+key, get_color_by_name(dict[key]));}
+                }
+            }
+
+        } else {
+            console.log('Your browser doesnt support WebSocket!')
+        }
+
+    }
+    </script>
+  </head>
+
+
+
+  <body onload="init();" onready="set_status();">
+    <div class="container">
+      <div style="min-height: calc(100vh - 10vh);">
+
+        <div class="info-row" style="font-size: 2vh; color: #CFCFCF; margin-top:2vh; margin-bottom:2vh; height:auto;">
+          <div style="text-align:left; width:50%"><b>OSCAR SUPERVISOR</b></div>
+          <div id="status_text" style="text-align:right; width:50%; margin-right:1%; text-transform:uppercase;" ><b>{{title}}: {{current_state}}</b></div>
+          <div class="square" id="status_square"></div>
+        </div>
+
+        <div class='info-row'>
+          <div class="info-box-left" style="width:50%; background: #B1DDF0; font-size: 2vh;" id="sound_on" onclick="sound_on_off()">Выключить звуковые уведомления</div>
+          <div class="info-box-right" style="width:50%; background: #B1DDF0; font-size: 2vh;" id="debug_mode" onclick="change_debug_mode()">Отключить DEBUG</div>
+        </div>
+        <div id="text_field" style="color: #CFCFCF;"></div>
+      </div>
+
+      <div class="status-bar" style="text-align:center; width=100%">
+        <div id="footer_canbus"class="footer-elem" style="border-top-left-radius: 8px; border-bottom-left-radius: 8px;">CAN</div>
+        <div id="footer_control" class="footer-elem">CTL</div>
+        <div id="footer_perception" class="footer-elem">PRC</div>
+        <div id="footer_gnss" class="footer-elem">GNSS</div>
+        <div id="footer_localization" class="footer-elem">LOC</div>
+        <div id="footer_planning" class="footer-elem">PLAN</div>
+        <div id="footer_imu" class="footer-elem" style="margin-right=0; border-top-right-radius: 8px; border-bottom-right-radius: 8px;">IMU</div>
+      </div>
+
+    </div>
+  </body>
+</html>

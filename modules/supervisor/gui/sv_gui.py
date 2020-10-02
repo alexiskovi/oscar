@@ -88,8 +88,7 @@ def status_check():
 
 def get_status_words():
     modules=['canbus', 'control', 'perception', 'gnss', 'localization', 'planning', 'imu']
-    dict={'sound_on': server_global_preferences['sound_on'],
-          'debug_mode': server_global_preferences['debug_mode']}
+    dict={}
     for i in modules:
         dict[i]=server_state[i]['status']
     return dict
@@ -114,10 +113,11 @@ class StoppableThread(threading.Thread):
 class IndexHandler(tornado.web.RequestHandler):
     def get(self, route_name):
         if not route_name:
-            self.render("templates/index.html", host_ip=host_ip, port=tornado_port)
+            self.render("templates/main_screen.html", host_ip=host_ip, port=tornado_port)
         elif 'info' in route_name:
             route_name = route_name.replace("info_", "")
-            self.render("templates/index0.html", title=route_name, host_ip=host_ip, port=tornado_port)
+            self.render("templates/full_info.html", title=route_name, host_ip=host_ip,
+             port=tornado_port, current_state=server_state.get(route_name).get('status'))
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -126,10 +126,15 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         if message == 'get_server_state':
-            self.write_message(get_status_words())
+            ans = get_status_words()
+            ans['sound_on']=server_global_preferences['sound_on']
+            ans['debug_mode']=server_global_preferences['debug_mode']
+            self.write_message(ans)
         elif 'get_server_state' in message:
             message = message.replace('get_server_state_', "")
-            self.write_message(server_state.get(message))
+            ans=server_state.get(message)
+            ans={**ans, **get_status_words()}
+            self.write_message(ans)
         elif message=='sound_on_off':
             supervisor.define_sv_sound_state(not server_global_preferences['sound_on'])
         elif 'sound_on_off' in message:
