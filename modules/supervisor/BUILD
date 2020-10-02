@@ -27,4 +27,29 @@ cc_binary(
     ],
 )
 
+cc_library(
+    name = "supervisor_guard_lib",
+    srcs = ["sv_guard_component.cc"],
+    hdrs = ["sv_guard_component.h"],
+    deps = [
+        "//cyber",
+        "//modules/common/util:message_util",
+        "//modules/supervisor/proto:supervisor_proto",
+        "//modules/canbus/proto:canbus_proto",
+        "//modules/control/proto:control_proto",
+        "//modules/guardian/proto:guardian_proto",
+        "@yaml_cpp//:yaml",
+    ],
+)
+
+cc_binary(
+    name = "sv_guard_lib.so",
+    linkshared = True,
+    linkstatic = False,
+    deps = [
+        ":supervisor_guard_lib",
+    ],
+)
+
+
 cpplint()

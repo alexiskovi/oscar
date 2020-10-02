@@ -1,0 +1,12 @@
+module_config {
+    module_library : "/apollo/bazel-bin/modules/supervisor/sv_guard_lib.so"
+    components {
+        class_name : "SupervisorGuard"
+        config {
+            name : "sv_guardian"
+            readers {
+                channel: "/supervisor/decision"
+            }
+        }
+    }
+}
