@@ -108,7 +108,6 @@ class SupervisorPreferences:
             params["Lateral error: "] = "%.4f" % self.last_gnss_msg.lateral_error
             params["Longitudinal error: "] = "%.4f" % self.last_gnss_msg.longitudinal_error
         except:
-            print('Fill zero')
             self._fill_zeros(params)
         return params
 

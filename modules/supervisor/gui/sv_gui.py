@@ -15,7 +15,7 @@ config = configparser.ConfigParser()
 config.read('/apollo/modules/supervisor/gui/config.ini', encoding='utf-8')
 host_ip=config.get('server', 'host_ip')
 tornado_port=config.get('server', 'port')
-server_started = {'state': True, 'tornado_thread': None, 'check_status_thread': None}
+server_started = {'tornado_thread': None, 'check_status_thread': None}
 supervisor = SupervisorPreferences()
 server_global_preferences={'sound_on':True, 'debug_mode': True}
 server_state = {
@@ -62,44 +62,6 @@ server_state = {
         'text_field': '-'}
 }
 
-def make_text_field_text(status, name):
-    # server_state[name]['text_field'] = '<br>'.join('{}{}'.format(
-    #     key, value) for key, value in status.items())
-
-    server_state[name]['text_field'] = '<tr>'+'</tr><tr>'.join('<td>{}</td><td>{}</td>'.format(
-        key, value) for key, value in status.items())+'</tr>'
-    # server_state[name]['tf1']='<br>'.join(status.keys())
-    # server_state[name]['tf2']='<br>'.join(status.values())
-    #print("tf2",server_state[name]['tf2'])
-    #print('VALUES:','<br>'.join(status.values()))
-
-
-def get_status_dict(supervisor):
-    modules=['canbus', 'control', 'perception', 'gnss', 'localization', 'planning', 'imu']
-    server_global_preferences.update(supervisor.get_sv_parameters())
-    for module in modules:
-        server_state[module]['status'] = getattr(supervisor, 'get_'+module+'_status_word')()
-        make_text_field_text(getattr(supervisor, 'get_'+module+'_status')(), module)
-        server_state[module].update(getattr(supervisor, 'get_'+module+'_parameters')())
-
-
-def status_check():
-    i = 0
-    while server_started['state']:
-        try:
-            get_status_dict(supervisor)
-            time.sleep(0.3)
-        except Exception as e:
-            print('Error:', e)
-    print('status_check exiting')
-
-def get_status_words():
-    modules=['canbus', 'control', 'perception', 'gnss', 'localization', 'planning', 'imu']
-    dict={}
-    for i in modules:
-        dict[i]=server_state[i]['status']
-    return dict
-
 
 class StoppableThread(threading.Thread):
 
@@ -116,7 +78,7 @@ class StoppableThread(threading.Thread):
     def stopped(self):
         return self._stop_event.is_set()
 
-
+#---------- TORNADO HANDLERS
 class IndexHandler(tornado.web.RequestHandler):
     def get(self, route_name):
         if not route_name:
@@ -160,6 +122,40 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def on_close(self):
         print("Connection closed")
 
+#---------- SUPERVISOR modules state check
+
+def make_text_field_text(status, name):
+    server_state[name]['text_field'] = '<tr>'+'</tr><tr>'.join('<td>{}</td><td>{}</td>'.format(
+        key, value) for key, value in status.items())+'</tr>'
+
+
+def get_status_dict(supervisor):
+    modules=['canbus', 'control', 'perception', 'gnss', 'localization', 'planning', 'imu']
+    server_global_preferences.update(supervisor.get_sv_parameters())
+    for module in modules:
+        server_state[module]['status'] = getattr(supervisor, 'get_'+module+'_status_word')()
+        make_text_field_text(getattr(supervisor, 'get_'+module+'_status')(), module)
+        server_state[module].update(getattr(supervisor, 'get_'+module+'_parameters')())
+
+
+def status_check():
+    i = 0
+    while True:
+        try:
+            get_status_dict(supervisor)
+            time.sleep(0.3)
+        except Exception as e:
+            print('Error:', e)
+    print('status_check exiting')
+
+def get_status_words():
+    modules=['canbus', 'control', 'perception', 'gnss', 'localization', 'planning', 'imu']
+    dict={}
+    for i in modules:
+        dict[i]=server_state[i]['status']
+    return dict
+
+#--------
 
 def tornado_start():
     asyncio.set_event_loop(asyncio.new_event_loop())
@@ -176,7 +172,6 @@ def tornado_start():
 def close_app(thread1, thread2):
     thread1.stop()
     thread2.stop()
-    server_started['state'] = False
     supervisor.stop()
     print('App closed')
 
