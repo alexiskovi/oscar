@@ -51,8 +51,6 @@
         text-align: center;
         background-color: #BAC8D3;
         align-items: center;
-        text-shadow: #CFCFCF 1px 1px 0, #CFCFCF -1px -1px 0,
-                 #CFCFCF -1px 1px 0, #CFCFCF 1px -1px 0;
       }
 
       .info-box-right {
@@ -115,21 +113,23 @@
                 dict=JSON.parse(msg.data);
                 for (key in dict){
                   if ((key=="sound_on")||(key=="debug_mode")){
-                    if (dict[key]){ set_color_button(key, "#B1DDF0");
+                    if (dict[key]){ set_color_button(key, "#3FA7D6");
+                      document.getElementById(key).innerHTML.color="black";
                       if(key=="sound_on"){
                         document.getElementById(key).innerHTML = "Выключить звуковые уведомления";
                       }else{document.getElementById(key).innerHTML = "Отключить DEBUG";}
                     }
-                    else{ set_color_button(key, "#BAC8D3");
+                    else{ set_color_button(key, "#296D8C");
+                      document.getElementById(key).innerHTML.color="#021B38";
                       if(key=="sound_on"){
                         document.getElementById(key).innerHTML = "Включить звуковые уведомления";
                       }else{document.getElementById(key).innerHTML = "Включить DEBUG";}
                     }
                   }else{
                     document.getElementById("text_"+key).innerHTML = dict[key];
-                    if (dict[key]==="OK"){set_color_info(key, "#B7E8DD");}
-                    else if(dict[key]==="WARNING"){set_color_info(key, "#F9FFC4");}
-                    else if(dict[key]=="-"||dict[key]=="No data yet"){set_color_info(key, "#BAC8D3");}
+                    if (dict[key]==="OK"){set_color_info(key, "#59CD90");}
+                    else if(dict[key]==="WARNING"){set_color_info(key, "#FAC05E");}
+                    else if(dict[key]=="-"||dict[key]=="No data yet"){set_color_info(key, "#EE6352");}
                     else{set_color_info(key, "#F8BCCE");}}
                 }
             }
@@ -186,13 +186,13 @@
         </div>
 
         <div class='info-row'>
-          <div class="info-box-left" style="width:32%; background: #B1DDF0; font-size: 2vh; padding:10px;" id="save_config" onclick="send_message('save_config')">
+          <div class="info-box-left" style="width:32%; background: #3FA7D6; font-size: 2vh; padding:10px;" id="save_config" onclick="send_message('save_config')">
             Сохранить текущую конфигурацию
           </div>
-          <div class="info-box-left" style="width:32%; background: #B1DDF0; font-size: 2vh; padding:10px;" id="sound_on" onclick="send_message('sound_on_off')">
+          <div class="info-box-left" style="width:32%; background: #3FA7D6; font-size: 2vh; padding:10px;" id="sound_on" onclick="send_message('sound_on_off')">
             Выключить звуковые уведомления
           </div>
-          <div class="info-box-right" style="width:32%; background: #B1DDF0; font-size: 2vh; padding:10px;" id="debug_mode" onclick="send_message('change_debug_mode')">
+          <div class="info-box-right" style="width:32%; background: #3FA7D6; font-size: 2vh; padding:10px;" id="debug_mode" onclick="send_message('change_debug_mode')">
             Отключить DEBUG
           </div>
         </div>

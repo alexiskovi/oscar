@@ -6,8 +6,9 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('/apollo/modules/supervisor/gui/config.ini', encoding='utf-8')
-host_ip=config.get('server', 'host_ip')
-tornado_port=config.get('server', 'port')
+host_ip = config.get('server', 'host_ip')
+tornado_port = config.get('server', 'port')
+
 
 async def main():
     async with websockets.connect('ws://'+host_ip+':'+str(tornado_port)+'/ws/') as websocket:

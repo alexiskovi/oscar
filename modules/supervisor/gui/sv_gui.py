@@ -13,11 +13,11 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('/apollo/modules/supervisor/gui/config.ini', encoding='utf-8')
-host_ip=config.get('server', 'host_ip')
-tornado_port=config.get('server', 'port')
+host_ip = config.get('server', 'host_ip')
+tornado_port = config.get('server', 'port')
 server_started = {'tornado_thread': None, 'check_status_thread': None}
 supervisor = SupervisorPreferences()
-server_global_preferences={'sound_on':True, 'debug_mode': True}
+server_global_preferences = {'sound_on': True, 'debug_mode': True}
 server_state = {
     'canbus': {
         'status': '-',
@@ -78,15 +78,18 @@ class StoppableThread(threading.Thread):
     def stopped(self):
         return self._stop_event.is_set()
 
-#---------- TORNADO HANDLERS
+# ---------- TORNADO HANDLERS
+
+
 class IndexHandler(tornado.web.RequestHandler):
     def get(self, route_name):
         if not route_name:
-            self.render("templates/main_screen.html", host_ip=host_ip, port=tornado_port)
+            self.render("templates/main_screen.html",
+                        host_ip=host_ip, port=tornado_port)
         elif 'info' in route_name:
             route_name = route_name.replace("info_", "")
             self.render("templates/full_info.html", title=route_name, host_ip=host_ip,
-             port=tornado_port, current_state=server_state.get(route_name).get('status'))
+                        port=tornado_port, current_state=server_state.get(route_name).get('status'))
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
@@ -96,33 +99,39 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         if message == 'get_server_state':
             ans = get_status_words()
-            ans['sound_on']=server_global_preferences['sound_on']
-            ans['debug_mode']=server_global_preferences['debug_mode']
+            ans['sound_on'] = server_global_preferences['sound_on']
+            ans['debug_mode'] = server_global_preferences['debug_mode']
             self.write_message(ans)
         elif 'get_server_state' in message:
             message = message.replace('get_server_state_', "")
-            ans=server_state.get(message)
-            ans={**ans, **get_status_words()}
+            ans = server_state.get(message)
+            ans = {**ans, **get_status_words()}
             self.write_message(ans)
-        elif message=='sound_on_off':
-            supervisor.define_sv_sound_state(not server_global_preferences['sound_on'])
+        elif message == 'sound_on_off':
+            supervisor.define_sv_sound_state(
+                not server_global_preferences['sound_on'])
         elif 'sound_on_off' in message:
             cur_module = message.replace('sound_on_off_', "")
-            getattr(supervisor, 'define_'+cur_module+'_sound_state')(not server_state[cur_module]['sound_on'])
+            getattr(supervisor, 'define_'+cur_module +
+                    '_sound_state')(not server_state[cur_module]['sound_on'])
         elif message == 'change_debug_mode':
-            supervisor.define_sv_debug_state(not server_global_preferences['debug_mode'])
+            supervisor.define_sv_debug_state(
+                not server_global_preferences['debug_mode'])
         elif 'change_debug_mode' in message:
             cur_module = message.replace('change_debug_mode_', "")
-            getattr(supervisor, 'define_'+cur_module+'_debug_state')(not server_state[cur_module]['debug_mode'])
-        elif message=='save_config':
+            getattr(supervisor, 'define_'+cur_module +
+                    '_debug_state')(not server_state[cur_module]['debug_mode'])
+        elif message == 'save_config':
             supervisor.save_current_parameters()
-        elif message=='stop server':
-            close_app(server_started['tornado_thread'], server_started['check_status_thread'])
+        elif message == 'stop server':
+            close_app(server_started['tornado_thread'],
+                      server_started['check_status_thread'])
 
     def on_close(self):
         print("Connection closed")
 
-#---------- SUPERVISOR modules state check
+# ---------- SUPERVISOR modules state check
+
 
 def make_text_field_text(status, name):
     server_state[name]['text_field'] = '<tr>'+'</tr><tr>'.join('<td>{}</td><td>{}</td>'.format(
@@ -130,12 +139,16 @@ def make_text_field_text(status, name):
 
 
 def get_status_dict(supervisor):
-    modules=['canbus', 'control', 'perception', 'gnss', 'localization', 'planning', 'imu']
+    modules = ['canbus', 'control', 'perception',
+               'gnss', 'localization', 'planning', 'imu']
     server_global_preferences.update(supervisor.get_sv_parameters())
     for module in modules:
-        server_state[module]['status'] = getattr(supervisor, 'get_'+module+'_status_word')()
-        make_text_field_text(getattr(supervisor, 'get_'+module+'_status')(), module)
-        server_state[module].update(getattr(supervisor, 'get_'+module+'_parameters')())
+        server_state[module]['status'] = getattr(
+            supervisor, 'get_'+module+'_status_word')()
+        make_text_field_text(
+            getattr(supervisor, 'get_'+module+'_status')(), module)
+        server_state[module].update(
+            getattr(supervisor, 'get_'+module+'_parameters')())
 
 
 def status_check():
@@ -148,14 +161,17 @@ def status_check():
             print('Error:', e)
     print('status_check exiting')
 
+
 def get_status_words():
-    modules=['canbus', 'control', 'perception', 'gnss', 'localization', 'planning', 'imu']
-    dict={}
+    modules = ['canbus', 'control', 'perception',
+               'gnss', 'localization', 'planning', 'imu']
+    dict = {}
     for i in modules:
-        dict[i]=server_state[i]['status']
+        dict[i] = server_state[i]['status']
     return dict
 
-#--------
+# --------
+
 
 def tornado_start():
     asyncio.set_event_loop(asyncio.new_event_loop())
@@ -177,7 +193,8 @@ def close_app(thread1, thread2):
 
 
 if __name__ == '__main__':
-    server_started['tornado_thread'] = StoppableThread(target=tornado_start)
+    server_started['tornado_thread'] = StoppableThread(
+        target=tornado_start)
     server_started['tornado_thread'].start()
     server_started['check_status_thread'] = StoppableThread(
         target=status_check, delete_link=True)
