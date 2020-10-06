@@ -13,7 +13,6 @@ import configparser
 
 config = configparser.ConfigParser()
 config.read('/apollo/modules/supervisor/gui/config.ini', encoding='utf-8')
-host_ip = config.get('server', 'host_ip')
 tornado_port = config.get('server', 'port')
 server_started = {'tornado_thread': None, 'check_status_thread': None}
 supervisor = SupervisorPreferences()
@@ -84,12 +83,11 @@ class StoppableThread(threading.Thread):
 class IndexHandler(tornado.web.RequestHandler):
     def get(self, route_name):
         if not route_name:
-            self.render("templates/main_screen.html",
-                        host_ip=host_ip, port=tornado_port)
+            self.render("templates/main_screen.html")
         elif 'info' in route_name:
             route_name = route_name.replace("info_", "")
-            self.render("templates/full_info.html", title=route_name, host_ip=host_ip,
-                        port=tornado_port, current_state=server_state.get(route_name).get('status'))
+            self.render("templates/full_info.html", title=route_name,
+                        current_state=server_state.get(route_name).get('status'))
 
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):

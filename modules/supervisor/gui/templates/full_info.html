@@ -4,8 +4,6 @@
     <meta charset="utf-8" />
     <title>Oscar Supervisor</title>
     <div id="title" style="display: none">{{title}}</div>
-    <div id="host_ip" style="display: none">{{host_ip}}</div>
-    <div id="port" style="display: none">{{port}}</div>
     <div id="current_state" style="display: none">{{current_state}}</div>
     <style>
     body{
@@ -118,11 +116,13 @@
     </style>
     <script type="text/javascript">
     var ws = null;
+    var start_href = window.location.href;
+    start_href = start_href.substring(7, start_href.length-1);
+    var host_ip = start_href.replace(/:\d*\/info_\w*/, "");
+    var port = start_href.replace(/(\d|.)*:/, "");
+    port = port.replace(/\/info_\w*/, "");
     var current_module=document.getElementById("title").innerHTML;
-    var host_ip = document.getElementById("host_ip").innerHTML;
-    var port = document.getElementById("port").innerHTML;
     var current_state = document.getElementById("current_state").innerHTML;
-
 
     function set_status(status){
       document.getElementById("status_text").innerHTML = "<b>"+current_module+": "+status+"</b>";
@@ -130,14 +130,10 @@
     }
 
     function get_color_by_name(name){
-      if (name=="OK"){ return "#59CD90"; }
+      if (name=="OK"){ return "#59CD91"; }
       else if(name=="WARNING"){ return "#FAC05E"; }
-      else if(name=="-"||name=="No data yet"){ return "#EE6352"; }
-      else{ return "#F8BCCE"; }
-    }
-
-    function make_link(){
-      document.location.href="http://"+host_ip+":"+port+"/";
+      else if(name=="-"||name=="No data yet"){ return "#A6A6A6"; }
+      else{ return "#EE6352"; }
     }
 
     function change_debug_mode(){ws.send("change_debug_mode_"+current_module);}

@@ -1,6 +1,7 @@
 import time
 import sys
-import os, signal
+import os
+import signal
 from cyber_py3 import cyber
 from modules.supervisor.proto.parameter_server_pb2 import sv_set_get
 from modules.supervisor.proto.parameter_server_pb2 import submodule_parameters
@@ -19,6 +20,7 @@ SOUND_MODE = "sound_on"
 WAIT_FOR_PARAMETER = 0.025
 SV_TIMEOUT = 2.5
 
+
 class SupervisorPreferences:
 
     def __init__(self):
@@ -30,8 +32,8 @@ class SupervisorPreferences:
         self.CURRENT_GLOBAL_STATUS = 0
         self.DEBUG_MESSAGE = "no msg recieved"
         self.params = {
-            "sound_on" : False,
-            "debug_mode" : False,
+            "sound_on": False,
+            "debug_mode": False,
         }
         self.parameters_flag = False
         self._create_callback_subscriber()
@@ -39,7 +41,6 @@ class SupervisorPreferences:
         self._create_preferences_publisher()
         self._create_gnss_status_subscriber()
         self._create_imu_status_subscriber()
-
 
     def _wait_for_callback(self):
         time_exceed = 0.0
@@ -50,8 +51,6 @@ class SupervisorPreferences:
                 print("Connection timeout!")
                 break
         return
-
-
 
     def _decision_callback(self, decision_data):
         # Callback function for supervisor global decision
@@ -66,21 +65,26 @@ class SupervisorPreferences:
 
     def _create_preferences_publisher(self):
         # Publisher for preferences set and get interface
-        self.preferences_pub = self.node.create_writer("/supervisor/preferences", sv_set_get, 5)
+        self.preferences_pub = self.node.create_writer(
+            "/supervisor/preferences", sv_set_get, 5)
 
     def _create_decision_subscriber(self):
         # Subscriber for global supervisor decision channel
-        self.node.create_reader("/supervisor/decision", sv_decision, self._decision_callback)
+        self.node.create_reader(
+            "/supervisor/decision", sv_decision, self._decision_callback)
 
     def _create_callback_subscriber(self):
         # Subscriber for supervisor module callbacks
-        self.node.create_reader("/supervisor/callback", submodule_parameters, self._parameters_callback)
+        self.node.create_reader(
+            "/supervisor/callback", submodule_parameters, self._parameters_callback)
 
     def _create_gnss_status_subscriber(self):
-        self.node.create_reader("/supervisor/gnss/status", sv_gnss_msg, self._update_gnss_msg)
+        self.node.create_reader(
+            "/supervisor/gnss/status", sv_gnss_msg, self._update_gnss_msg)
 
     def _create_imu_status_subscriber(self):
-        self.node.create_reader("/supervisor/imu/status", sv_gnss_msg, self._update_imu_msg)
+        self.node.create_reader(
+            "/supervisor/imu/status", sv_gnss_msg, self._update_imu_msg)
 
     def _update_gnss_msg(self, gnss_status):
         self.last_gnss_msg = gnss_status
@@ -128,8 +132,6 @@ class SupervisorPreferences:
     def _fill_zeros(self, params):
         for key in params.keys():
             params[key] = "No data yet"
-
-
 
     def define_gnss_sound_state(self, state):
         # Sending new state setting for sound in GNSS module
@@ -300,7 +302,7 @@ class SupervisorPreferences:
 
     def get_control_status_word(self):
         # TO DO
-        return "WARNING"
+        return "OK"
 
     def get_control_status(self):
         # TO DO
@@ -369,7 +371,7 @@ class SupervisorPreferences:
 
     def get_planning_status_word(self):
         # TO DO
-        return "WARNING"
+        return "ERROR"
 
     def get_planning_status(self):
         # TO DO

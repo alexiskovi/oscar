@@ -3,8 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <title>Oscar Supervisor</title>
-    <div id="host_ip" style="display: none">{{host_ip}}</div>
-    <div id="port" style="display: none">{{port}}</div>
     <style>
     body{
       -ms-user-select: none;
@@ -75,9 +73,11 @@
       }
     </style>
     <script type="text/javascript">
+    var start_href = window.location.href;
+    start_href = start_href.substring(7, start_href.length-1);
+    var host_ip = start_href.replace(/:\d*/, "");
+    var port = start_href.replace(/(\d|.)*:/, "");
     var ws = null;
-    var host_ip = document.getElementById("host_ip").innerHTML;
-    var port = document.getElementById("port").innerHTML;
     function get_server_state() {
         ws.send("get_server_state");
     }
@@ -100,6 +100,7 @@
     }
 
     function init() {
+
         if ("WebSocket" in window) {
             ws = new WebSocket("ws://"+host_ip+":"+port+"/ws/");
             ws.onopen = function() {
@@ -127,10 +128,10 @@
                     }
                   }else{
                     document.getElementById("text_"+key).innerHTML = dict[key];
-                    if (dict[key]==="OK"){set_color_info(key, "#59CD90");}
-                    else if(dict[key]==="WARNING"){set_color_info(key, "#FAC05E");}
-                    else if(dict[key]=="-"||dict[key]=="No data yet"){set_color_info(key, "#EE6352");}
-                    else{set_color_info(key, "#F8BCCE");}}
+                    if (dict[key]=="OK"){set_color_info(key, "#59CD91");}
+                    else if(dict[key]=="WARNING"){set_color_info(key, "#FAC05E");}
+                    else if(dict[key]=="-"||dict[key]=="No data yet"){set_color_info(key, "#A6A6A6");}
+                    else{set_color_info(key, "#EE6352");}}
                 }
             }
         } else {
@@ -139,7 +140,7 @@
 
     }
     function make_link(mdl){
-      document.location.href="http://"+host_ip+":"+port+"/info_"+mdl;
+      document.location.href="./info_"+mdl;
     }
     </script>
   </head>
