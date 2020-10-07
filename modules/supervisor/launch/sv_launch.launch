@@ -1,0 +1,7 @@
+<cyber>
+    <module>
+        <name>supervisor</name>
+        <dag_conf>/apollo/modules/supervisor/dag/sv_launch.dag</dag_conf>
+        <process_name>supervisor</process_name>
+    </module>
+</cyber>

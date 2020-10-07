@@ -1,6 +1,7 @@
-#!/usr/bin/env python3
 import threading
 import time
+import sys
+sys.path.insert(1, '/apollo/modules/supervisor/supervisor_api')
 from supervisor_api import SupervisorPreferences
 import tornado.ioloop
 import tornado.web
